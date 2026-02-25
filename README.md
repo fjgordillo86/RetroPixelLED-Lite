@@ -1,19 +1,19 @@
-# ⚡ Retro Pixel LED Lite v1.0.0
+# ✨ Retro Pixel LED Lite v1.0.0
 
 ## 💡 Descripción del Proyecto
 
-**Retro Pixel LED LITE** es la versión de alto rendimiento diseñada para quienes buscan estabilidad absoluta, velocidad instantánea y un sistema libre de mantenimiento. A diferencia de la versión estándar, el firmware LITE elimina la carga del servidor web y la conectividad permanente para dedicar el 100% de la potencia del ESP32 al renderizado de GIFs.
+**Retro Pixel LED Lite** es la versión de alto rendimiento diseñada para quienes buscan estabilidad absoluta, velocidad instantánea y un sistema libre de mantenimiento. A diferencia de la versión estándar, el firmware LITE elimina la carga del servidor web y la conectividad permanente para dedicar el 100% de la potencia del ESP32 al renderizado de GIFs.
 
 Es la solución perfecta para marquesinas fijas, salones arcade o decoración retro donde solo quieres **encender y disfrutar**.
 
 > [!TIP]
-> **🚀 Filosofía LITE:** Menos es más. Al apagar el WiFi después de sincronizar la hora, el sistema elimina el lag, reduce el calor del chip y evita cuelgues por saturación de red, permitiendo reproducciones fluidas de colecciones masivas.
+> **🚀 Filosofía Lite:** Menos es más. Al apagar el WiFi después de sincronizar la hora, el sistema elimina el lag, reduce el calor del chip y evita cuelgues por saturación de red, permitiendo reproducciones fluidas de colecciones masivas.
 
 ---
 
-## 🚀 Diferencias Clave: LITE vs ESTÁNDAR
+## 🚀 Diferencias Clave: Lite vs Estándar
 
-| Característica | Versión LITE | Versión Estándar |
+| Característica | Versión Lite | Versión Estándar |
 | :--- | :--- | :--- |
 | **Arranque** | Instantáneo (Lectura de `lista.txt`) | Lento (Indexado de carpetas SD) |
 | **Conectividad** | WiFi Sync & Sleep (Solo para hora) | Online Permanente (Web + MQTT) |
@@ -24,14 +24,14 @@ Es la solución perfecta para marquesinas fijas, salones arcade o decoración re
 
 ---
 
-## 🛠️ Herramientas Exclusivas LITE
+## 🛠️ Herramientas Exclusivas Lite
 
 ### 📜 Generador de Lista (Script .bat)
 Para evitar que el ESP32 pierda tiempo escaneando la SD, utilizamos un indexador externo.
 * **Ubicación:** `/Contenido SD/Listar GIFs v1.0.0.bat`
 * **Destino:** Raíz de la Micro SD.
-* **Función:** Escanea miles de GIFs en segundos y genera el archivo `lista.txt` con las rutas exactas. Incluye un contador en tiempo real para confirmar el progreso en colecciones gigantes.
-* 
+* **Función:** Escanea cientos de GIFs en segundos y genera el archivo `lista.txt` con las rutas exactas. Incluye un contador en tiempo real para confirmar el progreso en colecciones gigantes.
+  
 ### ⚙️ Archivo de Configuración (config.ini)
 Sustituye por completo la interfaz web de la versión estándar. Permite ajustar el comportamiento del hardware de forma persistente.
 * **Ubicación:** `/Contenido SD/config.ini`
@@ -44,7 +44,7 @@ Sustituye por completo la interfaz web de la versión estándar. Permite ajustar
 ### 1. 🚀 Programar el ESP32 (Web Installer)
 Puedes instalar esta versión sin instalar nada en tu PC usando nuestro instalador basado en Chrome/Edge:
 
-### **[👉 Abrir Instalador Web Retro Pixel LED - Lite](https://fjgordillo86.github.io/RetroPixelLED-Lite/)**
+### **[👉 Abrir Instalador Web Retro Pixel LED Lite](https://fjgordillo86.github.io/RetroPixelLED-Lite/)**
 
 **Pasos para la instalación:**
 1. Utiliza un navegador compatible (**Google Chrome** o **Microsoft Edge**).
