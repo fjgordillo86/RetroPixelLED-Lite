@@ -1,0 +1,24 @@
+<!  DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalador Retro Pixel LED Lite</title>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f0f0f; color: #e0e0e0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #1e1e1e; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; border: 1px solid #333; max-width: 400px; }
+        h1 { color: #00ff99; margin-bottom: 0.5rem; }
+        p { color: #888; margin-bottom: 2rem; }
+        esp-web-install-button { --esp-tools-button-color: #00ff99; --esp-tools-button-text-color: #000; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Retro Pixel LED Lite 🕹️</h1>
+        <p>Conecta tu ESP32 por USB y pulsa el botón para programar.</p>
+        
+        <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
+    </div>
+</body>
+</html>
