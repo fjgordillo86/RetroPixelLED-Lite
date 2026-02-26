@@ -28,16 +28,32 @@ Es la solución perfecta para marquesinas fijas, salones arcade o decoración re
 
 ## 🛠️ Herramientas Exclusivas Lite
 
-### 📜 Generador de Lista (Script .bat)
+### 📜 Generador de Lista (Script Listar GIFs v1.0.0)
 Para evitar que el ESP32 pierda tiempo escaneando la SD, utilizamos un indexador externo.
-* **Ubicación:** `/Contenido SD/Listar GIFs v1.0.0.bat`
-* **Destino:** Raíz de la Micro SD.
-* **Función:** Escanea cientos de GIFs en segundos y genera el archivo `lista.txt` con las rutas exactas. Incluye un contador en tiempo real para confirmar el progreso en colecciones gigantes.
-  
+* **Ubicación en el repo:** `/Contenido SD/`
+* **Destino:** El script debe copiarse y ejecutarse siempre desde la **raíz de la Micro SD**.
+* **Función:** Escanea la carpeta `/gifs/` y genera el archivo `lista.txt` con las rutas exactas. Incluye un contador en tiempo real para confirmar el progreso en colecciones gigantes.
+
+#### 🪟 Para Windows (`.bat`)
+1. Copia `Listar GIFs v1.0.0.bat` a la raíz de tu SD.
+2. Haz **doble clic** sobre el archivo.
+3. Se abrirá una ventana de consola mostrando el progreso. Al terminar, pulsa cualquier tecla para cerrar.
+
+#### 🍎 Para macOS / Linux (`.sh`)
+1. Copia `Listar GIFs v1.0.0.sh` a la raíz de tu SD.
+2. Abre la **Terminal** y accede a la SD (escribe `cd ` y arrastra la carpeta de la SD a la terminal).
+3. Otorga permisos de ejecución (solo la primera vez):
+   ```bash
+   chmod +x "Listar GIFs v1.0.0.sh"
+   ```
+4. Ejecuta el script:
+   ```bash
+   ./"Listar GIFs v1.0.0.sh"
+   ```
 ### ⚙️ Archivo de Configuración (config.ini)
 Sustituye por completo la interfaz web de la versión estándar. Permite ajustar el comportamiento del hardware de forma persistente.
-* **Ubicación:** `/Contenido SD/config.ini`
-* **Destino:** Raíz de la Micro SD.
+* **Ubicación en el repo:** `/Contenido SD/`
+* **Destino:** El config.ini debe copiarse en la **raíz de la Micro SD**.
 * **Función:** Define las credenciales WiFi para la sincronización horaria, el brillo de los LEDs, el estilo del reloj y la frecuencia con la que se interrumpe la galería para mostrar la hora.
 ---
 
@@ -69,8 +85,8 @@ Formatea tu MicroSD en **FAT32** añade los archivos Listar GIFs v1.0.0.bat y co
 ├── lista.txt                 <-- Generado automáticamente por el .bat
 └── Listar GIFs v1.0.0.bat    <-- Ejecútalo siempre que añadas GIFs nuevos.
 ```
-[!IMPORTANT]
-El archivo lista.txt es el mapa que utiliza el ESP32 para saber qué reproducir. Si añades, borras o mueves GIFs dentro de la carpeta /gifs/, asegúrate de ejecutar el archivo .bat de nuevo para actualizar el índice.
+>[!IMPORTANT]
+>El archivo lista.txt es el mapa que utiliza el ESP32 para saber qué reproducir. Si añades, borras o mueves GIFs dentro de la carpeta /gifs/, asegúrate de ejecutar el script **Listar GIFs v1.0.0** de nuevo para actualizar el índice.
 
 ### 3. 📝 Configuración via `config.ini`
 Modifica el archivo de texto llamado `config.ini` en la raíz de la SD para dejar Retro Pixel LED Lite a tu gusto:
