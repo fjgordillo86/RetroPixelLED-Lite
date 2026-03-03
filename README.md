@@ -164,7 +164,7 @@ CLOCK_COLOR=#FF0055
 # Activa el clima: 0=OFF, 1=ON (Requiere CLOCK_ENABLE=1)
 WEATHER_ENABLE=1
 
-# Tu ciudad (Sin espacios, usa '+' si es necesario: Azuagad,ES o Navalmoral+de+la+Mata,ES)
+# Tu ciudad (Sin espacios, usa '+' si es necesario: Azuaga,ES o Navalmoral+de+la+Mata,ES)
 CITY=Azuaga,ES
 
 # Tu API Key gratuita de OpenWeatherMap
