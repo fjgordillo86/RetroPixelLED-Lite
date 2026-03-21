@@ -278,5 +278,5 @@ Este proyecto se publica bajo la **Licencia MIT**.
 Agradecimientos especiales a los desarrolladores de las librerías base:
 * **Bitbank2** por la excelente librería `AnimatedGIF`.
 * **Mrfaptastic** por el motor DMA de alto rendimiento para matrices.
-* **Comunidad Telegram DMDos** al descubrir esta comunidad del proyecto DMDos me animé a desarrollar Retro Pixel LED.
-* **RpiTe@m** por la increíble recopilación de GIFs.
+* **Comunidad Telegram DMDos** al encontrarla y ver de lo que era capáz DMDos me animé a desarrollar **Retro Pixel LED**.
+* **RpiTe@m** por la increíble recopilación de [GIFs.](https://www.neo-arcadia.com/forum/viewtopic.php?t=67065)
