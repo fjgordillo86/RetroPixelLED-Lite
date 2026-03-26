@@ -1,10 +1,12 @@
-# ✨ Retro Pixel LED Lite v1.1.2
+# ✨ Retro Pixel LED Lite v2.0.0
 
-### **[✈️ Unirse al Grupo de Telegram: Retro Pixel LED](https://t.me/RetroPixelLed)**
+### **[✈️ Unirse al Grupo de Telegram: Retro Pixel LED para estár al día de las actualizaciones](https://t.me/RetroPixelLed)**
 
 ## 💡 Descripción del Proyecto
 
-**Retro Pixel LED Lite** es la versión de alto rendimiento diseñada para quienes buscan estabilidad absoluta, velocidad instantánea y un sistema libre de mantenimiento. A diferencia de la versión estándar, el firmware LITE elimina la carga del servidor web y la conectividad permanente para dedicar el 100% de la potencia del ESP32 al renderizado de GIFs.
+**Retro Pixel LED Lite** es la versión de alto rendimiento diseñada para quienes buscan estabilidad absoluta, velocidad instantánea y un sistema libre de mantenimiento. A diferencia de la versión estándar, el firmware LITE elimina la carga del servidor web y la conectividad permanente para dedicar el 100% de la potencia del ESP32 al renderizado de GIFs. 
+
+La versión **2.0.0** supone una revolución con la integración de un Menú OSD (On-Screen Display) nativo, que permite al usuario navegar por las listas de reproducción, ajustar el brillo, configurar el reloj y gestionar la conectividad WiFi.... directamente desde el panel LED, sin necesidad de dispositivos externos.
 
 Es la solución perfecta para marquesinas fijas, salones arcade o decoración retro donde solo quieres **encender y disfrutar**.
 
@@ -14,64 +16,34 @@ Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](htt
 > **🚀 Filosofía Lite:** Menos es más. Al apagar el WiFi después de sincronizar la hora y el tiempo, el sistema elimina el lag, reduce el calor del chip y evita cuelgues por saturación de red, permitiendo reproducciones fluidas de colecciones masivas.
 
 ---
+## 🆕 Novedades de la Versión v2.0.0 Lite
 
-## 🚀 Diferencias Clave: Lite vs Estándar
-
-| Característica | Versión Lite | Versión Estándar |
+| Característica | Detalle Técnico | Beneficio |
 | :--- | :--- | :--- |
-| **Arranque** | Instantáneo (Lectura de `lista.txt`) | Lento (Indexado de carpetas SD) |
-| **Conectividad** | WiFi Sync & Sleep (Hora y Clima) | Online Permanente (Web + MQTT) |
-| **Configuración** | Archivo `config.ini` en la SD | Interfaz Web UI |
-| **Límite de GIFs** | Ilimitado (+10.000 sin problemas) | Ilimitado (vía Caché SD) |
-| **Estabilidad** | Máxima (Sistema aislado) | Alta (Depende del tráfico WiFi) |
-| **Reloj** | Dinámico con Clima y Mensaje | Manual y Automático |
-
----
-## 🆕 Novedades de la Versión v1.1.2 Lite
-
-Esta actualización marca un hito en la estabilidad visual del sistema **Retro Pixel LED**, introduciendo tecnologías de renderizado que eliminan por completo el parpadeo y mejoran la experiencia de usuario desde el primer segundo.
-
-### 🚀 Motor de Renderizado: Double Buffering
-Se ha implementado la técnica de **Double Buffering** (Doble Buffer de Memoria) para una reproducción de contenido ultra fluida.
-* **Adiós al Parpadeo:** Al dibujar los frames en una "pizarra oculta" antes de volcarlos a los LEDs, se eliminan las interferencias visuales durante las transiciones.
-* **Scroll Suave:** Las animaciones con desplazamientos laterales y verticales en los GIFs ahora son mucho más nítidas, eliminando el efecto de "salto" de frames.
-* **Sincronización Vertical:** Optimización de la tasa de refresco a **120Hz** para coincidir con los múltiplos de frames por segundo habituales en el Pixel Art.
-
-### 🖼️ Nuevo Splash Screen y Branding
-El proceso de arranque ha sido rediseñado para ofrecer una estética más limpia, técnica y profesional.
-* **Logo RGB Dinámico:** Inicio con el logotipo "RETRO PIXEL LED lite" utilizando colores independientes para las siglas LED y marcos de contorno estilizados.
-* **Identificación de Firmware:** Visualización directa de la versión del sistema (`v1.1.2`) en la pantalla de carga, facilitando el control de versiones y soporte.
-
-### ⚡ Gestión Avanzada de Memoria "Silent WiFi"
-Para permitir el uso del Double Buffer en el ESP32 (que duplica el consumo de RAM DMA), se ha rediseñado el flujo de arranque:
-* **Secuencialidad Crítica:** El sistema ahora gestiona la conexión WiFi, sincronización NTP y descarga del clima *antes* de inicializar el panel LED. 
-* **Liberación de Recursos:** Una vez obtenidos los datos, el driver de WiFi se apaga por completo para ceder toda la memoria RAM al motor gráfico, evitando el error de inicialización `0x3001`.
+| **🖥️ Native OSD Menu** | Interfaz visual renderizada directamente en el panel LED. | **Control Total.** Ajusta brillo, WiFi y Playlists con un solo botón sin usar el móvil o PC. |
+| **🖼️ Double Buffering** | Implementación de doble buffer de memoria en el stack DMA. | **Cero Parpadeo.** Eliminación total del flickering y scrolls laterales ultra fluidos a 120Hz. |
+| **🌙 Dynamic Night Mode** | Integración astronómica con OpenWeatherMap (campo `icon`). | **Estética Realista.** El panel muestra iconos de Luna y tonos fríos automáticamente al anochecer. |
+| **🧠 Smart RAM Refresh** | Lógica de Soft-Reset tras actualizaciones de clima/hora. | **Estabilidad 24/7.** Evita la fragmentación de memoria al usar Double Buffer, garantizando 0 cuelgues. |
+| **🔌 Auto-Playlist P&P** | Escaneo automático de la carpeta `/playlists` al arranque. | **Plug & Play.** El panel funciona de forma autónoma desde el primer segundo, incluso sin botones. |
+| **📶 WiFi Stealth Mode** | Gestión radical del stack WiFi (Active/Sleep selectivo). | **Cero Lag.** El radio se apaga tras sincronizar, dedicando el 100% del CPU al renderizado de GIFs. |
+| **💾 SD Persistence** | Guardado de ajustes en `config.ini` tras cada cambio en el OSD. | **Memoria Persistente.** El panel recuerda tu brillo, modo de red y playlist elegida tras apagarlo. |
 ---
 
 ## 🛠️ Herramientas Exclusivas Lite
 
-### 📜 Generador de Lista (Script Listar GIFs v1.0.0)
-Para evitar que el ESP32 pierda tiempo escaneando la SD, utilizamos un indexador externo.
-* **Ubicación en el repo:** `/Contenido SD/`
-* **Destino:** El script debe copiarse y ejecutarse siempre desde la **raíz de la Micro SD**.
-* **Función:** Escanea la carpeta `/gifs/` y genera el archivo `lista.txt` con las rutas exactas. Incluye un contador en tiempo real para confirmar el progreso en colecciones gigantes.
+### 📖 Cómo usar el Script Generador de Playlists (Windows)
 
-#### 🪟 Para Windows (`.bat`)
-1. Copia `Listar GIFs v1.0.0.bat` a la raíz de tu SD.
-2. Haz **doble clic** sobre el archivo.
-3. Se abrirá una ventana de consola mostrando el progreso. Al terminar, pulsa cualquier tecla para cerrar.
+El script `Generador de Playlist v1.0.1.bat` facilita la creación de colecciones personalizadas sin tocar una sola línea de código. Lo encontrarás en la carpeta "Contenido SD" [aquí](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Contenido%20SD).
 
-#### 🍎 Para macOS / Linux (`.sh`)
-1. Copia `Listar GIFs v1.0.0.sh` a la raíz de tu SD.
-2. Abre la **Terminal** y accede a la SD (escribe `cd ` y arrastra la carpeta de la SD a la terminal).
-3. Otorga permisos de ejecución (solo la primera vez):
-   ```bash
-   chmod +x "Listar GIFs v1.0.0.sh"
-   ```
-4. Ejecuta el script:
-   ```bash
-   ./"Listar GIFs v1.0.0.sh"
-   ```
+1. **Preparación:** Coloca el archivo `.bat` en la **raíz de tu tarjeta SD**, justo al lado de la carpeta `gifs`.
+2. **Ejecución:** Haz doble clic en el archivo. Se abrirá una ventana de comandos.
+3. **Selección:** - El script listará todas las subcarpetas dentro de `/gifs`.
+   - Introduce los números de las carpetas que quieras incluir en la lista separados por comas (ej: `3,4,10`) o escribe `TODO`.
+4. **Nombre:** Escribe el nombre que quieras para tu lista (ej: `MisFavoritos`). 
+5. **Resultado:** El script creará automáticamente una carpeta llamada `playlists` y guardará dentro el archivo `MisFavoritos.txt` con las rutas corregidas para el ESP32.
+6. **Carga:** Inserta la SD en tu Retro Pixel LED, reproducirá la primera playlist que encuentre en la carpeta. Si quieres cambiar de playlist entra en el menú OSD y seleccionala en "Playlists".
+<img width="514" height="565" alt="Script PlayList" src="https://github.com/user-attachments/assets/3c600615-5539-4430-af7b-26cd219fc7fe" />
+
 ### ⚙️ Archivo de Configuración (config.ini)
 Sustituye por completo la interfaz web de la versión estándar. Permite ajustar el comportamiento del hardware de forma persistente.
 * **Ubicación en el repo:** `/Contenido SD/`
@@ -102,20 +74,23 @@ Formatea tu MicroSD en **FAT32** añade los archivos Listar GIFs v1.0.0.bat y co
 
 ```text
 / (Raíz de la SD)
-├── gifs/                     <-- Tus carpetas con GIFs (Arcade, Consolas, etc.)
-├── config.ini                <-- Configuración de WiFi y Panel.
-├── lista.txt                 <-- Generado automáticamente por el .bat
-└── Listar GIFs v1.0.0.bat    <-- Ejecútalo siempre que añadas GIFs nuevos.
+├── gifs/                        <-- Tus carpetas con GIFs (Arcade, Consolas, etc.)
+├── playlists/                   <-- Aquí estarán las listas generadas por el script "Generador de Playlists".
+│   ├── Mis Favoritos.txt        <-- Lista .txt.
+│   ├── Metal Slug.txt           <-- Lista .txt.
+│   └── Todos.txt                <-- Lista .txt.
+├── config.ini                   <-- Configuración de WiFi y Panel.
+└── Generador de Playlists.bat   <-- Script para generar las Playlist.
 ```
 >[!IMPORTANT]
->El archivo lista.txt es el mapa que utiliza el ESP32 para saber qué reproducir. Si añades, borras o mueves GIFs dentro de la carpeta /gifs/, asegúrate de ejecutar el script **Listar GIFs v1.0.0** de nuevo para actualizar el índice.
+>Si añades, borras o mueves GIFs dentro de la carpeta /gifs/, asegúrate de ejecutar el script **Generador de Playlists.bat** de nuevo para actualizar el índice.
 
 ### 3. 📝 Configuración via `config.ini`
 Modifica el archivo de texto llamado `config.ini` en la raíz de la SD para dejar Retro Pixel LED Lite a tu gusto:
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v1.1.2 - ARCHIVO DE CONFIGURACIÓN
+# 🕹️ RETRO PIXEL LED LITE v2.0.0 - ARCHIVO DE CONFIGURACIÓN
 # ============================================================
 # Nota: No dejes espacios alrededor del símbolo '='.
 # Ejemplo correcto: BRIGHTNESS=40
@@ -133,8 +108,11 @@ BRIGHTNESS=40    # Brillo general (0 a 255)
 # Velocidad I2S: 0=8MHz, 1=10MHz, 2=16MHz, 3=20MHz (Turbo)
 I2S_SPEED=2
 
-# Refresco Mínimo (Hz): 30 a 140
+# Refresco Mínimo (Hz): 30 a 1240
 REFRESH_MIN=120
+
+# Doble Buffer Activa o desactiva esta función: 0=OFF, 1=ON (Elimina parpadeos)
+DOUBLE_BUFF=1
 
 # Anti-Ghosting (Latch Blanking): 1 a 4 (Sube si ves brillo fantasma)
 LATCH_BLANK=1
@@ -185,6 +163,47 @@ WEATHER_MSG=Game Room
 
 [END]
 ```
+### 4. 🖥️ Estructura del Menú OSD (Navegación)
+
+El sistema se controla mediante un **único botón**. La navegación es intuitiva:
+* **Pulsación Corta:** Acceder al menú OSD o moverse por las opciones (Bajar).
+* **Pulsación Larga:** Entrar en un submenú o confirmar una selección.
+
+```text
+🏠 MENÚ PRINCIPAL
+├── 📂 Playlists
+│   ├── 📄 Favoritos
+│   ├── 📄 Arcade
+│   ├── 📄 ...
+│   └── 🔙 Volver
+├── 📂 Reproducción
+│   └── 🔀 Aleatorio: [SI / NO]
+│   └── 🔙 Volver
+├── ☀️ Brillo
+│   └──   Brillo: [5% - 100%]
+├── 📶 WiFi: [ON / OFF]
+│   ├── 🔄 Activar: [SI / NO]
+│   └── 🔙 Volver
+├── 🕒 Reloj: [ON / OFF]
+│   ├── 🔄 Activar: [SI / NO]
+│   ├── 🖼️ Cada: [1...20] GIFs
+│   ├── ⏳ Ver: [5...30] seg
+│   └── 🎨 Estilo Reloj: [Matrix, Solid, Rainbow, Pulse, Gradient]
+│   └── 🔙 Volver
+├── 🌡️ Clima: [ON / OFF]
+│   └── 🔄 Activar: [SI / NO]
+│   └── 🔙 Volver
+├── ⚙️ Ajustes Avanzados
+│   ├── ⚡ I2sSeep: [8, 10, 16, 20MHz]
+│   ├── 🔄 Refresco: [30, 60, 90, 120Hz]
+│   ├── 🖼️ Buffer: [SI / NO]
+│   ├── 👻 AntiGhot: [1, 2, 3, 4]
+│   ├── ⚠️ Reset:
+│   └── 🔙 Volver
+├── 💾 Guardar
+└── 🔙 Salir
+```
+
 ## ☁️ Cómo obtener tu API KEY de Clima
 
 Para que la barra de notificaciones muestre la temperatura y el icono del tiempo, necesitas una llave gratuita de **OpenWeatherMap**:
@@ -214,16 +233,18 @@ Si quieres estar 100% seguro de que **OpenWeatherMap** reconoce tu ciudad antes 
 * **WiFi Stealth Mode:** El ESP32 solo activa el WiFi brevemente para sincronizar la hora y el clima. El resto del tiempo el sistema permanece **100% offline**, garantizando **0 lag** en la reproducción de los GIFs.
 * **Barra de Notificaciones Dinámica:** Si activas el clima, el reloj baja automáticamente su posición (`startY=9`) para mostrar el mensaje personalizado (`WEATHER_MSG`), el icono del tiempo y la temperatura.
 * **Iconos en Bitmap:** Incluye iconos optimizados de 8x8 píxeles dibujados a mano para representar: Sol, Nubes, Lluvia, Nieve, Tormenta y Niebla.
-* **Motor de Lista Plana:** Lectura instantánea del archivo `lista.txt` para soportar colecciones de miles de GIFs sin tiempos de carga.
-* **Reloj Auto-Interrupción:** El panel interrumpe la galería cada "x" GIFs para mostrar la hora durante "x" segundos (ambos configurables en config.ini), retomando la reproducción exactamente donde se quedó.
+* **Iconografía Avanzada (Día/Noche):** Incluye iconos de 8x8 píxeles dibujados a mano que representan: Sol, Luna (Noche), Nubes, Lluvia, Nieve, Tormenta y Niebla, adaptándose dinámicamente según la fase horaria.
+* **Sistema de Playlists Dinámicas:** Sustituye el antiguo motor de lista única. Ahora el sistema puede gestionar múltiples archivos `.txt` en la carpeta `/playlists/`, permitiendo saltar entre colecciones temáticas (Arcade, Consolas, Favoritos, etc.) desde el menú OSD.
+* **Reloj Auto-Interrupción:** El panel interrumpe la galería cada "x" GIFs para mostrar la hora durante "x" segundos (ambos configurables desde el menú OSD y en config.ini), retomando la reproducción exactamente donde se quedó.
 * **Resiliencia Offline:** Si no hay WiFi disponible, el sistema ignora la sincronización y comienza a reproducir GIFs inmediatamente usando el reloj interno del chip.
+* **Motor de Renderizado Double Buffer:** Aprovecha el DMA del ESP32 para dibujar frames de forma invisible, logrando una fluidez absoluta y eliminando cualquier rastro de parpadeo en las animaciones.
 
 ## 🛒 Lista de Materiales
 
 Para garantizar la compatibilidad, se recomienda el uso de los componentes probados durante el desarrollo:
 
 * **Microcontrolador:** [ESP32 DevKit V1 (38 pines) - AliExpress](https://es.aliexpress.com/item/1005005704190069.html)
-* **Panel LED Matrix (HUB75):** [P2.5 / P3 / P4 RGB Matrix Panel - AliExpress](https://es.aliexpress.com/item/1005007439017560.html)
+* **Panel LED Matrix (HUB75):** [P2.5 / P4 RGB Matrix Panel - AliExpress](https://es.aliexpress.com/item/1005007439017560.html)
 * **Lector de Tarjetas:** [Módulo Adaptador Micro SD (SPI) - AliExpress](https://es.aliexpress.com/item/1005005591145849.html)
 * **Placa conexión ESP32-Panel LED:** [DMDos Board V3 - Mortaca ](https://www.mortaca.com/) (Opcional, no hay que soldar y tiene lector SD incroporado)
 * **Alimentación:** Fuente de alimentación de 5V (Mínimo 2A recomendado para paneles de 64x32).
@@ -261,6 +282,15 @@ Si utilizas DMDos Board V3 esta parte ya la tienes, salta al siguiente punto.
 | **CLK** | GPIO 16 | Clock |
 | **LAT** | GPIO 4 | Latch |
 | **OE** | GPIO 15 | Output Enable (Brillo) |
+
+#### 🕹️ Botón de Control (Menú OSD)
+| Componente | Pin ESP32 | Función |
+| :--- | :--- | :--- |
+| **Botón (PIN)** | GPIO 21 | Entrada de señal (Pull-Up interno) |
+| **Botón (GND)** | GND | Referencia de tierra |
+
+> [!NOTE]
+> Se recomienda el uso de un botón momentáneo (pulsador). El firmware gestiona el "deboucing" por software para evitar falsas pulsaciones.
 ---
 
 ## 🛠️ Hoja de Ruta (Roadmap LITE)
