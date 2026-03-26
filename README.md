@@ -24,7 +24,7 @@ Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](htt
 | **🖼️ Double Buffering** | Implementación de doble buffer de memoria en el stack DMA. | **Cero Parpadeo.** Eliminación total del flickering y scrolls laterales ultra fluidos a 120Hz. |
 | **🌙 Dynamic Night Mode** | Integración astronómica con OpenWeatherMap (campo `icon`). | **Estética Realista.** El panel muestra iconos de Luna y tonos fríos automáticamente al anochecer. |
 | **🧠 Smart RAM Refresh** | Lógica de Soft-Reset tras actualizaciones de clima/hora. | **Estabilidad 24/7.** Evita la fragmentación de memoria al usar Double Buffer, garantizando 0 cuelgues. |
-| **🔌 Auto-Playlist P&P** | Escaneo automático de la carpeta `/playlists` al arranque. | **Plug & Play.** El panel funciona de forma autónoma desde el primer segundo, incluso sin botones. |
+| **🔌 Auto-Playlist P&P** | Escaneo automático de la carpeta `/playlists` al arranque. | **Plug & Play.** El panel funciona de forma autónoma desde el primer segundo, incluso sin botón de menú. |
 | **📶 WiFi Stealth Mode** | Gestión radical del stack WiFi (Active/Sleep selectivo). | **Cero Lag.** El radio se apaga tras sincronizar, dedicando el 100% del CPU al renderizado de GIFs. |
 | **💾 SD Persistence** | Guardado de ajustes en `config.ini` tras cada cambio en el OSD. | **Memoria Persistente.** El panel recuerda tu brillo, modo de red y playlist elegida tras apagarlo. |
 ---
@@ -70,7 +70,7 @@ Puedes instalar esta versión sin instalar nada en tu PC usando nuestro instalad
 > * **Chip CH340/CH341:** [Descargar Drivers SparkFun](https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all)
 
 ### 2. 📂 Preparación de la Tarjeta SD
-Formatea tu MicroSD en **FAT32** añade los archivos Listar GIFs v1.0.0.bat y config.ini quedando organiza la  Micro SD de la siguiente manera:
+Formatea tu MicroSD en **FAT32** añade los archivos Generador de Playlists v1.0.1.bat y config.ini quedando organiza la  Micro SD de la siguiente manera:
 
 ```text
 / (Raíz de la SD)
