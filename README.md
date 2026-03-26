@@ -168,8 +168,9 @@ WEATHER_MSG=Game Room
 ### 4. 🖥️ Estructura del Menú OSD (Navegación)
 
 El sistema se controla mediante un **único botón**. La navegación es intuitiva:
-* **Pulsación Corta:** Acceder al menú OSD o moverse por las opciones (Bajar).
-* **Pulsación Larga:** Entrar en un submenú o confirmar una selección.
+* **Pulsación Corta (0.5 a 1 seg):** Acceder al menú OSD o moverse por las opciones (Bajar).
+* **Pulsación Larga (1.5 a 3 seg):** Entrar en un submenú o confirmar una selección.
+* **Pulsación super Larga (+10 seg):** Reset.
 
 ```text
 🏠 MENÚ PRINCIPAL
