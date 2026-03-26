@@ -10,8 +10,6 @@ La versión **2.0.0** supone una revolución con la integración de un Menú OSD
 
 Es la solución perfecta para marquesinas fijas, salones arcade o decoración retro donde solo quieres **encender y disfrutar**.
 
-Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](https://github.com/fjgordillo86/RetroPixelLED)**
-
 > [!TIP]
 > **🚀 Filosofía Lite:** Menos es más. Al apagar el WiFi después de sincronizar la hora y el tiempo, el sistema elimina el lag, reduce el calor del chip y evita cuelgues por saturación de red, permitiendo reproducciones fluidas de colecciones masivas.
 
@@ -22,7 +20,7 @@ Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](htt
 
 | Característica | Detalle Técnico | Beneficio |
 | :--- | :--- | :--- |
-| **🖥️ Native OSD Menu** | Interfaz visual renderizada directamente en el panel LED. | **Control Total.** Ajusta brillo, WiFi y Playlists con un solo botón sin usar el móvil o PC. |
+| **🖥️ Native OSD Menu** | Interfaz visual renderizada directamente en el panel LED. | **Control Total.** Ajusta brillo, WiFi y Playlists con un solo botón sin usar el PC. |
 | **🖼️ Double Buffering** | Implementación de doble buffer de memoria en el stack DMA. | **Cero Parpadeo.** Eliminación total del flickering y scrolls laterales ultra fluidos a 120Hz. |
 | **🌙 Dynamic Night Mode** | Integración astronómica con OpenWeatherMap (campo `icon`). | **Estética Realista.** El panel muestra iconos de Luna y tonos fríos automáticamente al anochecer. |
 | **🧠 Smart RAM Refresh** | Lógica de Soft-Reset tras actualizaciones de clima/hora. | **Estabilidad 24/7.** Evita la fragmentación de memoria al usar Double Buffer, garantizando 0 cuelgues. |
