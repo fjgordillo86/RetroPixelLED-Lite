@@ -285,14 +285,14 @@ Si utilizas DMDos Board V3 esta parte ya la tienes, salta al siguiente punto.
 | **LAT** | GPIO 4 | Latch |
 | **OE** | GPIO 15 | Output Enable (Brillo) |
 
-#### 🕹️ Botón de Control (Menú OSD)
+#### 🕹️ Botón momentáneo (pulsador) de Control (Menú OSD)
 | Componente | Pin ESP32 | Función |
 | :--- | :--- | :--- |
 | **Botón (PIN)** | GPIO 21 | Entrada de señal (Pull-Up interno) |
 | **Botón (GND)** | GND | Referencia de tierra |
 
-> [!NOTE]
-> Se recomienda el uso de un botón momentáneo (pulsador). El firmware gestiona el "deboucing" por software para evitar falsas pulsaciones.
+<img width="652" height="609" alt="Pulsador" src="https://github.com/user-attachments/assets/7b2ad821-e369-498a-a9cf-b1fac93472de" />
+
 ---
 
 ## 🛠️ Hoja de Ruta (Roadmap LITE)
