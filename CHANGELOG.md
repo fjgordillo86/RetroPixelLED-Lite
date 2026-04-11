@@ -1,5 +1,25 @@
 ## 📝 Changelog (Registro de Cambios)
 
+### [v2.0.5] - 2026-04-11
+**Retro Pixel LED Lite: "Smart Energy, Dual Vision & Safety Core"**
+
+#### ✨ Añadido
+- **Modo Visual Dual:** Selector en el menú para alternar entre "Solo Reloj" (minimalista) o "Playlist de GIFs" (animado).
+- **Temporizador Inteligente (Smart Timer):** Programación de encendido/apagado automático con soporte para cruce de medianoche (Over-midnight).
+- **Manual Override (Prioridad de Usuario):** Función de pulsación extra larga (4s) para forzar el estado de energía, bloqueando el temporizador hasta el siguiente ciclo.
+- **I2S Safety Shield:** Sistema de protección que limita dinámicamente la frecuencia a 16MHz al activar el Double Buffer para garantizar estabilidad total.
+
+#### ⚙️ Mejoras
+- **Navegación UI Inteligente:**
+    - Pulsación rápida: Despertar panel / Navegar.
+    - Pulsación larga: Retroceso rápido de valores (-5 min en Timer).
+    - Pulsación continua: Aceleración de valores (+5 min en Timer).
+- **Ultra-Responsive Loop:** Eliminación de código bloqueante; el botón ahora interrumpe cualquier animación o proceso de red al instante.
+- **Ciclo de Reloj Optimizado:** Rango de aparición del reloj ajustado de [2...10] GIFs con saltos de +2 para una configuración más lógica y rápida.
+- **Sanitización de API Weather:** Mejora en el manejo de URLs para ciudades con espacios o guiones, evitando fallos en la obtención de datos meteorológicos.
+- **Menús Paginados:** Reestructuración del OSD en varias páginas para mejorar la visibilidad de los nuevos ajustes avanzados.
+  
+---
 ### [v2.0.0] - 2026-03-26
 **Retro Pixel LED Lite: "OSD Menu, Night Mode & Smart RAM"**
 
@@ -14,6 +34,7 @@
 - **Gestión WiFi Stealth:** Desactivación radical del stack de red tras la sincronización para eliminar el lag y reducir la temperatura del ESP32.
 - **Sincronización NTP Silenciosa:** Ajuste del reloj interno en cada ventana de actualización de clima para evitar desviaciones horarias.
 - **Optimización de Playlists:** Transiciones instantáneas entre listas temáticas desde el menú sin necesidad de reiniciar el dispositivo.
+
 ---
 ### [v1.1.2] - 2026-03-19
 **Retro Pixel LED Lite: "Double Buffering & Splash Screen y Branding"**
@@ -26,6 +47,7 @@
 #### ⚙️ Mejoras
 * **Secuencialidad Crítica:** El sistema ahora gestiona la conexión WiFi, sincronización NTP y descarga del clima *antes* de inicializar el panel LED. 
 * **Liberación de Recursos:** Una vez obtenidos los datos, el driver de WiFi se apaga por completo para ceder toda la memoria RAM al motor gráfico, evitando el error de inicialización `0x3001`.
+
 ---
 ### [v1.1.0] - 2026-03-03
 **Retro Pixel LED Lite: "The Weather & Notification Update"**
