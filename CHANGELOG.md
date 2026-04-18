@@ -1,5 +1,26 @@
 ## 📝 Changelog (Registro de Cambios)
 
+### [v2.1.0] - 2026-04-18
+**Retro Pixel LED Lite: "Global Voice & Wireless Evolution"**
+
+#### ✨ Añadido
+- **Sistema Multidioma Dinámico:** Soporte para diccionarios externos en formato `.json` (ES, EN, FR...). Carga inteligente desde la SD para ahorrar RAM.
+- **Actualización Inalámbrica (OTA):** Motor de descarga e instalación de firmware directamente desde el menú OSD vía GitHub.
+- **Smart Menu Centering:** Algoritmo de centrado automático de texto que ajusta los menús basándose en el ancho de los caracteres de cada idioma.
+- **Feedback Visual "Sleep":** Iconografía personalizada de Luna y Emoji 😴 diseñada píxel a píxel para el modo de ahorro de energía.
+
+#### ⚙️ Mejoras
+- **Gestión de RAM (Anti-Panic):** Implementada liberación forzada de memoria tras cerrar el menú OSD para prevenir reinicios accidentales.
+- **Generación de Config.ini:** El sistema ahora autogenera los comentarios del archivo de configuración en el idioma seleccionado por el usuario.
+- **UX de Idiomas:** Selector de idioma en tiempo real que aplica los cambios sin necesidad de reiniciar el panel manualmente.
+
+#### 🛡️ Fixes
+- **JSON Parser Stability:** Corregido error crítico que provocaba un *Kernel Panic* al intentar leer archivos de idioma con etiquetas demasiado largas.
+- **OTA Secure Client:** Ajuste en el manejo de certificados para garantizar la conexión segura con los servidores de actualización.
+- **Texto OSD:** Eliminación de duplicidad de símbolos ":" en las cadenas de texto del menú para mejorar la limpieza visual.
+
+---
+
 ### [v2.0.5] - 2026-04-11
 **Retro Pixel LED Lite: "Smart Energy, Dual Vision & Safety Core"**
 
