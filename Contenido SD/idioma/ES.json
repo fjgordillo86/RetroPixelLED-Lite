@@ -1,0 +1,110 @@
+{
+  "_INFO_": {
+    "ADVERTENCIA": "NO USAR TILDES NI ENES (El sistema no las soporta)",
+    "LIMITE_TITULOS": "Maximo 21 caracteres (ancho total de 2 paneles)",
+    "LIMITE_LINEA": "Maximo 21 caracteres (ancho total de 2 paneles)"
+  },
+  "MENU": {
+    "titulo_principal": "MENU PRINCIPAL ",
+    "playlists": "Playlists",
+    "reproduccion": "Reproduccion",
+    "brillo": "Brillo: ",
+    "wifi": "WiFi: ",
+    "reloj": "Reloj: ",
+    "clima": "Clima: ",
+    "timer": "Temporizador: ",
+    "avanzado": "Avanzado",
+	"idioma": "Idioma",
+    "actualizacion": "Actualizacion"
+  },
+  "SUBMENU_PLAYLIST": {
+    "titulo_principal": "PLAYLISTS"
+  },
+  "SUBMENU_REPRODUCCION": {
+    "titulo_principal": "REPRODUCCION",
+	"modo": "Modo: ",
+	"aleatorio": "Aleatorio: "
+  },
+  "SUBMENU_BRILLO": {
+    "titulo_principal": "BRILLO",
+	"click_ok": "Click:+5  Hold:OK"
+  },
+  "SUBMENU_WIFI": {
+    "titulo_principal": "WIFI"
+  },
+  "SUBMENU_RELOJ": {
+    "titulo_principal": "RELOJ ",
+	"cada": "Cada: ",
+    "ver": "Ver: ",
+    "estilo": "Estilo: "
+  },
+  "SUBMENU_CLIMA": {
+    "titulo_principal": "CLIMA"
+  },
+  "SUBMENU_TEMPORIZADOR": {
+    "titulo_principal": "TEMPORIZADOR "
+  },
+  "SUBMENU_AVANZADO": {
+    "titulo_principal": "AVANZADO ",
+	"refresco": "Refresco: ",
+	"Speed": "I2sSpeed: ",
+	"buffer": "Buffer: ",
+	"antighos": "AntiGhos: ",
+	"reset": "Reset"
+  },
+  "SUBMENU_ACTUALIZACION": {
+    "titulo_principal": "ACTUALIZACION",
+	"buscar_ota": "Buscar OTA"
+  },
+  "SUBMENU_IDIOMA": {
+    "titulo_principal": "IDIOMA"
+  },
+  "ESTADOS": {
+    "on": "ON",
+    "off": "OFF",
+    "si": "SI",
+    "no": "NO",
+	"activar": "Activar",
+	"guardar": "Guardar",
+    "salir": "Salir",
+    "volver": "Volver",
+    "modo_gifs": "GIFs",
+    "modo_reloj": "Reloj",
+	"reinicio": "Reiniciando...",
+	"dormir": "Durmiendo zzz..."
+  },
+  "OTA": {
+	"reset": "Reiniciando para",
+	"buscar": "Buscar Update",
+	"al_dia_1": "Ya tienes la ultima",
+	"al_dia_2": "No hay que actualizar",
+	"exito_1": "Actualizacion",
+	"exito_2": "Completada con Exito",
+	"error": "ERROR ACTUALIZANDO"
+  },
+  "CONFIG_INI": {
+    "header_1": "RETRO PIXEL LED LITE - ARCHIVO DE CONFIGURACION",
+    "header_2": "Nota: No dejes espacios alrededor del símbolo '='.",
+    "header_3": "Ejemplo correcto: BRIGHTNESS=40",
+    "wifi_section": "Configura tu red solo si vas a usar el reloj (CLOCK_ENABLE=1)",
+    "panel_chain": "Numero de paneles en cascada",
+    "brightness": "Brillo general (0 a 255)",
+    "i2s_speed": "Velocidad I2S: 0=8MHz, 1=10MHz, 2=16MHz, 3=20MHz (Turbo)",
+    "refresh_min": "Refresco Minimo (Hz): 30 a 120",
+    "double_buff": "Doble Buffer: 0=OFF, 1=ON (Elimina parpadeos)",
+    "latch_blank": "Anti-Ghosting: 1 a 4 (Sube si ves brillo fantasma)",
+    "play_mode": "Modo de visualizacion: 0=GIFs, 1=Solo Reloj",
+    "clock_enable": "Activa o desactiva el reloj: 0=OFF, 1=ON",
+    "random_mode": "Modo de reproduccion: 0=Secuencial, 1=Aleatorio",
+    "clock_int": "Intervalo: Cada cuantos GIFs aparece el reloj",
+    "clock_dur": "Duracion: Cuantos segundos se muestra el reloj",
+    "clock_style": "Estilos: 0=Matrix, 1=Solid, 2=Rainbow, 3=Pulse, 4=Gradient",
+	"clock_color": "Color del Reloj (Formato HEX)",
+    "weather_enable": "Activa el clima: 0=OFF, 1=ON (Requiere WiFi)",
+    "weather_city": "Tu ciudad (Sin espacios, usa '+' si es necesario: Madrid,ES o Buenos+Aires,AR)",
+    "weather_key": "Tu API Key gratuita de OpenWeatherMap",
+    "weather_int": "Intervalo de actualizacion en MINUTOS",
+    "weather_msg": "Texto que se muestra encima del reloj",
+	"language": "Indica el Idioma (Nombre del archivo sin .json: ES, EN, FR...)"
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "_INFO_": {
+    "ADVERTENCIA": "PAS D'ACCENTS (Le systeme ne les supporte pas)",
+    "LIMITE_TITULOS": "Max 21 caracteres (largeur de 2 panneaux)",
+    "LIMITE_LINEA": "Max 21 caracteres (largeur de 2 panneaux)"
+  },
+  "MENU": {
+    "titulo_principal": "MENU PRINCIPAL ",
+    "playlists": "Playlists",
+    "reproduccion": "Reproduction",
+    "brillo": "Luminosite: ",
+    "wifi": "WiFi: ",
+    "reloj": "Horloge: ",
+    "clima": "Climat: ",
+    "timer": "Temporisateur: ",
+    "avanzado": "Reglages Avances",
+    "idioma": "Langue",
+    "actualizacion": "Mise a jour"
+  },
+  "SUBMENU_PLAYLIST": {
+    "titulo_principal": "PLAYLISTS"
+  },
+  "SUBMENU_REPRODUCCION": {
+    "titulo_principal": "REPRODUCTION",
+    "modo": "Mode: ",
+    "aleatorio": "Aleatoire: "
+  },
+  "SUBMENU_BRILLO": {
+    "titulo_principal": "LUMINOSITE",
+    "click_ok": "Click:+5  Hold:OK"
+  },
+  "SUBMENU_WIFI": {
+    "titulo_principal": "WIFI"
+  },
+  "SUBMENU_RELOJ": {
+    "titulo_principal": "HORLOGE ",
+    "cada": "Chaque: ",
+    "ver": "Voir: ",
+    "estilo": "Style: "
+  },
+  "SUBMENU_CLIMA": {
+    "titulo_principal": "CLIMAT"
+  },
+  "SUBMENU_TEMPORIZADOR": {
+    "titulo_principal": "TEMPORISATEUR "
+  },
+  "SUBMENU_AVANZADO": {
+    "titulo_principal": "REGLAGES AVANCES ",
+    "refresco": "Rafraichir: ",
+    "Speed": "I2sSeep: ",
+    "buffer": "Buffer: ",
+    "antighos": "AntiGhos: ",
+    "reset": "Reset"
+  },
+  "SUBMENU_ACTUALIZACION": {
+    "titulo_principal": "MISE A JOUR",
+    "buscar_ota": "Chercher OTA"
+  },
+  "SUBMENU_IDIOMA": {
+    "titulo_principal": "LANGUE"
+  },
+  "ESTADOS": {
+    "on": "ON",
+    "off": "OFF",
+    "si": "OUI",
+    "no": "NON",
+    "activar": "Activer",
+    "guardar": "Sauver",
+    "salir": "Quitter",
+    "volver": "Retour",
+    "modo_gifs": "GIFs",
+    "modo_reloj": "Horloge",
+    "reinicio": "Redemarrage...",
+    "dormir": "En Sommeil zzz..."
+  },
+  "OTA": {
+    "reset": "Redemarrage pour",
+    "buscar": "Chercher Update",
+    "al_dia_1": "Version a jour",
+    "al_dia_2": "Pas de mise a jour",
+    "exito_1": "Mise a jour",
+    "exito_2": "Terminee avec Succes",
+    "error": "ERREUR MISE A JOUR"
+  },
+  "CONFIG_INI": {
+    "header_1": "RETRO PIXEL LED LITE - FICHIER DE CONFIGURATION",
+    "header_2": "Note: Ne laissez pas d’espaces autour du symbole '='.",
+    "header_3": "Exemple correct: BRIGHTNESS=40",
+    "wifi_section": "Configurez votre réseau seulement si vous allez utiliser l’horloge (CLOCK_ENABLE=1)",
+    "panel_chain": "Nombre de panneaux en cascade",
+    "brightness": "Luminosite generale (0 a 255)",
+    "i2s_speed": "Vitesse I2S: 0=8MHz, 1=10MHz, 2=16MHz, 3=20MHz (Turbo)",
+    "refresh_min": "Rafraichissement Minimum (Hz): 30 a 120",
+    "double_buff": "Double Buffer: 0=OFF, 1=ON (Supprime le scintillement)",
+    "latch_blank": "Anti-Ghosting (Latch Blanking) : 1 à 4 (Augmentez si vous voyez un halo lumineux)",
+    "play_mode": "Mode de lecture : 0=Sequentiel, 1=Aleatoire",
+    "clock_enable": "Activer ou desactiver l'horloge: 0=OFF, 1=ON",
+    "random_mode": "Mode de lecture: 0=Sequentiel, 1=Aleatoire",
+    "clock_int": "Intervalle : Tous les combien de GIFs apparait l’horloge",
+    "clock_dur": "Duree : Combien de secondes l’horloge est affichee",
+    "clock_style": " Styles d'Horloge : 0=Matrix, 1=Solid, 2=Rainbow, 3=Pulse, 4=Gradient",
+    "clock_color": "Couleur Horloge (Format HEX)",
+    "weather_enable": "Activer Meteo: 0=OFF, 1=ON (Necessite WiFi)",
+    "weather_city": "Votre ville (Sans espaces, utilisez '+' si necessaire : Paris,FR ou Buenos+Aires,AR)",
+    "weather_key": "Votre API Key gratuite de OpenWeatherMap",
+    "weather_int": "Intervalle de mise a jour en MINUTES",
+    "weather_msg": "Texte affiche au-dessus de l'horloge",
+    "language": "Indiquer la Langue (Nom du fichier sans .json: ES, EN, FR...)"
+  }
+}
