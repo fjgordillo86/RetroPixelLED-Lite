@@ -1,0 +1,110 @@
+{
+  "_INFO_": {
+    "WARNING": "DO NOT USE SPECIAL CHARACTERS (System does not support them)",
+    "TITLE_LIMIT": "Maximum 21 characters",
+    "LINE_LIMIT": "Maximum 21 characters"
+  },
+  "MENU": {
+    "titulo_principal": "MAIN MENU ",
+    "playlists": "Playlists",
+    "reproduccion": "Playback",
+    "brillo": "Brightness: ",
+    "wifi": "WiFi: ",
+    "reloj": "Clock: ",
+    "clima": "Weather: ",
+    "timer": "Timer: ",
+    "avanzado": "Advanced",
+	"idioma": "Language",
+    "actualizacion": "Update"
+  },
+  "SUBMENU_PLAYLIST": {
+    "titulo_principal": "PLAYLISTS"
+  },
+  "SUBMENU_REPRODUCCION": {
+    "titulo_principal": "PLAYBACK",
+	"modo": "Mode: ",
+	"aleatorio": "Random: "
+  },
+  "SUBMENU_BRILLO": {
+    "titulo_principal": "BRIGHTNESS",
+    "click_ok": "Click:+5  Hold:OK"
+  },
+  "SUBMENU_WIFI": {
+    "titulo_principal": "WIFI"
+  },
+  "SUBMENU_RELOJ": {
+    "titulo_principal": "CLOCK ",
+    "cada": "Every: ",
+    "ver": "Show: ",
+    "estilo": "Style: "
+  },
+  "SUBMENU_CLIMA": {
+    "titulo_principal": "WEATHER"
+  },
+  "SUBMENU_TEMPORIZADOR": {
+    "titulo_principal": "TIMER "
+  },
+  "SUBMENU_AVANZADO": {
+    "titulo_principal": "ADVANCED ",
+	"refresco": "Refresh: ",
+    "Speed": "I2sSpeed: ",
+    "buffer": "Buffer: ",
+    "antighos": "AntiGhost: ",
+    "reset": "Factory Reset"
+  },
+  "SUBMENU_ACTUALIZACION": {
+    "titulo_principal": "UPDATE",
+    "buscar_ota": "Check for OTA"
+  },
+  "SUBMENU_IDIOMA": {
+    "titulo_principal": "LANGUAGE"
+  },
+  "ESTADOS": {
+    "on": "ON",
+    "off": "OFF",
+    "si": "YES",
+    "no": "NO",
+    "activar": "Enable",
+	"guardar": "Save Settings",
+    "salir": "Exit Menu",
+    "volver": "Back",  
+    "modo_gifs": "GIFs",
+    "modo_reloj": "Clock",
+	"reinicio": "Rebooting...",
+	"dormir": "Sleeping zzz..."
+  },
+  "OTA": {
+    "reset": "Restarting for",
+    "buscar": "Search Update",
+    "al_dia_1": "You have latest",
+    "al_dia_2": "No need to update",
+    "exito_1": "Update",
+    "exito_2": "Completed Successfully",
+    "error": "UPDATE ERROR"
+  },
+  "CONFIG_INI": {
+    "header_1": "RETRO PIXEL LED LITE - CONFIGURATION FILE",
+    "header_2": "Note: Do not leave spaces around the '=' symbol.",
+    "header_3": "Correct example: BRIGHTNESS=40",
+    "wifi_section": "Setup network only if using clock (CLOCK_ENABLE=1)",
+    "panel_chain": "Number of panels in daisy chain",
+    "brightness": "General brightness (0 to 255)",
+    "i2s_speed": "I2S Speed: 0=8MHz, 1=10MHz, 2=16MHz, 3=20MHz (Turbo)",
+    "refresh_min": "Min Refresh (Hz): 30 to 120",
+    "double_buff": "Double Buffer: 0=OFF, 1=ON (Eliminates flickering)",
+    "latch_blank": "Anti-Ghosting: 1 to 4 (Increase if ghosting occurs)",
+    "play_mode": "Display mode: 0=GIFs, 1=Clock Only",
+    "clock_enable": "Clock ON/OFF: 0=OFF, 1=ON",
+    "random_mode": "Playback mode: 0=Sequential, 1=Random",
+    "clock_int": "Interval: Number of GIFs before clock shows",
+    "clock_dur": "Duration: Seconds the clock is displayed",
+    "clock_style": "Styles: 0=Matrix, 1=Solid, 2=Rainbow, 3=Pulse, 4=Gradient",
+	"clock_color" :"Clock Color (HEX Format)",
+    "weather_enable": "Weather ON/OFF: 0=OFF, 1=ON (WiFi required)",
+    "weather_city": "Your city (No spaces, use '+' if needed: Madrid,ES o Buenos+Aires,AR)",
+    "weather_key": "Your free OpenWeatherMap API Key",
+    "weather_int": "Update interval in MINUTES",
+    "weather_msg": "Text displayed above the clock",
+	"language": "Select Language (Filename without .json: ES, EN, FR...)"
+  }
+}
