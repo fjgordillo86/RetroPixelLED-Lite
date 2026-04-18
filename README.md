@@ -173,7 +173,7 @@ Modifica el archivo de texto llamado `config.ini` en la raíz de la SD para deja
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v2.0.5 - ARCHIVO DE CONFIGURACIÓN
+# 🕹️ RETRO PIXEL LED LITE v2.1.0 - ARCHIVO DE CONFIGURACIÓN
 # ============================================================
 # Nota: No dejes espacios alrededor del símbolo '='.
 # Ejemplo correcto: BRIGHTNESS=40
