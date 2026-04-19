@@ -3,6 +3,8 @@
 
 ### **[✈️ Rejoindre le Groupe Telegram : Retro Pixel LED pour rester informé des mises à jour](https://t.me/RetroPixelLed)**
 
+### ¡¡TRADUCTION EN COURS POUR LA VERSION 2.1.0!!
+
 ## 💡 Description du Projet
 
 **Retro Pixel LED Lite** est la version haute performance conçue pour ceux qui recherchent une stabilité absolue, une vitesse instantanée et un système sans maintenance. Contrairement à la version standard, le firmware LITE élimine la charge du serveur web et la connectivité permanente pour consacrer 100 % de la puissance de l’ESP32 au rendu des GIFs.
