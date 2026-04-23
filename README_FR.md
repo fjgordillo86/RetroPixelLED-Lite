@@ -57,13 +57,13 @@ Le système est contrôlé au moyen d’un **seul bouton**. Il utilise une logiq
 
 * **Pression Longue (1 à 2 sec) :**
     * **Action Générale :** Entrer dans les sous-menus ou confirmer une sélection.
-    * **Dans la Configuration du Temps (Temporisateur) :** Soustrait **-5 minutes** à la valeur actuelle pour un ajustement rapide vers l’arrière.
+    * **Dans la Configuration du Temps (Minuterie) :** Soustrait **-5 minutes** à la valeur actuelle pour un ajustement rapide vers l’arrière.
 
 * **Pression Extra Longue (> 4 sec) :**
     * **Manual Override :** Force l’extinction (Mode Sommeil), bloquant l’automatisme du temporisateur jusqu’au prochain cycle.
 
 * **Maintenir Pressé en Continu :**
-    * **Dans la Configuration du Temps (Temporisateur) :** Augmente automatiquement **+5 minutes** de manière cyclique tant que vous maintenez la pression.
+    * **Dans la Configuration du Temps (Minuterie) :** Augmente automatiquement **+5 minutes** de manière cyclique tant que vous maintenez la pression.
 
 ```text
 Voici la **traduction en français**, en **respectant strictement la mise en page et le sens**, sans rien modifier d’autre que la langue.
@@ -101,7 +101,7 @@ Voici la **traduction en français**, en **respectant strictement la mise en pag
 │   └── 🔙 Retour  
 ├── ⚙️ Réglages Avancés  
 │   ├── ⚡ I2sSeep : [8, 10, 16, 20MHz]  
-│   ├── 🔄 Rafraîchissement : [30, 60, 90, 120Hz]  
+│   ├── 🔄 Balayage : [30, 60, 90, 120Hz]  
 │   ├── 🖼️ Buffer : [OUI / NON]  
 │   ├── 👻 AntiGhost : [1, 2, 3, 4]  
 │   ├── ⚠️ Réinitialiser :  
