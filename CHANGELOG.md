@@ -1,5 +1,26 @@
 ## 📝 Changelog (Registro de Cambios)
 
+### [v2.1.4] - 2026-04-24
+**Retro Pixel LED Lite: "Arcade Mastery & Binary Speed"**
+
+#### ✨ Añadido
+- **Modo Arcade (Integración Batocera):** Implementado receptor de eventos HTTP para sincronización automática de marquesinas con sistemas externos.
+- **Motor de Búsqueda Binaria:** Algoritmo de alto rendimiento para localizar juegos en la SD en milisegundos, eliminando el lag en colecciones masivas.
+- **Lógica de Cascada (Fallback):** Sistema de visualización inteligente: Juego > Logo de Sistema > Imagen Default.
+- **Herramienta de Indexación (PowerShell):** Script interactivo para PC que automatiza el procesamiento de imágenes (BMP 24-bit) y la creación de índices `.txt`.
+
+#### ⚙️ Mejoras
+- **Gestión Dinámica de Buffer:** El sistema ahora conmuta automáticamente a **Single Buffer** cuando el modo Arcade está activo para maximizar la RAM disponible.
+- **Optimización de Memoria SD:** Implementado cierre forzado de archivos tras la lectura de índices para evitar el agotamiento de manejadores de archivos (File Handles).
+- **Feedback por Consola:** Serial Log detallado para diagnosticar la recepción de comandos IP y la existencia de archivos en la SD.
+
+#### 🛡️ Fixes
+- **Error de Terminador en Scripts:** Corregido fallo de sintaxis en el lanzador `.ps1` que impedía su ejecución en sistemas Windows con políticas restrictivas.
+- **Limpieza de Nombres (Trim):** Los nombres de juegos y sistemas ahora ignoran espacios en blanco accidentales enviados por Batocera, evitando errores de "Archivo no encontrado".
+- **Estabilidad de Cambio de Estado:** Corregido bug que impedía volver correctamente a la galería de GIFs tras recibir un comando de parada (STOP/OFF).
+
+---
+
 ### [v2.1.0] - 2026-04-18
 **Retro Pixel LED Lite: "Global Voice & Wireless Evolution"**
 
