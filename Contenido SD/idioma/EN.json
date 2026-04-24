@@ -21,9 +21,10 @@
     "titulo_principal": "PLAYLISTS"
   },
   "SUBMENU_REPRODUCCION": {
-    "titulo_principal": "PLAYBACK",
+    "titulo_principal": "PLAYBACK ",
 	"modo": "Mode: ",
-	"aleatorio": "Random: "
+	"aleatorio": "Random: ",
+	"arcade": "Arcade: "
   },
   "SUBMENU_BRILLO": {
     "titulo_principal": "BRIGHTNESS",
@@ -94,6 +95,7 @@
     "double_buff": "Double Buffer: 0=OFF, 1=ON (Eliminates flickering)",
     "latch_blank": "Anti-Ghosting: 1 to 4 (Increase if ghosting occurs)",
     "play_mode": "Display mode: 0=GIFs, 1=Clock Only",
+	"arcade": "Enable Batocera marquee reception: 0=OFF, 1=ON",
     "clock_enable": "Clock ON/OFF: 0=OFF, 1=ON",
     "random_mode": "Playback mode: 0=Sequential, 1=Random",
     "clock_int": "Interval: Number of GIFs before clock shows",
