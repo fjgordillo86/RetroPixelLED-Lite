@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v2.1.0
+# ✨ Retro Pixel LED Lite v2.1.4
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_FR.md)**
 
 ### **[✈️ Rejoindre le Groupe Telegram : Retro Pixel LED pour rester informé des mises à jour](https://t.me/RetroPixelLed)**
@@ -23,30 +23,53 @@ Bien sûr — voici **la traduction en français**, en **respectant strictement 
 
 ---
 
-## 🆕 Nouveautés de la Version v2.1.0 Lite
+## 🆕 Nouveautés de la Version v2.1.4 Lite
 
-| Fonctionnalité | Détail Technique | Bénéfice |
-| :--- | :--- | :--- |
-| **☁️ Mise à jour OTA** | Moteur de mise à jour sans fil via `WiFiClientSecure` et GitHub. | **Maintenance Simple.** Met à jour le firmware vers la dernière version depuis le menu sans utiliser de câbles. |
-| **🌐 Multilingue Dynamique** | Dictionnaires `.json` externes avec système de chargement paresseux (**Lazy Loading**). | **Internationalisation.** Support pour n’importe quelle langue sans sacrifier la mémoire RAM pour les GIFs. |
-| **📐 Smart Menu Centering** | Calcul dynamique des coordonnées basé sur la largeur du texte pour des zones de 128px. | **Esthétique Supérieure.** Menus parfaitement équilibrés et alignés, quel que soit le langage. |
-| **😴 Feedback Universel** | Iconographie rétro (Emoji 😴) dessinée pixel par pixel. | **Clarté Visuelle.** Indicateurs d’état compréhensibles universellement sans dépendre de textes. |
+| Fonction | Description Technique | Bénéfice Utilisateur |
+|---------|------------------------|------------------------|
+| **☁️ Mise à jour OTA** | Moteur de mise à jour sans fil via `WiFiClientSecure` et GitHub. | **Maintenance Simplifiée.** Mets à jour le firmware depuis le menu, sans aucun câble. |
+| **🌐 Multilingue Dynamique** | Dictionnaires `.json` externes avec système de chargement paresseux (**Lazy Loading**). | **Internationalisation.** Support de n’importe quelle langue sans sacrifier la RAM dédiée aux GIFs. |
+| **📐 Smart Menu Centering** | Calcul dynamique des coordonnées basé sur la largeur du texte pour les zones de 128px. | **Esthétique Supérieure.** Menus parfaitement équilibrés et alignés, quel que soit le langage. |
+| **😴 Feedback Universel** | Iconographie rétro (Emoji 😴) dessinée pixel par pixel. | **Clarté Visuelle.** Indicateurs compréhensibles universellement, sans dépendre de textes. |
+| **🕹️ Mode Arcade (Batocera)** | Intégration via recherche binaire et index `.txt` optimisés. | **Marquise Dynamique.** Le panneau change automatiquement selon le jeu lancé dans Batocera. |
 
 ---
 
-## 📜 Historique de Changements Détaillé (v2.0.5 -> v2.1.0)
+## 🕹️ Intégration Spéciale : Mode Arcade (Batocera)
+
+Cette version Lite introduit une prise en charge avancée pour les systèmes de retrogaming. Grâce à une hiérarchie de fichiers intelligente, le panneau peut afficher :
+
+1. **Marquise du Jeu :** Récupérée directement depuis ta collection scrapée dans Batocera.  
+2. **Logo du Système :** Image de secours si le jeu ne possède pas d’art spécifique.  
+3. **Ressource Maître :** Image par défaut si le système n’est pas indexé.
+
+> [!IMPORTANT]  
+> Un outil est inclus dans `/Batocera/tools` pour automatiser le redimensionnement en 128×32, la conversion en BMP 24 bits et la génération des index pour une réponse instantanée de l’ESP32.  
+> Consulte le [README spécifique de Batocera](/README_BATOCERA.md) pour plus de détails.
+
+---
+Voici la **traduction en français**, parfaitement fidèle au sens, **sans modifier la mise en page**, et prête à être intégrée dans un fichier `FR.md` ou un tableau GitHub.
+
+---
+
+## 📜 Historique des Changements Détaillé (v2.1.0 → v2.1.4)
 
 | Type | Composant | Description du Changement |
 | :--- | :--- | :--- |
 | **✨ Nouveau** | **Système** | **Support Multilingue :** Menus traduisibles via des fichiers dans le dossier `/idioma/`. |
 | **✨ Nouveau** | **Système** | **Mise à jour OTA :** Téléchargement sécurisé de binaires directement depuis le menu OSD. |
-| **✨ Nouveau** | **UX / OSD** | **Auto-centrage :** Les textes se positionnent automatiquement au centre de la zone totale (`offset + 64`). |
-| **✨ Nouveau** | **Visuel** | **Feedback Visuel :** Ajout d’une animation d’emoji endormi pour le mode sommeil. |
-| **⚡ Amélioration** | **Performance** | **Gestion de RAM :** Le dictionnaire JSON est libéré en quittant le menu pour éviter les blocages du système (*Panic*). |
-| **⚡ Amélioration** | **Configuration** | Le fichier `config.ini` se génère automatiquement avec des commentaires dans la langue sélectionnée par l’utilisateur. |
-
+| **✨ Nouveau** | **UX / OSD** | **Auto‑centrage :** Les textes se positionnent automatiquement au centre de la zone totale (`offset + 64`). |
+| **✨ Nouveau** | **Visuel** | **Feedback Visuel :** Ajout d’une animation d’emoji endormi pour le mode veille. |
+| **⚡ Amélioration** | **Performance** | **Gestion de la RAM :** Le dictionnaire JSON est libéré en quittant le menu pour éviter les blocages du système (*Panic*). |
+| **⚡ Amélioration** | **Configuration** | Le fichier `config.ini` est généré automatiquement avec des commentaires dans la langue sélectionnée. |
+| **✨ Nouveau** | **Arcade** | **Intégration Batocera :** Support du changement de marquise en temps réel via API HTTP. |
+| **✨ Nouveau** | **Recherche** | **Recherche Binaire :** Implémentation d’un algorithme permettant de trouver les jeux sur la SD en millisecondes. |
+| **✨ Nouveau** | **Scripts** | **Outil PowerShell :** Nouveau script interactif pour traiter les ROMs réseau et générer les index. |
+| **⚡ Amélioration** | **Visuel** | **Logique de Cascade :** Le panneau affiche désormais le logo du système si l’image du jeu est absente. |
+| **⚡ Amélioration** | **Mémoire** | **Auto‑Single Buffer :** En mode Arcade, le système désactive automatiquement le *Double Buffering* pour optimiser la RAM et le rendu des BMP. |
 
 ---
+
 ### 🖥️ Structure du Menu OSD (Navigation Intelligente)
 
 Le système est contrôlé au moyen d’un **seul bouton**. Il utilise une logique de pression avancée qui s’adapte selon le menu où vous vous trouvez :
@@ -65,9 +88,6 @@ Le système est contrôlé au moyen d’un **seul bouton**. Il utilise une logiq
 * **Maintenir Pressé en Continu :**
     * **Dans la Configuration du Temps (Minuterie) :** Augmente automatiquement **+5 minutes** de manière cyclique tant que vous maintenez la pression.
 
-```text
-Voici la **traduction en français**, en **respectant strictement la mise en page et le sens**, sans rien modifier d’autre que la langue.
-
 ---
 
 🏠 **MENU PRINCIPAL**  
@@ -78,7 +98,8 @@ Voici la **traduction en français**, en **respectant strictement la mise en pag
 │   └── 🔙 Retour  
 ├── 📂 Lecture  
 │   └── 🖼️ Mode : [GIFs / Horloge]  
-│   └── 🔀 Aléatoire : [OUI / NON]  
+│   └── 🔀 Aléatoire : [OUI / NON] 
+   └── 🕹️ Arcade : [OUI / NON] 
 │   └── 🔙 Retour  
 ├── ☀️ Luminosité  
 │   └──   Luminosité : [5% - 100%]  
@@ -183,7 +204,16 @@ Formatez votre MicroSD en **FAT32**, ajoutez les fichiers Generador de Playlists
 ├── playlists/                   <-- Ici se trouveront les listes générées par le script « Générateur de Playlists ».  
 │   ├── Mes Favoris.txt          <-- Liste .txt.  
 │   ├── Metal Slug.txt           <-- Liste .txt.  
-│   └── Tous.txt                 <-- Liste .txt.  
+│   └── Tous.txt                 <-- Liste .txt.
+├── arcade/                      <-- Intégration avec Batocera Marquesinas. (Uniquement si tu utilises le Mode Arcade)
+│   ├── neogeo.txt               <-- Liste des marquesinas.txt. (Uniquement si tu utilises le Mode Arcade)
+│   ├── mame.txt                 <-- Liste des marquesinas.txt. (Uniquement si tu utilises le Mode Arcade)
+│   ├── neogeo/                  <-- Dossier contenant les marquesinas pour le système neogeo. (Uniquement si tu utilises le Mode Arcade)
+│   │   ├── mslug.bmp            <-- Image de marquise. (Uniquement si tu utilises le Mode Arcade)
+│   │   └── kof98.bmp            <-- Image de marquise. (Uniquement si tu utilises le Mode Arcade)
+│   ├── mame/                    <-- Dossier contenant les marquesinas pour le système mame. (Uniquement si tu utilises le Mode Arcade)
+│   │   ├── logo.bmp             <-- Image de marquise. (Uniquement si tu utilises le Mode Arcade)
+│   └── └── pacman.bmp           <-- Image de marquise. (Uniquement si tu utilises le Mode Arcade)
 ├── config.ini                   <-- Configuration du WiFi et du Panneau.  
 └── Générateur de Playlists.bat  <-- Script pour générer les Playlists.
 
@@ -197,7 +227,7 @@ Modifiez le fichier texte nommé config.ini à la racine de la SD pour configure
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v2.1.0 - FICHIER DE CONFIGURATION
+# 🕹️ RETRO PIXEL LED LITE v2.1.4 - FICHIER DE CONFIGURATION
 # ============================================================
 # Note : Ne laissez pas d’espaces autour du symbole '='.
 # Exemple correct : BRIGHTNESS=40
@@ -226,6 +256,8 @@ LATCH_BLANK=1
 [LOGIC]
 # Mode d’affichage : 0=GIFs, 1=Seulement Horloge
 PLAY_MODE=0
+# Active la réception des marquises de Batocera : 0=OFF, 1=ON
+ARCADE_ENABLE=1
 # Active ou désactive l’horloge : 0=OFF, 1=ON
 CLOCK_ENABLE=1
 # Mode de lecture : 0=Séquentiel, 1=Aléatoire
@@ -363,15 +395,43 @@ Lorsque tu changes la langue dans l’OSD :
 3. La prochaine fois que tu ouvriras le menu, le système chargera le fichier correspondant à la nouvelle langue.
 
 ---
+Voici la **traduction en français**, fidèle au sens, **sans modifier la mise en page**, et parfaitement adaptée à ton futur `FR.md` :
+
+---
+
+### 8. 🕹️ Intégration avec Batocera (Arcade)
+
+Si tu veux que **Retro Pixel LED Lite** affiche les marquises du jeu que tu lances dans Batocera, tu dois activer dans le menu l’option **Arcade**.
+
+```
+🏠 MENU PRINCIPAL
+├── 📂 Reproduction
+│   └── 🖼️ Mode : [GIFs / Horloge]
+│   └── 🔀 Aléatoire : [OUI / NON]
+│   └── 🕹️ Arcade : [OUI / NON]   <--
+│   └── 🔙 Retour
+```
+
+> [!IMPORTANT]
+> ### 🕹️ Configuration de Batocera
+> Pour apprendre à synchroniser tes ROMs, utiliser le script PC et installer les scripts de communication, consulte notre guide détaillé :
+> **[👉 CLIQUE ICI POUR VOIR LES INSTRUCTIONS DE BATOCERA](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_BATOCERA.md)**
+
+---
 
 
 ## 🧠 Fonctionnalités Core LITE
 
-
+* **Moteur de Recherche Binaire (Arcade) :** Capacité à localiser des marquises parmi des milliers de fichiers en quelques millisecondes. Le système ne “scanne” pas les dossiers : il saute directement à la position exacte du fichier sur la SD grâce à des index triés alphabétiquement.
+* 
+* **Mémoire Adaptative (Single/Double Buffer) :** Gestion intelligente de la RAM. Le système utilise le *Double Buffer* pour une fluidité totale des GIFs, mais bascule automatiquement en *Single Buffer* en mode Arcade afin de garantir une stabilité maximale lors du chargement de bitmaps haute définition.
+* 
+* **API HTTP en Temps Réel :** Récepteur de commandes intégré permettant la synchronisation avec des systèmes externes comme Batocera ou RetroPie pour le changement dynamique de marquises.
+* 
 * **Smart Text Centering :** Moteur dynamique qui aligne automatiquement les menus et les états au centre de la matrice (`offset + 64px`) en calculant la largeur de chaque chaîne de texte.
-
+* 
 * **WiFi Stealth Mode :** L’ESP32 n’active le WiFi que brièvement pour synchroniser l’heure et la météo. Le reste du temps, le système reste **100 % hors-ligne**, garantissant **0 lag** dans la lecture des GIFs.
-
+* 
 * **Barre de Notifications Dynamique :**  
   Si vous activez la météo, l’horloge descend automatiquement (`startY=9`) pour afficher :  
   - le message personnalisé (`WEATHER_MSG`),  
