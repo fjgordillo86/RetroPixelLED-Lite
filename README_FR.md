@@ -45,7 +45,7 @@ Cette version Lite introduit une prise en charge avancée pour les systèmes de 
 
 > [!IMPORTANT]  
 > Un outil est inclus dans `/Batocera/tools` pour automatiser le redimensionnement en 128×32, la conversion en BMP 24 bits et la génération des index pour une réponse instantanée de l’ESP32.  
-> Consulte le [README spécifique de Batocera](/README_BATOCERA.md) pour plus de détails.
+> Consulte le [README spécifique de Batocera](/README_BATOCERA_FR.md) pour plus de détails.
 
 ---
 Voici la **traduction en français**, parfaitement fidèle au sens, **sans modifier la mise en page**, et prête à être intégrée dans un fichier `FR.md` ou un tableau GitHub.
@@ -99,7 +99,7 @@ Le système est contrôlé au moyen d’un **seul bouton**. Il utilise une logiq
 ├── 📂 Lecture  
 │   └── 🖼️ Mode : [GIFs / Horloge]  
 │   └── 🔀 Aléatoire : [OUI / NON] 
-   └── 🕹️ Arcade : [OUI / NON] 
+│   └── 🕹️ Arcade : [OUI / NON] 
 │   └── 🔙 Retour  
 ├── ☀️ Luminosité  
 │   └──   Luminosité : [5% - 100%]  
@@ -415,7 +415,7 @@ Si tu veux que **Retro Pixel LED Lite** affiche les marquises du jeu que tu lanc
 > [!IMPORTANT]
 > ### 🕹️ Configuration de Batocera
 > Pour apprendre à synchroniser tes ROMs, utiliser le script PC et installer les scripts de communication, consulte notre guide détaillé :
-> **[👉 CLIQUE ICI POUR VOIR LES INSTRUCTIONS DE BATOCERA](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_BATOCERA.md)**
+> **[👉 CLIQUE ICI POUR VOIR LES INSTRUCTIONS DE BATOCERA](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_BATOCERA_FR.md)**
 
 ---
 
