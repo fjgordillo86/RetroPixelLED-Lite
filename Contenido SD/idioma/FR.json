@@ -95,7 +95,7 @@
     "double_buff": "Double Buffer: 0=OFF, 1=ON (Supprime le scintillement)",
     "latch_blank": "Anti-Ghosting (Latch Blanking) : 1 à 4 (Augmentez si vous voyez un halo lumineux)",
     "play_mode": "Mode de lecture : 0=Sequentiel, 1=Aleatoire",
-    "arcade": "Activa la reccepcion de marquesinas de Batocera: 0=OFF, 1=ON",
+    "arcade": "Active la réception des marquises de Batocera : 0=OFF, 1=ON",
     "clock_enable": "Activer ou desactiver l'horloge: 0=OFF, 1=ON",
     "random_mode": "Mode de lecture: 0=Sequentiel, 1=Aleatoire",
     "clock_int": "Intervalle : Tous les combien de GIFs apparait l’horloge",
