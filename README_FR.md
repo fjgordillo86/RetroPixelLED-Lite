@@ -466,7 +466,7 @@ Si tu veux que **Retro Pixel LED Lite** affiche les marquises du jeu que tu lanc
 
 Pour garantir la compatibilité, il est recommandé d’utiliser les composants testés durant le développement :
 
-* **Microcontrôleur :** [ESP32 DevKit V1 (38 pins) - AliExpress](https://es.aliexpress.com/item/1005005704190069.html)
+* **Microcontrôleur :** [ESP32 DevKit V1 (30 pins) - AliExpress](https://es.aliexpress.com/item/1005005704190069.html)
 * **Panneau LED Matrix (HUB75) :** [P2.5 / P4 RGB Matrix Panel - AliExpress](https://es.aliexpress.com/item/1005007439017560.html)
 * **Lecteur de Cartes :** [Module Adaptateur Micro SD (SPI) - AliExpress](https://es.aliexpress.com/item/1005005591145849.html)
 * **Carte de connexion ESP32-Panneau LED :** [DMDos Board V3 - Mortaca](https://www.mortaca.com/) (Optionnel, pas besoin de souder et possède un lecteur SD intégré)
