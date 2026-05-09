@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v2.1.4
+# ✨ Retro Pixel LED Lite v3.0.0
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_FR.md)**
 
 ### **[✈️ Unirse al Grupo de Telegram: Retro Pixel LED para estár al día de las actualizaciones](https://t.me/RetroPixelLed)**
@@ -7,9 +7,9 @@
 
 **Retro Pixel LED Lite** es la versión de alto rendimiento diseñada para quienes buscan estabilidad absoluta, velocidad instantánea y un sistema libre de mantenimiento. A diferencia de la versión estándar, el firmware LITE elimina la carga del servidor web y la conectividad permanente para dedicar el 100% de la potencia del ESP32 al renderizado de GIFs. 
 
-La versión **2.x.x** supone una revolución con la integración de un Menú OSD (On-Screen Display) nativo, que permite al usuario navegar por las listas de reproducción, ajustar el brillo, configurar el reloj y gestionar la conectividad WiFi.... directamente desde el panel LED, sin necesidad de dispositivos externos.
-
-Es la solución perfecta para marquesinas fijas, salones arcade o decoración retro donde solo quieres **encender y disfrutar**.
+Si la rama 2.x.x introdujo el Menú OSD, la nueva **v3.0.0** supone el salto definitivo hacia la independencia del hardware. Esta versión transforma el panel LED en un dispositivo inteligente autónomo, eliminando por completo la necesidad de conectar el ESP32 al ordenador para tareas de mantenimiento o configuración.
+Por primera vez, el sistema permite la edición de archivos de configuración (`config.ini`) y la gestión de librerías de playlists directamente desde el Explorador de Windows o clientes FTP, convirtiendo la tarjeta SD en una unidad de red inalámbrica.
+Se integra soporte nativo para mandos a distancia, permitiendo navegar por el Menú OSD, ajustar el brillo dinámico y controlar el encendido/apagado desde el sofá.
 
 > [!TIP]
 > **🚀 Filosofía Lite:** Menos es más. Al apagar el WiFi después de sincronizar la hora y el tiempo, el sistema elimina el lag, reduce el calor del chip y evita cuelgues por saturación de red, permitiendo reproducciones fluidas de colecciones masivas.
@@ -17,11 +17,15 @@ Es la solución perfecta para marquesinas fijas, salones arcade o decoración re
 Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](https://github.com/fjgordillo86/RetroPixelLED)**
 
 ---
-## 🆕 Novedades de la Versión v2.1.4 Lite
+## 🆕 Novedades de la Versión v3.0.0 Lite
 
 | Característica | Detalle Técnico | Beneficio |
 | :--- | :--- | :--- |
-| **🕹️ Modo Arcade (Batocera)** | Integración mediante búsqueda binaria e índices `.txt` optimizados. | **Marquesina Dinámica.** El panel cambia automáticamente al juego que elijas en Batocera. |
+| **🛡️ Anti-Panic System** | Verificación de `display->begin()` con autorreinicio en caso de fallo de asignación de RAM. | **Estabilidad total.** Evita cuelgues (`StoreProhibited`) si la memoria se fragmenta tras usar el WiFi. |
+| **🖱️ Confirmación Segura** | Lógica de detección basada en tiempo de pulsación (*Long Press*) para el botón físico. | **Navegación Precisa.** Evita entradas accidentales en menús; ahora confirmas manteniendo presionado. |
+| **📂 Servidor FTP Integrado** | Protocolo de transferencia de archivos inalámbrico directo a la tarjeta SD del ESP32. | **Comodidad.** Gestiona tus playlists, archivos `.ini` y `.json` sin necesidad de extraer la MicroSD. |
+| **📡 Control Remoto IR** | Mapeado dinámico de funciones y navegación de menús mediante receptor infrarrojo. | **Control a distancia.** Maneja el brillo, el reloj y los modos de juego cómodamente desde un mando. |
+| **🎨 Configuración de Color** | Parámetro `colorOrder` (RGB/RBG/GBR) procesado dinámicamente desde el `config.ini`. | **Versatilidad.** Compatibilidad con cualquier panel HUB75 del mercado sin necesidad de reprogramar. |
 
 ---
 
@@ -37,23 +41,26 @@ Esta versión Lite introduce un soporte avanzado para sistemas de retrogaming. M
 
 ---
 
-## 📜 Historial de Cambios Detallado (v2.1.0 -> v2.1.4)
+## 📜 Historial de Cambios Detallado (v2.1.4 -> v3.0.0)
 
 | Tipo | Componente | Descripción del Cambio |
 | :--- | :--- | :--- |
-| **✨ Nuevo** | **Arcade** | **Integración Batocera:** Soporte para cambios de marquesina en tiempo real vía API HTTP. |
-| **✨ Nuevo** | **Búsqueda** | **Búsqueda Binaria:** Implementado algoritmo para encontrar juegos en la SD en milisegundos. |
-| **✨ Nuevo** | **Scripts** | **PowerShell Tool:** Nuevo script interactivo para procesar ROMs de red y generar índices. |
-| **⚡ Mejora** | **Visual** | **Lógica de Cascada:** El panel ahora muestra el logo del sistema si falta la imagen del juego. |
-| **⚡ Mejora** | **Memoria** | **Auto-Single Buffer:** Al activar el modo Arcade, el sistema desactiva automáticamente el *Double Buffering* para optimizar la RAM y el renderizado de BMPs. |
+| **🛡️ Estabilidad** | **Núcleo (DMA)** | **Anti-Panic System:** Implementada detección de fragmentación de RAM con autorreinicio preventivo. |
+| **✨ Nuevo** | **Archivos** | **Servidor FTP:** Acceso remoto a la SD para cargar GIFs y editar la configuración sin cables. |
+| **✨ Nuevo** | **Control** | **Mando IR:** Mapeado completo de funciones del menú OSD para control remoto por infrarrojos. |
+| **⚡ Mejora** | **Botón** | **Long Press:** Cambio en la lógica de confirmación; ahora requiere mantener pulsado para evitar errores. |
+| **⚡ Mejora** | **Hardware** | **colorOrder:** Posibilidad de alternar entre RGB, RBG y GBR directamente desde el archivo `config.ini`. |
+| **⚡ Mejora** | **Red** | **WiFi On-Demand:** El sistema ignora la fase de conexión si `wifiEnable` está desactivado, ahorrando RAM crítica. |
+| **⚡ Mejora** | **Timer** | **Smart Sync:** Ajuste fino de intervalos (+5m) y resincronización automática tras intervención manual. |
+| **⚡ Mejora** | **Memoria** | **Agresive Cleanup:** Desconexión forzada de radio y vaciado de buffers tras actualización de Clima/NTP. ||
 ---
 ### 🖥️ Estructura del Menú OSD (Navegación Inteligente)
 
 El sistema se controla mediante un **único botón**. Utiliza una lógica de pulsación avanzada que se adapta según el menú donde te encuentres:
-* **Pulsación Rápida (>0.5 seg):**
+* **Pulsación Rápida:**
     * **En Menús:** Mover el cursor / Navegar hacia abajo.
     * **En Modo Sueño:** Despierta el panel de forma inmediata (Wake-up).
-* **Pulsación Larga (1 a 2 seg):**
+* **Pulsación mantenida:**
     * **Acción General:** Entrar en submenús o confirmar selección.
     * **En Configuración de Tiempo (Temporizador):** Resta **-5 minutos** al valor actual para un ajuste rápido hacia atrás.
 * **Pulsación Extra Larga (> 4 seg):**
@@ -97,10 +104,14 @@ El sistema se controla mediante un **único botón**. Utiliza una lógica de pul
 │   ├── 🔄 Refresco: [30, 60, 90, 120Hz]
 │   ├── 🖼️ Buffer: [SI / NO]
 │   ├── 👻 AntiGhot: [1, 2, 3, 4]
+│   ├── 🎮 Mapeado mando IR: [On, Off, ,Menu, Validar, Subir, Bajar, Brillo+, Brillo-]
 │   ├── ⚠️ Reset:
 │   └── 🔙 Volver
 ├── 🚀 Actualización
 │   └── 🔄 Buscar OTA
+│   └── 🔙 Volver
+├── 📂 Explorardor SD
+│   └── 🔄 Iniciar FTP
 │   └── 🔙 Volver
 ├── 🌐 Idioma
 │   └── [ES] Español
@@ -189,50 +200,53 @@ Formatea tu MicroSD en **FAT32** añade los archivos Generador de Playlists v1.0
 >Si añades, borras o mueves GIFs dentro de la carpeta /gifs/, asegúrate de ejecutar el script **Generador de Playlists.bat** de nuevo para actualizar el índice.
 
 ### 3. 📝 Configuración via `config.ini`
-Modifica el archivo de texto llamado `config.ini` en la raíz de la SD para dejar Retro Pixel LED Lite a tu gusto:
+El archivo llamado `config.ini` que lo encontrarás en la carpeta "Contenido SD" [aquí](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Contenido%20SD) tienes que añadirlo en la raíz de la SD y modificarlo para dejar Retro Pixel LED Lite a tu gusto:
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v2.1.4 - ARCHIVO DE CONFIGURACIÓN
+# 🕹️ RETRO PIXEL LED LITE v3.0.0 - ARCHIVO DE CONFIGURACIÓN
 # ============================================================
 # Nota: No dejes espacios alrededor del símbolo '='.
 # Ejemplo correcto: BRIGHTNESS=40
 
 [WIFI_NTP]
-# Configura tu red solo si vas a usar el reloj (CLOCK_ENABLE=1)
+# Configura tu red WiFi
 WIFI_ENABLE=1
 SSID=Nombre_De_Tu_Red
 PASS=Password_De_Tu_Red
+# Configura tu zona horaria
 TZ=CET-1CEST,M3.5.0,M10.5.0/3
 
 [HARDWARE]
-# Número de paneles en cascada
+# Numero de paneles
 PANEL_CHAIN=2
-# # Brillo general (0 a 255)
-BRIGHTNESS=40
+# Orden de colores del Panel: RGB, RBG o GBR
+COLOR_ORDER=RGB
+# Brillo (0 a 255)
+BRIGHTNESS=43
 # Velocidad I2S: 0=8MHz, 1=10MHz, 2=16MHz, 3=20MHz (Turbo)
 I2S_SPEED=2
-# Refresco Mínimo (Hz): 30 a 120
+# Refresco Minimo (Hz): 30 a 120
 REFRESH_MIN=120
-# Doble Buffer Activa o desactiva esta función: 0=OFF, 1=ON (Elimina parpadeos)
+# Doble Buffer: 0=OFF, 1=ON (Elimina parpadeos)
 DOUBLE_BUFF=1
-# Anti-Ghosting (Latch Blanking): 1 a 4 (Sube si ves brillo fantasma)
+# Anti-Ghosting: 1 a 4 (Sube si ves brillo fantasma)
 LATCH_BLANK=1
 
 [LOGIC]
 # Modo de visualizacion: 0=GIFs, 1=Solo Reloj
 PLAY_MODE=0
-# Activa la reccepcion de marquesinas de Batocera: 0=OFF, 1=ON
-ARCADE_ENABLE=1
-# Activa o desactiva el reloj: 0=OFF, 1=ON
+# Activa la recepcion de marquesinas desde Batocera: 0=OFF, 1=ON
+ARCADE_ENABLE=0
+# Activa o desactiva el reloj: 0=OFF, 1=ON (Requiere WiFi)
 CLOCK_ENABLE=1
-# Modo de reproducción: 0=Secuencial, 1=Aleatorio
+# Modo de reproduccion: 0=Secuencial, 1=Aleatorio
 RANDOM_MODE=1
-# Intervalo: Cada cuántos GIFs aparece el reloj
+# Intervalo: Cada cuantos GIFs aparece el reloj
 AUTO_CLOCK_INT=6
-# Duración: Cuántos segundos se muestra el reloj
+# Duracion: Cuantos segundos se muestra el reloj
 CLOCK_DURATION=10
-# Estilos de Reloj: 0=Matrix, 1=Solid, 2=Rainbow, 3=Pulse, 4=Gradient
+# Estilos: 0=Matrix, 1=Solid, 2=Rainbow, 3=Pulse, 4=Gradient
 CLOCK_STYLE=2
 # Color del Reloj (Formato HEX)
 CLOCK_COLOR=#FF0055
@@ -252,6 +266,17 @@ WEATHER_MSG=Game Room
 [LANGUAGE]
 # Indica el Idioma (Nombre del archivo sin .json: ES, EN, FR...)
 LANGUAGE=ES
+
+[IR_REMOTE]
+# Códigos HEX del mando IR (NO hay que indicar nada los guardará automaticamente Retro Pixel LED)
+BTN_ON=F20DFF00
+BTN_OFF=E01FFF00
+BTN_BRILLO_UP=F609FF00
+BTN_BRILLO_DOWN=E21DFF00
+BTN_MENU=EA15FF00
+BTN_OK=ED12FF00
+BTN_SUBIR=E41BFF00
+BTN_BAJAR=B34CFF00
 
 [END]
 ```
@@ -341,14 +366,55 @@ Cuando cambias el idioma en el OSD:
 2. Se reinicia el puntero del diccionario.
 3. La siguiente vez que abras el menú, el sistema buscará el archivo correspondiente a la nueva configuración.
 
-### 8. 🕹️ Integración con Batocera (Arcade)
+### 8. 📂 Explorador SD (FTP)
+Esta función activa un servidor de archivos inalámbrico en tu Retro Pixel LED. Su objetivo principal es facilitar el mantenimiento del sistema sin necesidad de extraer la tarjeta MicroSD.
+
+> [!IMPORTANT]
+> **Uso recomendado:** Esta función ha sido diseñada específicamente para gestionar **archivos de configuración (`config.ini`)**, **archivos de idioma (`ES.json`)**,edición de **playlists (`.txt`)** y archivos de pequeño tamaño. Debido a las limitaciones de ancho de banda del hardware ESP32, **no se recomienda para la transferencia masiva de colecciones de GIFs**, ya que el proceso sería extremadamente lento comparado con un lector de tarjetas convencional.
+
+#### 🚀 Cómo activar el servidor FTP
+1. Navega en el menú OSD hasta **Explorador SD**.
+2. Selecciona la opción **Iniciar FTP**.
+3. El panel detendrá la reproducción de GIFs y mostrará:
+   * **Dirección IP:** (ej. `192.168.1.109`)
+
+#### 💻 Configuración de conexión
+Se recomienda utilizar un cliente como **FileZilla** o **WinSCP** con los siguientes datos:
+
+* **Protocolo:** FTP Protocolo de transferencia de Archivos.
+* **Servidor/Host:** La IP que aparece en tu panel LED.
+* **Cifrado:** usar solo FTP plano.
+* **Modo de Acceso:** Normal
+* **Usuario:** `admin`
+* **Contraseña:** `admin`
+* **Puerto:** `21`
+* **Opciones de transferencia:** Predeterminado
+  
+<img width="545" height="227" alt="image" src="https://github.com/user-attachments/assets/1b537615-3e39-48ba-9eb0-48b03931c5f9" />
+
+---
+Si no deseas instalar software adicional como FileZilla, puedes integrar la tarjeta SD del panel directamente en tu ordenador como si fuera una carpeta más usando el **Explorador de Archivos**:
+
+1. **Abrir el Explorador:** Ve a **Este equipo** en tu PC.
+2. **Agregar Ubicación:** Haz clic derecho en cualquier zona blanca de la ventana y selecciona **"Agregar una ubicación de red"**.
+3. **Configurar Dirección:** Cuando el asistente te solicite la dirección de red, introduce la IP que muestra tu panel con el prefijo FTP. 
+   * Ejemplo: `ftp://192.168.1.109`
+4. **Credenciales:** Desmarca la casilla de "Iniciar sesión de forma anónima" e indica el usuario: `admin`.
+5. **Finalizar:** Asigna un nombre descriptivo a la unidad (ej. `Retro Pixel LED`) para identificarla fácilmente en el futuro.
+
+#### ⚠️ Notas de seguridad y uso
+* **Bloqueo de pantalla:** Mientras el FTP esté activo, el panel no reproducirá GIFs para dedicar toda la CPU a la transferencia de datos.
+* **Salida segura:** Para cerrar el servidor y volver al modo normal, presiona el botón físico o utiliza la tecla "Validar" de tu mando IR.
+* **Cuidado con el apagado:** No desconectes la alimentación mientras estés editando un archivo vía FTP, ya que el archivo podría quedar corrupto.
+
+### 9. 🕹️ Integración con Batocera (Arcade)
 Si queremos activar que Rretro Pixel LED lite muestre las marquesinas del juego que estamos lanzando en Batocera debes de activar en el menú la opción **Arcade**.
 ```
 🏠 MENÚ PRINCIPAL
 ├── 📂 Reproducción
 │   └── 🖼️ Modo: [GIFs / Reloj]
 │   └── 🔀 Aleatorio: [SI / NO]
-│   └── 🕹️ Arcade: [SI / NO]   <--
+│   └── 🕹️ Arcade: [SI / NO]   <-- AQUÍ
 │   └── 🔙 Volver
 ```
 > [!IMPORTANT]
@@ -359,6 +425,9 @@ Si queremos activar que Rretro Pixel LED lite muestre las marquesinas del juego 
 
 ## 🧠 Características Core LITE
 
+* **📡 Control IR & Mapeado Dinámico:** Soporte completo para mandos infrarrojos con mapeado de funciones desde el menú OSD (Brillo, Navegación, Power Toggle y Confirmación).
+* **📂 Servidor FTP de Mantenimiento:** Permite la gestión inalámbrica del archivo `config.ini` y listas de reproducción. Ideal para ajustes rápidos sin necesidad de extraer la MicroSD.
+* **Anti-Panic RAM Management:** Sistema de vigilancia del *heap*. Si el DMA no puede asignar memoria tras la actividad del WiFi, el sistema realiza un autorreinicio preventivo para desfragmentar la RAM y garantizar estabilidad total.
 * **Motor de Búsqueda Binaria (Arcade):** Capacidad para localizar marquesinas entre miles de archivos en milisegundos. El sistema no "escanea" carpetas, sino que salta directamente a la posición del archivo en la SD gracias a índices ordenados alfabéticamente.
 * **Memoria Adaptativa (Single/Double Buffer):** Gestión inteligente de la RAM. El sistema utiliza *Double Buffer* para una fluidez total en GIFs, pero conmuta automáticamente a *Single Buffer* en modo Arcade para garantizar estabilidad total al cargar bitmaps de alta definición.
 * **API HTTP en Tiempo Real:** Receptor de comandos integrado que permite la sincronización con sistemas externos como Batocera o RetroPie para el cambio dinámico de marquesinas.
@@ -377,9 +446,11 @@ Si queremos activar que Rretro Pixel LED lite muestre las marquesinas del juego 
 Para garantizar la compatibilidad, se recomienda el uso de los componentes probados durante el desarrollo:
 
 * **Microcontrolador:** [ESP32 DevKit V1 (30 pines) - AliExpress](https://es.aliexpress.com/item/1005005704190069.html)
-* **Panel LED Matrix (HUB75):** [P2.5 / P4 RGB Matrix Panel - AliExpress](https://es.aliexpress.com/item/1005007439017560.html)
+* **Panel LED Matrix (HUB75):** [P2.5 / P4 RGB Matrix Panel - AliExpress](https://es.aliexpress.com/item/1005008479388445.html)
 * **Lector de Tarjetas:** [Módulo Adaptador Micro SD (SPI) - AliExpress](https://es.aliexpress.com/item/1005005591145849.html)
 * **Placa conexión ESP32-Panel LED:** [DMDos Board V3 - Mortaca ](https://www.mortaca.com/) (Opcional, no hay que soldar y tiene lector SD incroporado)
+* **Receptor de IR:** [Sensor de receptor de infrarrojos Universal - AliExpress](https://es.aliexpress.com/item/1005005343424296.html)
+* **Pulsador:** [Interruptor momentáneo elegir DS-316 - AliExpress](https://es.aliexpress.com/item/4000888761296.html)
 * **Alimentación:** Fuente de alimentación de 5V (Mínimo 2A recomendado para paneles de 64x32).
 
 ---
@@ -416,24 +487,29 @@ Si utilizas DMDos Board V3 esta parte ya la tienes, salta al siguiente punto.
 | **LAT** | GPIO 4 | Latch |
 | **OE** | GPIO 15 | Output Enable (Brillo) |
 
-#### 🕹️ Botón momentáneo (pulsador) de Control (Menú OSD)
+#### 🕹️ Control de Usuario Menú OSD (Físico e Infrarrojo)
+
+El sistema permite el control total mediante un pulsador físico (con lógica de pulsación larga) y un receptor IR para manejo a distancia.
+
 | Componente | Pin ESP32 | Función |
 | :--- | :--- | :--- |
-| **Botón (PIN)** | GPIO 21 | Entrada de señal (Pull-Up interno) |
-| **Botón (GND)** | GND | Referencia de tierra |
+| **Botón (PIN)** | GPIO 21 | **Multifunción:** Click (Navegar) / Long Press (Confirmar - Power Toggle). |
+| **Botón (GND)** | GND | Referencia de tierra. |
+| **Receptor IR (Data)** | GPIO 34 | Entrada de señal (Protocolo NEC/etc). |
+| **Receptor IR (VCC)** | 3.3V | Alimentación del sensor. |
+| **Receptor IR (GND)** | GND | Referencia de tierra. |
 
-<img width="652" height="609" alt="Pulsador" src="https://github.com/user-attachments/assets/7b2ad821-e369-498a-a9cf-b1fac93472de" />
+<img width="769" height="716" alt="image" src="https://github.com/user-attachments/assets/11fef006-59f3-405f-b00a-a32c9bba7bc5" />
+
 
 ---
 
 ## 🛠️ Hoja de Ruta (Roadmap LITE)
 
 ### ⚡ Optimización & Funcionalidad
-* **[Próximamente] Integración con Batocera / RetroPie:** Soporte para scripts `game-start` que enviarán el nombre del juego al panel para mostrar el GIF correspondiente automáticamente al jugar.
-* **[Investigación] Búsqueda Binaria:** Optimización de la función `buscarEnCache` para gestionar colecciones de miles de GIFs sin latencia.
 
 ### 🎨 Estética & Conectividad
-* **[Próximamente] Soporte MQTT (Home Assistant):** Integración total para controlar el brillo, encendido/apagado y cambio de Playlists desde tu panel de domótica.
+
 ---
 
 ## ⚖️ Licencia y Agradecimientos
@@ -445,3 +521,4 @@ Agradecimientos especiales a los desarrolladores de las librerías base:
 * **Mrfaptastic** por el motor DMA de alto rendimiento para matrices.
 * **Comunidad Telegram DMDos** al encontrarla y ver de lo que era capáz DMDos me animé a desarrollar **Retro Pixel LED**.
 * **RpiTe@m** por la increíble recopilación de [GIFs.](https://www.neo-arcadia.com/forum/viewtopic.php?t=67065)
+* **shan-aya** por la traducción al Francés y su magnifico soft para crear [GIFs.](https://github.com/shan-aya/DMD_GIF_converter)
