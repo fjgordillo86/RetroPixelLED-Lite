@@ -1,7 +1,7 @@
 {
   "_INFO_": {
     "WARNING": "DO NOT USE SPECIAL CHARACTERS (System does not support them)",
-    "LIMIT": "Maximum 21 characters",
+    "LIMIT": "Maximum 21 characters"
   },
   "MENU": {
     "titulo": "MAIN MENU ",
