@@ -16,6 +16,10 @@ Se integra soporte nativo para mandos a distancia, permitiendo navegar por el Me
 
 Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](https://github.com/fjgordillo86/RetroPixelLED)**
 
+¿Quieres hacer tus propios GIFs?  Aquí tienes dos herramientas magínificas.
+- [DMD GIF converter](https://github.com/shan-aya/DMD_GIF_converter) creada por **shan-aya**.
+- [Video a GIF](https://p4blogc.github.io/dmdos-converter/) creada por **p4bloGC**.
+
 ---
 ## 🆕 Novedades de la Versión v3.0.0 Lite
 
@@ -24,7 +28,7 @@ Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](htt
 | **🛡️ Anti-Panic System** | Verificación de `display->begin()` con autorreinicio en caso de fallo de asignación de RAM. | **Estabilidad total.** Evita cuelgues (`StoreProhibited`) si la memoria se fragmenta tras usar el WiFi. |
 | **🖱️ Confirmación Segura** | Lógica de detección basada en tiempo de pulsación (*Long Press*) para el botón físico. | **Navegación Precisa.** Evita entradas accidentales en menús; ahora confirmas manteniendo presionado. |
 | **📂 Servidor FTP Integrado** | Protocolo de transferencia de archivos inalámbrico directo a la tarjeta SD del ESP32. | **Comodidad.** Gestiona tus playlists, archivos `.ini` y `.json` sin necesidad de extraer la MicroSD. |
-| **📡 Control Remoto IR** | Mapeado dinámico de funciones y navegación de menús mediante receptor infrarrojo. | **Control a distancia.** Maneja el brillo, el reloj y los modos de juego cómodamente desde un mando. |
+| **📡 Control Remoto IR** | Mapeado dinámico de funciones y navegación de menús mediante receptor infrarrojo. | **Control a distancia.** Maneja el brillo, apaga o enciende el panel y navega por el menú cómodamente desde un mando. |
 | **🎨 Configuración de Color** | Parámetro `colorOrder` (RGB/RBG/GBR) procesado dinámicamente desde el `config.ini`. | **Versatilidad.** Compatibilidad con cualquier panel HUB75 del mercado sin necesidad de reprogramar. |
 
 ---
