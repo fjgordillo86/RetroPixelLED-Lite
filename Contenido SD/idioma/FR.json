@@ -13,7 +13,7 @@
     "clima": "Meteo: ",
     "timer": "Minuterie: ",
     "avanzado": "Reglages Avances",
-	"ftp": "Explorador SD",
+	"ftp": "Exploreur SD",
     "idioma": "Langue",
     "actualizacion": "Mise a jour"
   },
@@ -51,28 +51,28 @@
     "Speed": "I2sSeep: ",
     "buffer": "Buffer: ",
     "antighos": "AntiGhos: ",
-	"mapear": "Mapear Mando IR",
+	"mapear": "Lier Telecommande IR",
     "reset": "Remise a zero"
   },
   "SUBMENU_MAPEADO_IR": {
-	"titulo": "MAPEAR MANDO ",
-	"pulsar": "Pulsar Boton IR",
-	"btn_on": "Encender: ",
-	"btn_off": "Apagar: ",
-	"btn_brillo_up": "Brillo +: ",
-	"btn_brillo_down": "Brillo -: ",
-	"btn_menu": "Menu: ",
-	"btn_ok": "Validar: ",
-	"btn_subir": "Subir: ",
-	"btn_bajar": "Bajar: "
+  	"titulo": "LIER TELECOMMANDE",
+  	"pulsar": "Appuyer Bouton IR",
+  	"btn_on": "Allumer : ",
+  	"btn_off": "Éteindre : ",
+  	"btn_brillo_up": "Luminosite + : ",
+  	"btn_brillo_down": "Luminosite - : ",
+  	"btn_menu": "Menu : ",
+  	"btn_ok": "Valider : ",
+  	"btn_subir": "Monter : ",
+  	"btn_bajar": "Descendre : "
   },
   "SUBMENU_ACTUALIZACION": {
     "titulo": "MISE A JOUR",
     "buscar_ota": "Recherche OTA"
   },
   "SUBMENU_FTP": {
-    "titulo": "ARCHIVOS SD",
-	"activar": "Iniciar FTP"
+    "titulo": "FICHIERS SD",
+  	"activar": "Activer FTP"
   },
   "SUBMENU_IDIOMA": {
     "titulo": "LANGUE"
@@ -95,7 +95,7 @@
     "buscar": "Recherche de MAJ"
   },
   "FTP": {
-	"reset": "Reiniciando para",
-	"iniciar": "Iniciar FTP"
+	"reset": "Redemarrage pour",
+  	"iniciar": "Demarrer FTP"
   }
 }
