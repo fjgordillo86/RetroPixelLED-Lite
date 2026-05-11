@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v2.1.4
+# ✨ Retro Pixel LED Lite v3.0.0
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_FR.md)**
 
 ### **[✈️ Rejoindre le Groupe Telegram : Retro Pixel LED pour rester informé des mises à jour](https://t.me/RetroPixelLed)**
@@ -82,8 +82,7 @@ Le système est contrôlé au moyen d’un **seul bouton**. Il utilise une logiq
 * **Maintenir Pressé en Continu :**
     * **Dans la Configuration du Temps (Minuterie) :** Augmente automatiquement **+5 minutes** de manière cyclique tant que vous maintenez la pression.
 
----
-
+```text
 🏠 **MENU PRINCIPAL**  
 ├── 📂 Playlists  
 │   ├── 📄 Favoris  
@@ -133,7 +132,6 @@ Le système est contrôlé au moyen d’un **seul bouton**. Il utilise une logiq
 │   └── 🔙 Retour  
 ├── 💾 Sauvegarder  
 └── 🔙 Quitter
-
 
 ```
 ⏰ Fonctionnement du Sous-menu Minuterie
