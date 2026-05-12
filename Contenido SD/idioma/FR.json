@@ -2,7 +2,6 @@
   "_INFO_": {
     "ADVERTENCIA": "PAS D'ACCENTS ni de TILDES (Le systeme ne les supporte pas)",
     "LIMITE": "Max 21 caracteres"
-	  {
   },
   "MENU": {
     "titulo": "MENU PRINCIPAL",
@@ -14,7 +13,7 @@
     "clima": "Meteo: ",
     "timer": "Minuteur: ",
     "avanzado": "Menu Avance",
-    "ftp": "Explorateur SD",
+    "ftp": "Navigateur carte SD",
     "idioma": "Langue",
     "actualizacion": "Mise a jour"
   },
@@ -24,7 +23,7 @@
   "SUBMENU_REPRODUCCION": {
     "titulo": "LECTURE",
     "modo": "Mode: ",
-    "aleatorio": "Alleatoire: ",
+    "aleatorio": "Aleatoire: ",
     "arcade": "Arcade: "
   },
   "SUBMENU_BRILLO": {
@@ -53,7 +52,7 @@
     "buffer": "Tampon: ",
     "antighos": "Antighosting: ",
     "mapear": "Mapper telec IR",
-    "reset": "Reset"
+    "reset": "Remise a zero"
   },
   "SUBMENU_MAPEADO_IR": {
     "titulo": "MAPPER TELECOMMANDE",
@@ -71,20 +70,20 @@
     "titulo": "MISE A JOUR"
   },
   "SUBMENU_FTP": {
-    "titulo": "FICHIERS SD",
-    "activar": "Demarrer FTP"
+    "titulo": "NAVIGATEUR CARTE SD",
+    "activar": "Activer le mode FTP"
   },
   "SUBMENU_IDIOMA": {
     "titulo": "LANGUE"
   },
   "ESTADOS": {
-    "on": "ON",
-    "off": "OFF",
+    "on": "ACTIF",
+    "off": "INACTIF",
     "si": "OUI",
     "no": "NON",
     "activar": "Activer",
-    "guardar": "Sauver",
-    "salir": "Sortir",
+    "guardar": "Enregistrer",
+    "salir": "Quitter",
     "volver": "Retour",
     "modo_gifs": "GIFs",
     "modo_reloj": "Horloge",
@@ -92,10 +91,10 @@
   },
   "OTA": {
     "reset": "Redemarrage pour",
-    "buscar": "Chercher MAJ"
+    "buscar": "Rechercher une MAJ"
   },
   "FTP": {
     "reset": "Redemarrage pour",
-    "iniciar": "Demarrer FTP"
+    "iniciar": "Activer le mode FTP"
   }
 }
