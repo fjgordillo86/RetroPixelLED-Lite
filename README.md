@@ -383,7 +383,7 @@ Esta función activa un servidor de archivos inalámbrico en tu Retro Pixel LED.
    * **Dirección IP:** (ej. `192.168.1.109`)
 
 #### 💻 Configuración de conexión
-Se recomienda utilizar un cliente como **FileZilla** o **WinSCP** con los siguientes datos:
+Se recomienda utilizar un cliente como **FileZilla** con los siguientes datos:
 
 * **Protocolo:** FTP Protocolo de transferencia de Archivos.
 * **Servidor/Host:** La IP que aparece en tu panel LED.
@@ -392,12 +392,27 @@ Se recomienda utilizar un cliente como **FileZilla** o **WinSCP** con los siguie
 * **Usuario:** `admin`
 * **Contraseña:** `admin`
 * **Puerto:** `21`
-* **Opciones de transferencia:** Predeterminado
+* **Modo de transferencia:** Predeterminado
+* **Limitar nº de conexiones simultaneas :** Activado
+* **Número máximo de conexiones:** 1
   
 <img width="545" height="227" alt="image" src="https://github.com/user-attachments/assets/1b537615-3e39-48ba-9eb0-48b03931c5f9" />
 
+<img width="544" height="193" alt="image" src="https://github.com/user-attachments/assets/ba4c85bc-920a-48c9-83d8-99b96ecbc57f" />
+
+**En Edición -> Opciones -> Transferencias**
+* **Máximo numero de trasnferencis simultaneas:** 1
+* **Activar límites de velocidad:** Activado
+* **Límite de descarga:** 20 KiB/s
+* **Límite de carga:** 20 KiB/s
+<img width="841" height="522" alt="image" src="https://github.com/user-attachments/assets/e90d3e84-9c93-45c0-b942-8b601db40041" />
+
+
+
 ---
-Si no deseas instalar software adicional como FileZilla, puedes integrar la tarjeta SD del panel directamente en tu ordenador como si fuera una carpeta más usando el **Explorador de Archivos**:
+Si no deseas instalar software adicional como FileZilla, puedes integrar la tarjeta SD del panel directamente en tu ordenador como si fuera una carpeta más usando el **Explorador de Archivos**: 
+
+`(Esta opción no se recomienda, durante las pruebas algunas veces los archivos no se han cargado completos, provocando fallos)`
 
 1. **Abrir el Explorador:** Ve a **Este equipo** en tu PC.
 2. **Agregar Ubicación:** Haz clic derecho en cualquier zona blanca de la ventana y selecciona **"Agregar una ubicación de red"**.
