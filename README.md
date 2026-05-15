@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v3.0.0
+# ✨ Retro Pixel LED Lite v3.0.1
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_FR.md)**
 
 ### **[✈️ Unirse al Grupo de Telegram: Retro Pixel LED para estár al día de las actualizaciones](https://t.me/RetroPixelLed)**
@@ -21,11 +21,12 @@ Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](htt
 - [Video a GIF](https://p4blogc.github.io/dmdos-converter/) creada por **p4bloGC**.
 
 ---
-## 🆕 Novedades de la Versión v3.0.0 Lite
+## 🆕 Novedades de la Versión v3.0.1 Lite
 
 | Característica | Detalle Técnico | Beneficio |
 | :--- | :--- | :--- |
-| **🛡️ Anti-Panic System** | Verificación de `display->begin()` con autorreinicio en caso de fallo de asignación de RAM. | **Estabilidad total.** Evita cuelgues (`StoreProhibited`) si la memoria se fragmenta tras usar el WiFi. |
+| **🧠 Optimización de RAM** | Refactorización de objetos `String` a `char[]` y uso masivo de `PSTR()` / `F()`. | **Cero fragmentación.** Los textos se almacenan en la Flash, liberando el Heap para el Double Buffer. |
+| **🛡️ Anti-Panic System** | Verificación de `display->begin()` con cambio a single Buffer en caso de fallo de asignación de RAM. | **Estabilidad total.** Evita cuelgues (`StoreProhibited`) si la memoria se fragmenta tras usar el WiFi. |
 | **🖱️ Confirmación Segura** | Lógica de detección basada en tiempo de pulsación (*Long Press*) para el botón físico. | **Navegación Precisa.** Evita entradas accidentales en menús; ahora confirmas manteniendo presionado. |
 | **📂 Servidor FTP Integrado** | Protocolo de transferencia de archivos inalámbrico directo a la tarjeta SD del ESP32. | **Comodidad.** Gestiona tus playlists, archivos `.ini` y `.json` sin necesidad de extraer la MicroSD. |
 | **📡 Control Remoto IR** | Mapeado dinámico de funciones y navegación de menús mediante receptor infrarrojo. | **Control a distancia.** Maneja el brillo, apaga o enciende el panel y navega por el menú cómodamente desde un mando. |
@@ -45,18 +46,12 @@ Esta versión Lite introduce un soporte avanzado para sistemas de retrogaming. M
 
 ---
 
-## 📜 Historial de Cambios Detallado (v2.1.4 -> v3.0.0)
+## 📜 Historial de Cambios Detallado (v3.0.1 -> v3.0.1)
 
 | Tipo | Componente | Descripción del Cambio |
 | :--- | :--- | :--- |
-| **🛡️ Estabilidad** | **Núcleo (DMA)** | **Anti-Panic System:** Implementada detección de fragmentación de RAM con autorreinicio preventivo. |
-| **✨ Nuevo** | **Archivos** | **Servidor FTP:** Acceso remoto a la SD para cargar GIFs y editar la configuración sin cables. |
-| **✨ Nuevo** | **Control** | **Mando IR:** Mapeado completo de funciones del menú OSD para control remoto por infrarrojos. |
-| **⚡ Mejora** | **Botón** | **Long Press:** Cambio en la lógica de confirmación; ahora requiere mantener pulsado para evitar errores. |
-| **⚡ Mejora** | **Hardware** | **colorOrder:** Posibilidad de alternar entre RGB, RBG y GBR directamente desde el archivo `config.ini`. |
-| **⚡ Mejora** | **Red** | **WiFi On-Demand:** El sistema ignora la fase de conexión si `wifiEnable` está desactivado, ahorrando RAM crítica. |
-| **⚡ Mejora** | **Timer** | **Smart Sync:** Ajuste fino de intervalos (+5m) y resincronización automática tras intervención manual. |
-| **⚡ Mejora** | **Memoria** | **Agresive Cleanup:** Desconexión forzada de radio y vaciado de buffers tras actualización de Clima/NTP. ||
+| **🧠 Optimización** | **RAM**. | **Cero fragmentación.** Los textos se almacenan en la Flash, liberando el Heap para el Double Buffer. |
+| **🛡️ Estabilidad** | **Núcleo (DMA)** | **Anti-Panic System:** Implementada detección de fragmentación de RAM, cambia a single Buffer automaticamente. |
 ---
 ### 🖥️ Estructura del Menú OSD (Navegación Inteligente)
 
@@ -446,7 +441,7 @@ Si queremos activar que Rretro Pixel LED lite muestre las marquesinas del juego 
 
 * **📡 Control IR & Mapeado Dinámico:** Soporte completo para mandos infrarrojos con mapeado de funciones desde el menú OSD (Brillo, Navegación, Power Toggle y Confirmación).
 * **📂 Servidor FTP de Mantenimiento:** Permite la gestión inalámbrica del archivo `config.ini` y listas de reproducción. Ideal para ajustes rápidos sin necesidad de extraer la MicroSD.
-* **Anti-Panic RAM Management:** Sistema de vigilancia del *heap*. Si el DMA no puede asignar memoria tras la actividad del WiFi, el sistema realiza un autorreinicio preventivo para desfragmentar la RAM y garantizar estabilidad total.
+* **Anti-Panic RAM Management:** Sistema de vigilancia del *heap*. Si el DMA no puede asignar memoria tras la actividad del WiFi, el sistema cambia a single Buffer para garantizar estabilidad total.
 * **Motor de Búsqueda Binaria (Arcade):** Capacidad para localizar marquesinas entre miles de archivos en milisegundos. El sistema no "escanea" carpetas, sino que salta directamente a la posición del archivo en la SD gracias a índices ordenados alfabéticamente.
 * **Memoria Adaptativa (Single/Double Buffer):** Gestión inteligente de la RAM. El sistema utiliza *Double Buffer* para una fluidez total en GIFs, pero conmuta automáticamente a *Single Buffer* en modo Arcade para garantizar estabilidad total al cargar bitmaps de alta definición.
 * **API HTTP en Tiempo Real:** Receptor de comandos integrado que permite la sincronización con sistemas externos como Batocera o RetroPie para el cambio dinámico de marquesinas.
