@@ -1,0 +1,101 @@
+{
+  "_INFO_": {
+    "WARNING": "DO NOT USE SPECIAL CHARACTERS (System does not support them)",
+    "LIMIT": "Maximum 21 characters"
+  },
+  "MENU": {
+    "titulo": "MAIN MENU ",
+    "playlists": "Playlists",
+    "reproduccion": "Playback",
+    "brillo": "Brightness: ",
+    "wifi": "WiFi: ",
+    "reloj": "Clock: ",
+    "clima": "Weather: ",
+    "timer": "Timer: ",
+    "avanzado": "Advanced",
+	"ftp": "SD Explorer",
+	"idioma": "Language",
+    "actualizacion": "Update"
+  },
+  "SUBMENU_PLAYLIST": {
+    "titulo": "PLAYLISTS"
+  },
+  "SUBMENU_REPRODUCCION": {
+    "titulo": "PLAYBACK ",
+	"modo": "Mode: ",
+	"aleatorio": "Random: ",
+	"arcade": "Arcade: "
+  },
+  "SUBMENU_BRILLO": {
+    "titulo": "BRIGHTNESS",
+    "click_ok": "Click:+5  Hold:OK"
+  },
+  "SUBMENU_WIFI": {
+    "titulol": "WIFI"
+  },
+  "SUBMENU_RELOJ": {
+    "titulo": "CLOCK ",
+    "cada": "Every: ",
+    "ver": "Show: ",
+    "estilo": "Style: "
+  },
+  "SUBMENU_CLIMA": {
+    "titulo": "WEATHER"
+  },
+  "SUBMENU_TEMPORIZADOR": {
+    "titulo": "TIMER "
+  },
+  "SUBMENU_AVANZADO": {
+    "titulo": "ADVANCED ",
+	"refresco": "Refresh: ",
+    "Speed": "I2sSpeed: ",
+    "buffer": "Buffer: ",
+    "antighos": "AntiGhost: ",
+	"mapear": "Map IR Remote",
+    "reset": "Factory Reset"
+  },
+    "SUBMENU_MAPEADO_IR": {
+	"titulo": "REMOTE MAPPING ",
+	"pulsar": "Press IR Button",
+	"btn_on": "Power On: ",
+	"btn_off": "Power Off: ",
+	"btn_brillo_up": "Bright +: ",
+	"btn_brillo_down": "Bright -: ",
+	"btn_menu": "Menu: ",
+	"btn_ok": "Confirm: ",
+	"btn_subir": "Up: ",
+	"btn_bajar": "Down: "
+  },
+  "SUBMENU_ACTUALIZACION": {
+    "titulo": "UPDATE",
+    "buscar_ota": "Check for OTA"
+  },
+  "SUBMENU_FTP": {
+    "titulo": "SD EXPLORER",
+	"activar": "Start FTP"
+  },
+  "SUBMENU_IDIOMA": {
+    "titulo": "LANGUAGE"
+  },
+  "ESTADOS": {
+    "on": "ON",
+    "off": "OFF",
+    "si": "YES",
+    "no": "NO",
+    "activar": "Enable",
+	"guardar": "Save Settings",
+    "salir": "Exit Menu",
+    "volver": "Back",  
+    "modo_gifs": "GIFs",
+    "modo_reloj": "Clock",
+	"reinicio": "Rebooting..."
+  },
+  "OTA": {
+    "reset": "Restarting for",
+    "buscar": "Search Update"
+  },
+  "FTP": {
+	"reset": "Rebooting for",
+	"iniciar": "Start FTP"
+  }
+}

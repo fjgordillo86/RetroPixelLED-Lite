@@ -1,0 +1,100 @@
+{
+  "_INFO_": {
+    "ADVERTENCIA": "NO USAR TILDES NI ENES (El sistema no las soporta)",
+    "LIMITE": "Maximo 21 caracteres"
+  },
+  "MENU": {
+    "titulo": "MENU PRINCIPAL ",
+    "playlists": "Playlists",
+    "reproduccion": "Reproduccion",
+    "brillo": "Brillo: ",
+    "wifi": "WiFi: ",
+    "reloj": "Reloj: ",
+    "clima": "Clima: ",
+    "timer": "Temporizador: ",
+    "avanzado": "Avanzado",
+	"ftp": "Explorador SD",
+	"idioma": "Idioma",
+    "actualizacion": "Actualizacion"
+  },
+  "SUBMENU_PLAYLIST": {
+    "titulo": "PLAYLISTS"
+  },
+  "SUBMENU_REPRODUCCION": {
+    "titulo": "REPRODUCCION ",
+	"modo": "Modo: ",
+	"aleatorio": "Aleatorio: ",
+	"arcade": "Arcade: "
+  },
+  "SUBMENU_BRILLO": {
+    "titulo": "BRILLO",
+	"click_ok": "Click:+5  Hold:OK"
+  },
+  "SUBMENU_WIFI": {
+    "titulo": "WIFI"
+  },
+  "SUBMENU_RELOJ": {
+    "titulo": "RELOJ ",
+	"cada": "Cada: ",
+    "ver": "Ver: ",
+    "estilo": "Estilo: "
+  },
+  "SUBMENU_CLIMA": {
+    "titulo": "CLIMA"
+  },
+  "SUBMENU_TEMPORIZADOR": {
+    "titulo": "TEMPORIZADOR "
+  },
+  "SUBMENU_AVANZADO": {
+    "titulo": "AVANZADO ",
+	"refresco": "Refresco: ",
+	"Speed": "I2sSpeed: ",
+	"buffer": "Buffer: ",
+	"antighos": "AntiGhos: ",
+	"mapear": "Mapear Mando IR",
+	"reset": "Reset"
+  },
+  "SUBMENU_MAPEADO_IR": {
+	"titulo": "MAPEAR MANDO ",
+	"pulsar": "Pulsar Boton IR",
+	"btn_on": "Encender: ",
+	"btn_off": "Apagar: ",
+	"btn_brillo_up": "Brillo +: ",
+	"btn_brillo_down": "Brillo -: ",
+	"btn_menu": "Menu: ",
+	"btn_ok": "Validar: ",
+	"btn_subir": "Subir: ",
+	"btn_bajar": "Bajar: "
+  },
+  "SUBMENU_ACTUALIZACION": {
+    "titulo": "ACTUALIZACION"
+  },
+  "SUBMENU_FTP": {
+    "titulo": "ARCHIVOS SD",
+	"activar": "Iniciar FTP"
+  },
+  "SUBMENU_IDIOMA": {
+    "titulo": "IDIOMA"
+  },
+  "ESTADOS": {
+    "on": "ON",
+    "off": "OFF",
+    "si": "SI",
+    "no": "NO",
+	"activar": "Activar",
+	"guardar": "Guardar",
+    "salir": "Salir",
+    "volver": "Volver",
+    "modo_gifs": "GIFs",
+    "modo_reloj": "Reloj",
+	"reinicio": "Reiniciando..."
+  },
+  "OTA": {
+	"reset": "Reiniciando para",
+	"buscar": "Buscar Update"
+  },
+  "FTP": {
+	"reset": "Reiniciando para",
+	"iniciar": "Iniciar FTP"
+  }
+}

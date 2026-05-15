@@ -1,0 +1,100 @@
+{
+  "_INFO_": {
+    "ADVERTENCIA": "PAS D'ACCENTS ni de TILDES (Le systeme ne les supporte pas)",
+    "LIMITE": "Max 21 caracteres"
+  },
+  "MENU": {
+    "titulo": "MENU PRINCIPAL",
+    "playlists": "Listes de lecture",
+    "reproduccion": "Lecture",
+    "brillo": "Luminosite: ",
+    "wifi": "WiFi: ",
+    "reloj": "Horloge: ",
+    "clima": "Meteo: ",
+    "timer": "Minuteur: ",
+    "avanzado": "Menu Avance",
+    "ftp": "Navigateur carte SD",
+    "idioma": "Langue",
+    "actualizacion": "Mise a jour"
+  },
+  "SUBMENU_PLAYLIST": {
+    "titulo": "LISTES DE LECTURE"
+  },
+  "SUBMENU_REPRODUCCION": {
+    "titulo": "LECTURE",
+    "modo": "Mode: ",
+    "aleatorio": "Aleatoire: ",
+    "arcade": "Arcade: "
+  },
+  "SUBMENU_BRILLO": {
+    "titulo": "LUMINOSITE",
+    "click_ok": "Clic:+5 Maint:OK"
+  },
+  "SUBMENU_WIFI": {
+    "titulo": "WIFI"
+  },
+  "SUBMENU_RELOJ": {
+    "titulo": "HORLOGE",
+    "cada": "Tous les: ",
+    "ver": "Voir: ",
+    "estilo": "Style: "
+  },
+  "SUBMENU_CLIMA": {
+    "titulo": "METEO"
+  },
+  "SUBMENU_TEMPORIZADOR": {
+    "titulo": "MINUTEUR"
+  },
+  "SUBMENU_AVANZADO": {
+    "titulo": "MENU AVANCE",
+    "refresco": "Frequence: ",
+    "Speed": "I2sVitesse: ",
+    "buffer": "Tampon: ",
+    "antighos": "Antighosting: ",
+    "mapear": "Mapper telec IR",
+    "reset": "Remise a zero"
+  },
+  "SUBMENU_MAPEADO_IR": {
+    "titulo": "MAPPER TELECOMMANDE",
+    "pulsar": "Appuyer bouton IR",
+    "btn_on": "Allumer: ",
+    "btn_off": "Eteindre: ",
+    "btn_brillo_up": "Lum +: ",
+    "btn_brillo_down": "Lum -: ",
+    "btn_menu": "Menu: ",
+    "btn_ok": "Valider: ",
+    "btn_subir": "Monter: ",
+    "btn_bajar": "Descendre: "
+  },
+  "SUBMENU_ACTUALIZACION": {
+    "titulo": "MISE A JOUR"
+  },
+  "SUBMENU_FTP": {
+    "titulo": "NAVIGATEUR CARTE SD",
+    "activar": "Activer le mode FTP"
+  },
+  "SUBMENU_IDIOMA": {
+    "titulo": "LANGUE"
+  },
+  "ESTADOS": {
+    "on": "ACTIF",
+    "off": "INACTIF",
+    "si": "OUI",
+    "no": "NON",
+    "activar": "Activer",
+    "guardar": "Enregistrer",
+    "salir": "Quitter",
+    "volver": "Retour",
+    "modo_gifs": "GIFs",
+    "modo_reloj": "Horloge",
+    "reinicio": "Redemarrage..."
+  },
+  "OTA": {
+    "reset": "Redemarrage pour",
+    "buscar": "Rechercher une MAJ"
+  },
+  "FTP": {
+    "reset": "Redemarrage pour",
+    "iniciar": "Activer le mode FTP"
+  }
+}
