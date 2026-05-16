@@ -6,7 +6,7 @@
   "MENU": {
     "titulo": "MENU PRINCIPAL",
     "playlists": "Listes de lecture",
-    "reproduccion": "Lecture",
+    "reproduccion": "Affichage",
     "brillo": "Luminosite: ",
     "wifi": "WiFi: ",
     "reloj": "Horloge: ",
@@ -21,7 +21,7 @@
     "titulo": "LISTES DE LECTURE"
   },
   "SUBMENU_REPRODUCCION": {
-    "titulo": "LECTURE",
+    "titulo": "AFFICHAGE",
     "modo": "Mode: ",
     "aleatorio": "Aleatoire: ",
     "arcade": "Arcade: "
