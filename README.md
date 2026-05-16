@@ -46,7 +46,7 @@ Esta versión Lite introduce un soporte avanzado para sistemas de retrogaming. M
 
 ---
 
-## 📜 Historial de Cambios Detallado (v3.0.1 -> v3.0.1)
+## 📜 Historial de Cambios Detallado (v3.0.0 -> v3.0.1)
 
 | Tipo | Componente | Descripción del Cambio |
 | :--- | :--- | :--- |
