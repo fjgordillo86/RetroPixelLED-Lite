@@ -170,7 +170,7 @@ Puedes instalar esta versión sin instalar nada en tu PC usando nuestro instalad
 > * **Chip CH340/CH341:** [Descargar Drivers SparkFun](https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all)
 
 ### 2. 📂 Preparación de la Tarjeta SD
-Formatea tu MicroSD en **FAT32** añade los archivos Generador de Playlists v1.0.1.bat y config.ini en la raiz, dentro de la carpetra idioma los archivos .json y dentro de playlists las listas generadas con el script quedando organiza la Micro SD de la siguiente manera:
+Formatea tu MicroSD en **FAT32** añade todo el contenido de la carpeta [Contenido SD](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Contenido%20SD) en la raiz. La Micro SD tendrá la siguiente estructura:
 
 ```text
 / (Raíz de la SD)
@@ -180,8 +180,9 @@ Formatea tu MicroSD en **FAT32** añade los archivos Generador de Playlists v1.0
 │   ├── EN.json                  <-- Dicccionadio EN.json.
 │   └── FR.json                  <-- Dicccionadio FR.json.
 ├── playlists/                   <-- Aquí estarán las listas generadas por el script "Generador de Playlists".
-│   ├── Mis Favoritos.txt        <-- Lista .txt.
-│   ├── Metal Slug.txt           <-- Lista .txt.
+│   ├── Arcade.txt               <-- Lista .txt.
+│   ├── Computers.txt            <-- Lista .txt.
+│   ├── Consolas.txt             <-- Lista .txt.
 │   └── Todos.txt                <-- Lista .txt.
 ├── arcade/                      <-- Integración con Batocera Marquesinas. (Solo Si haces uso de Modo Arcade)
 │   ├── neogeo.txt               <-- Lista marquesinas.txt. (Solo Si haces uso de Modo Arcade)
@@ -195,6 +196,8 @@ Formatea tu MicroSD en **FAT32** añade los archivos Generador de Playlists v1.0
 ├── config.ini                   <-- Configuración de WiFi y Panel.
 └── Generador de Playlists.bat   <-- Script para generar las Playlist.
 ```
+`La carpeta arcade solo es necesaria si se utiliza el "Modo Arcade" y la genera automáticamente el script Marquesinas. Para mas info lee el punto 9.`
+
 >[!IMPORTANT]
 >Si añades, borras o mueves GIFs dentro de la carpeta /gifs/, asegúrate de ejecutar el script **Generador de Playlists.bat** de nuevo para actualizar el índice.
 
@@ -534,5 +537,5 @@ Agradecimientos especiales a los desarrolladores de las librerías base:
 * **Bitbank2** por la excelente librería `AnimatedGIF`.
 * **Mrfaptastic** por el motor DMA de alto rendimiento para matrices.
 * **Comunidad Telegram DMDos** al encontrarla y ver de lo que era capáz DMDos me animé a desarrollar **Retro Pixel LED**.
-* **RpiTe@m** por la increíble recopilación de [GIFs.](https://www.neo-arcadia.com/forum/viewtopic.php?t=67065)
+* **RpiTe@m** por compartir el pack de 600 GIFs **gratis** y su increíble recopilación de 11000 GIFs que puedes adquirirla [Aquí.](https://www.neo-arcadia.com/forum/viewtopic.php?t=67065)
 * **shan-aya** por la traducción al Francés y su magnifico soft para crear [GIFs.](https://github.com/shan-aya/DMD_GIF_converter)
