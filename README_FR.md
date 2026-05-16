@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v3.0.0
+# ✨ Retro Pixel LED Lite v3.0.1
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_FR.md)**
 
 ### **[✈️ Rejoindre le Groupe Telegram : Retro Pixel LED pour rester informé des mises à jour](https://t.me/RetroPixelLed)**
@@ -20,14 +20,15 @@ Si vous voulez essayer la version standard, voici le lien vers le **[GitHub.](ht
 Voulez-vous créer vos propres GIFs ? Voici deux outils magnifiques.
 
 - [DMD GIF converter](https://github.com/shan-aya/DMD_GIF_converter) créé par **shan-aya**.
-- [Video a GIF](https://p4blogc.github.io/dmdos-converter/) créé par **p4bloGC**.
+
 ---
 
-## 🆕 Nouveautés de la Version v3.0.0 Lite
+## 🆕 Nouveautés de la Version v3.0.1 Lite
 
 | Caractéristique           | Détail Technique                                                                                  | Bénéfice                                                                                       |
 | :---------------------- | :----------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------- |
-| **🛡️ Système Anti-Panique** | Vérification de `display->begin()` avec redémarrage automatique en cas d’échec d’allocation RAM.      | **Stabilité totale.** Évite les plantages (`StoreProhibited`) si la mémoire se fragmente après utilisation du WiFi.             |
+| **🧠 Optimisation de la RAM** | Refactorisation des objets `String` en `char[]` et usage massif de `PSTR()` / `F()`. | **Aucune fragmentation.** Les textes sont stockés en Flash, libérant le Heap pour le Double Buffer. |
+| **🛡️ Système Anti-Panique** | Vérification de `display->begin()` avec basculement en Single Buffer en cas d’échec d’allocation RAM. | **Stabilité totale.** Évite les plantages (`StoreProhibited`) si la mémoire se fragmente après usage du WiFi. |
 | **🖱️ Confirmation Sécurisée** | Logique de détection basée sur la durée d’appui (*Long Press*) pour le bouton physique.          | **Navigation précise.** Évite les entrées accidentelles dans les menus ; la confirmation se fait désormais via un appui prolongé.               |
 | **📂 Serveur FTP Intégré** | Protocole de transfert de fichiers sans fil directement vers la carte SD de l’ESP32.         | **Confort.** Gérez vos playlists, fichiers `.ini` et `.json` sans avoir à extraire la MicroSD.                 |
 | **📡 Télécommande IR** | Mappage dynamique des fonctions et navigation des menus via récepteur infrarouge.               | **Contrôle à distance.** Gérez la luminosité, allumez ou éteignez le panneau et naviguez dans le menu confortablement depuis une télécommande. |
@@ -49,18 +50,12 @@ Cette version Lite introduit une prise en charge avancée pour les systèmes de 
 
 ---
 
-## 📜 Historique détaillé des changements (v2.1.4 -> v3.0.0)
+## 📜 Historique détaillé des changements (v3.0.0 -> v3.0.1)
 
 | Type             | Composant   | Description du changement                                                                                  |
 | :--------------- | :---------- | :-------------------------------------------------------------------------------------------------------- |
-| **🛡️ Stabilité**  | **Noyau (DMA)**    | **Système Anti-Panique :** Mise en place de la détection de fragmentation de la RAM avec redémarrage préventif automatique.    |
-| **✨ Nouveau**    | **Fichiers**       | **Serveur FTP :** Accès distant à la carte SD pour charger des GIFs et éditer la configuration sans fil.                   |
-| **✨ Nouveau**    | **Contrôle**       | **Télécommande IR :** Mappage complet des fonctions du menu OSD pour le contrôle à distance par infrarouge.               |
-| **⚡ Amélioration** | **Bouton**        | **Appui Long :** Modification de la logique de confirmation ; il faut maintenant maintenir le bouton appuyé pour éviter les erreurs. |
-| **⚡ Amélioration** | **Matériel**      | **colorOrder :** Possibilité d’alterner entre RGB, RBG et GBR directement depuis le fichier `config.ini`.                  |
-| **⚡ Amélioration** | **Réseau**        | **WiFi à la demande :** Le système ignore la phase de connexion si `wifiEnable` est désactivé, économisant ainsi la RAM critique.         |
-| **⚡ Amélioration** | **Timer**         | **Smart Sync :** Ajustement fin des intervalles (+5 min) et resynchronisation automatique après intervention manuelle.         |
-| **⚡ Amélioration** | **Mémoire**       | **Nettoyage agressif :** Déconnexion forcée de la radio et vidage des buffers après mise à jour Clima/NTP.                    |
+| **🧠 Optimisation** | **RAM**. | **Aucune fragmentation.** Les textes sont stockés en Flash, libérant le Heap pour le Double Buffer. |
+| **🛡️ Stabilité** | **Noyau (DMA)** | **Système Anti-Panique :** Détection de fragmentation de la RAM, bascule automatique en Single Buffer. |
 
 ---
 
@@ -470,7 +465,7 @@ Si tu veux que **Retro Pixel LED Lite** affiche les marquises du jeu que tu lanc
 
 * **📡 Contrôle IR & Mappage Dynamique :** Support complet pour télécommandes infrarouges avec mappage des fonctions depuis le menu OSD (Luminosité, Navigation, Activation/Désactivation et Confirmation).
 * **📂 Serveur FTP de Maintenance :** Permet la gestion sans fil du fichier `config.ini` et des listes de lecture. Idéal pour des réglages rapides sans avoir à retirer la MicroSD.
-* **Gestion Anti-Panique de la RAM :** Système de surveillance du *heap*. Si le DMA ne peut pas allouer de mémoire après utilisation du WiFi, le système effectue un redémarrage préventif pour défragmenter la RAM et garantir une stabilité totale.
+* **Gestion Anti-Panique de la RAM :** Système de surveillance du *heap*. Si le DMA ne peut pas allouer de mémoire après l’activité WiFi, le système bascule en Single Buffer pour garantir une stabilité totale.
 * **Moteur de Recherche Binaire (Arcade) :** Capacité à localiser des bandeaux parmi des milliers de fichiers en millisecondes. Le système ne "scanne" pas les dossiers, mais accède directement à la position du fichier sur la SD grâce à des index triés alphabétiquement.
 * **Mémoire Adaptative (Single/Double Buffer) :** Gestion intelligente de la RAM. Le système utilise *Double Buffer* pour une fluidité totale des GIFs, mais commute automatiquement en *Single Buffer* en mode Arcade pour garantir une stabilité totale lors du chargement des bitmaps en haute définition.
 * **API HTTP en Temps Réel :** Récepteur de commandes intégré permettant la synchronisation avec des systèmes externes comme Batocera ou RetroPie pour changer dynamiquement les bandeaux.
