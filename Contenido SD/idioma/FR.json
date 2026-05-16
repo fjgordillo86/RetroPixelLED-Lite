@@ -67,7 +67,8 @@
     "btn_bajar": "Descendre: "
   },
   "SUBMENU_ACTUALIZACION": {
-    "titulo": "MISE A JOUR"
+    "titulo": "MISE A JOUR",
+    "buscar_ota": "Recherche OTA"
   },
   "SUBMENU_FTP": {
     "titulo": "NAVIGATEUR CARTE SD",
