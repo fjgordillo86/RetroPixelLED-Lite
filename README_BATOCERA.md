@@ -16,7 +16,7 @@ A diferencia del modo galería, el modo Arcade busca contenido específico. Para
 Para que el ESP32 encuentre los archivos de forma instantánea entre miles de juegos, el sistema utiliza una **Búsqueda Binaria**. Para ello, los archivos deben estar indexados y procesados correctamente.
 
 ### 2.1 🛠️ Cómo usar el Script (Ejecutar Script Marquesinas)
-El script se encuentra en la carpeta `Batocera/tools` del proyecto. Consta de dos archivos `Ejecutar Script Marquesinas.bat` y `Script.ps1`.
+El script se encuentra en la carpeta `Batocera/Marquesinas` del proyecto [aquí](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Batocera/Marquesinas). Consta de dos archivos `Ejecutar Script Marquesinas.bat` y `Script.ps1`.
 
 1.  **Conecta la SD** de tu Retro Pixel LED al PC.
 2.  **Ejecuta el archivo** `Ejecutar Script Marquesinas.bat` (Lanzador para evitar bloqueos de Windows).
@@ -25,7 +25,9 @@ El script se encuentra en la carpeta `Batocera/tools` del proyecto. Consta de do
     * **Destino:** Introduce la ruta `C:\Export_Arcade` o directamente la letra de la unidad SD por ejemplo `F:\`. Se recomienda la ruta `C:\Export_Arcade` el script será más rápido.
 4.  **Selección de Sistema:** El script detectará automáticamente qué sistemas tienen un archivo `gamelist.xml`. Puedes elegir procesar uno solo por su número, varios o **Todos (0)**.
 5.  **Copiar:** Si seleccionaste la ruta `C:\Export_Arcade` copia la carpeta  `arcade` y todo su contenido a la raiz de la SD, como se indica en siguiente punto.
-   
+
+<img width="1111" height="619" alt="image" src="https://github.com/user-attachments/assets/cac94465-3382-477c-98e8-b73e5de22939" />
+
 ### ¿Qué hace el script automáticamente?
 * **Redimensionado:** Convierte tus marquesinas originales a **128x32 píxeles**.
 * **Formato:** Fuerza el color a **BMP de 24 bits** (formato compatible con el driver DMA del ESP32).
@@ -41,9 +43,9 @@ El script se encuentra en la carpeta `Batocera/tools` del proyecto. Consta de do
 
 Para que la integración funcione correctamente, la tarjeta SD debe mantener el siguiente orden jerárquico tras ejecutar el script Marquesinas:
 
-* **`/arcade/default.bmp`** (Imagen de reserva general si falla todo lo demás. Esta debe ser creada por el usuario).
+* **`/arcade/default.bmp`** (Imagen de reserva general si falla todo lo demás. Esta debe ser creada por el usuario. NO es Obligatoria).
 * **`/arcade/sistema.txt`** (Índice de juegos generado, ej: `neogeo.txt`).
-* **`/arcade/sistema/logo.bmp`** (Logo que se muestra si falta la marquesina específica del juego.Esta debe ser creada por el usuario).
+* **`/arcade/sistema/logo.bmp`** (Logo que se muestra si falta la marquesina específica del juego. Esta debe ser creada por el usuario. NO es Obligatoria).
 * **`/arcade/sistema/rom_name.bmp`** (Marquesina del juego procesada, ej: `mslug.bmp`).
 
 Como usuario, tu única tarea manual de personalización es:
@@ -66,50 +68,55 @@ A futuro se creará un script que le daras una imagen y automaticamente la redim
     ├── 📄 logo.bmp
     └── 📄 pacman.bmp
 ```
-## 4. Configuración en Batocera (Comunicación)
-Para que Batocera notifique al panel cada vez que cambias de juego, utilizaremos scripts de usuario.
+## 4. Instalación Automática en Batocera
 
-### A. Configurar la IP del Panel
-1. **Usa un editor avanzado:** Abre los archivos `pixel_start.sh`, `pixel_stop.sh` y `pixel_off.sh` con **Notepad++**, **VS Code** o **Sublime Text**.
-2. **Cambia la IP:** Busca la línea del comando y sustituye la IP de ejemplo por la IP de tu ESP32.
-3. **Verifica el formato Unix:** En Notepad++, asegúrate de que en la esquina inferior derecha indique **Unix (LF)**. Si dice Windows (CRLF), ve a *Editar > Conversión de fin de línea > Convertir a Formato Unix (LF)*.
-4. **Guarda los cambios.**
+A partir de la versión **v3.0.0**, ya no es necesario editar líneas de código a mano, preocuparse por los formatos de archivo de Windows o utilizar consolas SSH avanzadas (como PuTTY) para configurar los permisos de ejecución. 
 
+Hemos desarrollado un **Script Instalador Inteligente en PowerShell** que realiza todo el despliegue de forma automática desde tu PC.
+
+---
+
+### 📦 ¿Qué hace este instalador por ti?
+
+* **Configuración de IP:** Inyecta automáticamente la dirección IP de tu panel LED en todos los scripts de comunicación.
+* **Corrección de Formato:** Fuerza el formato de fin de línea **Unix (LF)**. Esto evita que los scripts fallen si fueron abiertos por error con el Bloc de Notas de Windows.
+* **Organización de Archivos:** Crea la estructura de directorios necesaria en Batocera (`game-start` y `game-end`) y copia los archivos en su lugar correspondiente.
+* **Auto-Permisos (Sin PuTTY):** Genera un script del sistema (`custom.sh`) que hace que Batocera se otorgue a sí mismo permisos de ejecución (`chmod +x`) sobre las carpetas del panel en cada arranque.
+
+---
+
+### 🛠️ Requisitos Previos
+
+1. Tener tu **PC** y tu **Batocera** conectados a la misma red local (o conectar el almacenamiento físico de Batocera directamente al PC).
+2. Conocer la **IP local de tu panel LED** Retro Pixel LED (ej. `192.168.1.109`).
+3. Descargar la carpeta completa `Auto Instalador Batocera` desde este repositorio, lo puedes encontar [aquí](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Batocera/Instalador%20Autom%C3%A1tico).
+
+> [!IMPORTANT]
+> Si descargaste el repositorio en un archivo `.zip`, asegúrate de **descomprimirlo por completo** antes de ejecutar el instalador.
+
+---
+
+### 💻 Paso a Paso
+
+1. Abre la carpeta `Instalador Automático` en tu PC. Dentro encontrarás cuatro archivos:
+   * `Ejecutar Script Instalador Batocera.bat`
+   * `Script_Instalador_Batocera.ps1`
+   * `pixel_start.sh`
+   * `pixel_stop.sh`
+
+3. Haz **clic** sobre `Ejecutar Script Instalador Batocera.bat`.
+
+4. Sigue las instrucciones en la ventana de la consola:
+   * **Paso 1:** Introduce la IP de tu panel LED y pulsa `Enter`.
+   * **Paso 2:** Introduce la ruta de tu Batocera. Puede ser una ruta de red (ej: `\\192.168.1.119` o `\\BATOCERA`) o la letra de una unidad física si conectaste el disco/SD al PC (ej: `E:`).
+
+5. El script procesará los archivos en un segundo. Al finalizar, verás el mensaje `🎉 ¡INSTALACIÓN COMPLETADA!`. Pulsa cualquier tecla para salir.
+
+<img width="1110" height="373" alt="image" src="https://github.com/user-attachments/assets/cf5f3ac3-5906-4071-ac0a-45c11341c896" />
+
+7. **Reinicia tu sistema Batocera por completo.**
 > [!CAUTION]
->  No utilices el Bloc de Notas básico de Windows, ya que cambiaría el formato de fin de línea a Windows (CRLF) y el script dejará de funcionar en Batocera.
-
-### B. Ubicación de los Scripts
-Copia los archivos de la carpeta `/Batocera/tools/Script/` a la siguiente ruta en tu sistema Batocera (vía red Samba):
-`\\IP_DE_TU_BATOCERA\share\system\configs\emulationstation\scripts`
-
-Organiza los archivos en estas subcarpetas:
-* `/game-start/pixel_start.sh` (Se activa al lanzar un juego).
-* `/game-end/pixel_stop.sh` (Se activa al salir al menú).
-
-### C. Asignación de Permisos de Ejecución
-  Es **obligatorio** otorgar permisos de ejecución a los archivos mediante una consola SSH (como PuTTY). Ejecuta los siguientes comandos:
-
-  1. **Conéctate por SSH:** Abre PuTTY, introduce la IP de tu Batocera en "Host name" y pincha en "Open".
-     <img width="453" height="444" alt="Putty Configuración" src="https://github.com/user-attachments/assets/2eec17d6-36b0-4ef5-bea6-b4d30aa8ee01" />
-
-  2. **Identificate:** Usa el usuario `root` y contraseña `linux`.
-     <img width="661" height="519" alt="Putty login" src="https://github.com/user-attachments/assets/46308f5f-d01a-4495-97f7-e8c07bc3915f" />
-
-  3. **Otorgar permisos a los script:** Copia y pega (clic derecho en PuTTY para pegar) es romendable enviarlos de un en uno:
-     <img width="862" height="516" alt="Putty permisos" src="https://github.com/user-attachments/assets/9d38f2d1-4065-40ad-a100-7651da94c1af" />
-      ```bash
-      # Comandos para otorgar permisos de ejecución
-      chmod +x /userdata/system/configs/emulationstation/scripts/game-start/pixel_start.sh 
-      chmod +x /userdata/system/configs/emulationstation/scripts/game-end/pixel_stop.sh
-      ```
-  4. **Verificar permisos de los script:** Copia y pega (clic derecho en PuTTY para pegar) es romendable enviarlos de un en uno:
-     <img width="871" height="516" alt="Putty verificar permisos" src="https://github.com/user-attachments/assets/863665be-9eb3-42c8-a1a4-06f39dfbb7ba" />
-      ```bash
-      # Comandos para verificar permisos de ejecución:
-      ls -l /userdata/system/configs/emulationstation/scripts/game-start/pixel_start.sh
-      ls -l /userdata/system/configs/emulationstation/scripts/game-end/pixel_stop.sh
-      ```
-      **Ejemplo de permisos de ejecución correctos:**-rwxr-xr-x 1 root root 320 ene 10 13:18 /userdata/system/configs/emulationstation/scripts/game-end/pixel_stop.sh
+> El reinicio completo del sistema es **obligatorio**. Durante este arranque, el script `custom.sh` configurará los permisos internos. A partir de ese momento, cada vez que lances o cierres un juego, el panel reaccionará automáticamente.
 
 ## 5. Funcionamiento en Tiempo Real
 
@@ -132,3 +139,5 @@ Para que el modo **🕹️ Arcade** de Batocera funcione siempre correctamente, 
 > 2. Busca la sección de **DHCP Estático** o **Asignación de IP por MAC**.
 > 3. Vincula la dirección MAC de tu ESP32 con la IP que hayas escrito en tus scripts (ej: `192.168.1.109`).
 > 4. Dado que cada router es diferente, si tienes dudas busca en Google: *"Cómo asignar IP fija [modelo de tu router]"*.
+
+## 7. ¡Disfruta de las marquesinas mientras juegas en tu Arcade!
