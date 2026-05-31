@@ -37,7 +37,9 @@
     "titulo": "HORLOGE",
     "cada": "Tous les: ",
     "ver": "Voir: ",
-    "estilo": "Style: "
+    "estilo": "Style: ",
+	"transicion": "Transition: ",
+	"color": "Couleur: "
   },
   "SUBMENU_CLIMA": {
     "titulo": "METEO"
@@ -97,5 +99,16 @@
   "FTP": {
     "reset": "Redemarrage pour",
     "iniciar": "Activer le mode FTP"
+  },
+  "COLORES": {
+    "blanco": "Blanc",
+    "rojo": "Rouge",
+    "verde": "Vert",
+    "azul": "Bleu",
+    "amarillo": "Jaune",
+    "cian": "Cyan",
+    "magenta": "Magenta",
+    "naranja": "Orange",
+    "rosa": "Rose"
   }
 }
