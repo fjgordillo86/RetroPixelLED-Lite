@@ -1,5 +1,27 @@
 ## 📝 Changelog (Registro de Cambios)
 
+### [v3.0.4] - 2026-05-31
+**Retro Pixel LED Lite: "Particles & System Stability"**
+
+#### ✨ Añadido
+- **Transición "Explosión de Partículas":** Nuevo efecto dinámico para el reloj al aparecer y desaparecer, mejorando la fluidez visual.
+- **Selección de Color vía OSD:** Nueva opción en el menú para cambiar el color del reloj en tiempo real sin necesidad de editar archivos `.ini`.
+- **Servidor FTP Integrado:** Protocolo de transferencia de archivos inalámbrico para gestionar playlists y configuraciones directamente en la SD.
+- **Control Remoto IR:** Mapeado dinámico de funciones para navegar menús, ajustar brillo y controlar el panel a distancia.
+
+#### ⚙️ Mejoras
+- **Implementación de Single Buffer:** Refactorización de la lógica de dibujado para eliminar parpadeos en el reloj y menús.
+- **Optimización de RAM:** Migración completa de objetos `String` a `char[]` y uso extensivo de `PSTR()` / `F()` para liberar el Heap y evitar fragmentación.
+- **Sistema Anti-Panic:** Verificación de seguridad en `display->begin()` con fallback automático a Single Buffer ante casos de fragmentación de memoria tras usar WiFi.
+- **Confirmación Segura (Long Press):** Implementación de detección de pulsación larga en el botón físico para evitar entradas accidentales en menús.
+- **Configuración de Color Universal:** Procesado dinámico del parámetro `colorOrder` (RGB/RBG/GBR) desde `config.ini` para compatibilidad con cualquier panel HUB75.
+
+#### 🛡️ Fixes
+- **Estabilidad de Renderizado:** Eliminación de errores de asignación de memoria (*StoreProhibited*) en situaciones de alta carga de red.
+- **Limpieza de Logs:** Mejora en el diagnóstico de inicialización del sistema para detectar fallos en la asignación del buffer de forma temprana.
+  
+---  
+
 ### [v2.1.4] - 2026-04-24
 **Retro Pixel LED Lite: "Arcade Mastery & Binary Speed"**
 
