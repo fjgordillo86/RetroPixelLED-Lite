@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v3.0.1
+# ✨ Retro Pixel LED Lite v3.0.4
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_FR.md)**
 
 ### **[✈️ Unirse al Grupo de Telegram: Retro Pixel LED para estár al día de las actualizaciones](https://t.me/RetroPixelLed)**
@@ -21,16 +21,12 @@ Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](htt
 - [Video a GIF](https://p4blogc.github.io/dmdos-converter/) creada por **p4bloGC**.
 
 ---
-## 🆕 Novedades de la Versión v3.0.1 Lite
+## 🆕 Novedades de la Versión v3.0.4 Lite
 
-| Característica | Detalle Técnico | Beneficio |
-| :--- | :--- | :--- |
-| **🧠 Optimización de RAM** | Refactorización de objetos `String` a `char[]` y uso masivo de `PSTR()` / `F()`. | **Cero fragmentación.** Los textos se almacenan en la Flash, liberando el Heap para el Double Buffer. |
-| **🛡️ Anti-Panic System** | Verificación de `display->begin()` con cambio a single Buffer en caso de fallo de asignación de RAM. | **Estabilidad total.** Evita cuelgues (`StoreProhibited`) si la memoria se fragmenta tras usar el WiFi. |
-| **🖱️ Confirmación Segura** | Lógica de detección basada en tiempo de pulsación (*Long Press*) para el botón físico. | **Navegación Precisa.** Evita entradas accidentales en menús; ahora confirmas manteniendo presionado. |
-| **📂 Servidor FTP Integrado** | Protocolo de transferencia de archivos inalámbrico directo a la tarjeta SD del ESP32. | **Comodidad.** Gestiona tus playlists, archivos `.ini` y `.json` sin necesidad de extraer la MicroSD. |
-| **📡 Control Remoto IR** | Mapeado dinámico de funciones y navegación de menús mediante receptor infrarrojo. | **Control a distancia.** Maneja el brillo, apaga o enciende el panel y navega por el menú cómodamente desde un mando. |
-| **🎨 Configuración de Color** | Parámetro `colorOrder` (RGB/RBG/GBR) procesado dinámicamente desde el `config.ini`. | **Versatilidad.** Compatibilidad con cualquier panel HUB75 del mercado sin necesidad de reprogramar. |
+* **💥 Transición "Explosión de Partículas":** El reloj ahora cobra vida al aparecer y desaparecer. Hemos implementado un efecto dinámico de partículas que sustituye las transiciones estáticas, dando una sensación mucho más fluida y profesional a la pantalla.
+* **🎨 Selección de Color vía OSD:** Olvídate de editar archivos `.ini` para cambiar el color del reloj. Ahora puedes acceder al menú OSD y seleccionar tu combinación favorita directamente desde el control remoto.
+* **⚡ Eliminación de Parpadeos (Single Buffer):** He refactorizado la lógica de dibujado para el reloj y el menú. Al utilizar un modo de *Single Buffer* optimizado, hemos eliminado los molestos parpadeos que ocurrían al renderizar interfaces rápidas, garantizando una imagen limpia y estable.
+
 
 ---
 
@@ -48,10 +44,14 @@ Esta versión Lite introduce un soporte avanzado para sistemas de retrogaming. M
 
 ## 📜 Historial de Cambios Detallado (v3.0.0 -> v3.0.1)
 
-| Tipo | Componente | Descripción del Cambio |
+| Característica | Detalle Técnico | Beneficio |
 | :--- | :--- | :--- |
-| **🧠 Optimización** | **RAM**. | **Cero fragmentación.** Los textos se almacenan en la Flash, liberando el Heap para el Double Buffer. |
-| **🛡️ Estabilidad** | **Núcleo (DMA)** | **Anti-Panic System:** Implementada detección de fragmentación de RAM, cambia a single Buffer automaticamente. |
+| **🧠 Optimización de RAM** | Refactorización de objetos `String` a `char[]` y uso masivo de `PSTR()` / `F()`. | **Cero fragmentación.** Los textos se almacenan en la Flash, liberando el Heap para el Double Buffer. |
+| **🛡️ Anti-Panic System** | Verificación de `display->begin()` con cambio a single Buffer en caso de fallo de asignación de RAM. | **Estabilidad total.** Evita cuelgues (`StoreProhibited`) si la memoria se fragmenta tras usar el WiFi. |
+| **🖱️ Confirmación Segura** | Lógica de detección basada en tiempo de pulsación (*Long Press*) para el botón físico. | **Navegación Precisa.** Evita entradas accidentales en menús; ahora confirmas manteniendo presionado. |
+| **📂 Servidor FTP Integrado** | Protocolo de transferencia de archivos inalámbrico directo a la tarjeta SD del ESP32. | **Comodidad.** Gestiona tus playlists, archivos `.ini` y `.json` sin necesidad de extraer la MicroSD. |
+| **📡 Control Remoto IR** | Mapeado dinámico de funciones y navegación de menús mediante receptor infrarrojo. | **Control a distancia.** Maneja el brillo, apaga o enciende el panel y navega por el menú cómodamente desde un mando. |
+| **🎨 Configuración de Color** | Parámetro `colorOrder` (RGB/RBG/GBR) procesado dinámicamente desde el `config.ini`. | **Versatilidad.** Compatibilidad con cualquier panel HUB75 del mercado sin necesidad de reprogramar. |
 ---
 ### 🖥️ Estructura del Menú OSD (Navegación Inteligente)
 
@@ -89,6 +89,8 @@ El sistema se controla mediante un **único botón**. Utiliza una lógica de pul
 │   ├── 🖼️ Cada: [1...20] GIFs
 │   ├── ⏳ Ver: [5...30] seg
 │   └── 🎨 Estilo Reloj: [Matrix, Solid, Rainbow, Pulse, Gradient]
+│   └── 🎨 Color: [Blanco, Rojo, Verde, Azul, Amarillo, Cian, Magenta, Naranja y Rosa]
+│   ├── 🔄 Transición: [SI / NO]
 │   └── 🔙 Volver
 ├── 🌡️ Clima: [ON / OFF]
 │   └── 🔄 Activar: [SI / NO]
@@ -206,7 +208,7 @@ El archivo llamado `config.ini` que lo encontrarás en la carpeta "Contenido SD"
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v3.0.0 - ARCHIVO DE CONFIGURACIÓN
+# 🕹️ RETRO PIXEL LED LITE v3.0.4 - ARCHIVO DE CONFIGURACIÓN
 # ============================================================
 # Nota: No dejes espacios alrededor del símbolo '='.
 # Ejemplo correcto: BRIGHTNESS=40
@@ -250,8 +252,10 @@ AUTO_CLOCK_INT=6
 CLOCK_DURATION=10
 # Estilos: 0=Matrix, 1=Solid, 2=Rainbow, 3=Pulse, 4=Gradient
 CLOCK_STYLE=2
-# Color del Reloj (Formato HEX)
-CLOCK_COLOR=#FF0055
+# Activa la transicion del reloj a GIFs con una explosion de particulas : 0=OFF, 1=ON
+TRANSITION_ENABLE=1
+# Color del reloj (0= Blanco, 1=Rojo, 2=Verde, 3=Azul, 4=Amarillo, 5=Cian, 6=Magenta, 7=Naranja, 8=Rosa)
+CLOCK_COLOR=6
 
 [WEATHER]
 # Activa el clima: 0=OFF, 1=ON (Requiere CLOCK_ENABLE=1)
@@ -539,3 +543,4 @@ Agradecimientos especiales a los desarrolladores de las librerías base:
 * **Comunidad Telegram DMDos** al encontrarla y ver de lo que era capáz DMDos me animé a desarrollar **Retro Pixel LED**.
 * **RpiTe@m** por compartir el pack de 600 GIFs **gratis** y su increíble recopilación de 11000 GIFs que puedes adquirirla [Aquí.](https://www.neo-arcadia.com/forum/viewtopic.php?t=67065)
 * **shan-aya** por la traducción al Francés y su magnifico soft para crear [GIFs.](https://github.com/shan-aya/DMD_GIF_converter)
+* **joseAveleira** por el ejecto de particulas en el Reloj. [GitHub](https://github.com/joseAveleira/RelojPixel/tree/main)
