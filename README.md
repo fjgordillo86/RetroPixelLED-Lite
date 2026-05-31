@@ -23,9 +23,9 @@ Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](htt
 ---
 ## 🆕 Novedades de la Versión v3.0.4 Lite
 
-* **💥 Transición "Explosión de Partículas":** El reloj ahora cobra vida al aparecer y desaparecer. Hemos implementado un efecto dinámico de partículas que sustituye las transiciones estáticas, dando una sensación mucho más fluida y profesional a la pantalla.
+* **💥 Transición "Explosión de Partículas":** El reloj ahora cobra vida al aparecer y desaparecer. Se ha implementado un efecto dinámico de partículas que sustituye las transiciones estáticas, dando una sensación mucho más fluida y profesional a la pantalla.
 * **🎨 Selección de Color vía OSD:** Olvídate de editar archivos `.ini` para cambiar el color del reloj. Ahora puedes acceder al menú OSD y seleccionar tu combinación favorita directamente desde el control remoto.
-* **⚡ Eliminación de Parpadeos (Single Buffer):** He refactorizado la lógica de dibujado para el reloj y el menú. Al utilizar un modo de *Single Buffer* optimizado, hemos eliminado los molestos parpadeos que ocurrían al renderizar interfaces rápidas, garantizando una imagen limpia y estable.
+* **⚡ Eliminación de Parpadeos (Single Buffer):** Se ha refactorizado la lógica de dibujado para el reloj y el menú. Al utilizar un modo de *Single Buffer* optimizado, hemos eliminado los molestos parpadeos que ocurrían al renderizar interfaces rápidas, garantizando una imagen limpia y estable.
 
 
 ---
