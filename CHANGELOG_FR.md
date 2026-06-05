@@ -1,6 +1,25 @@
 # 📝 Changelog (Journal des Modifications)
 
+### [v3.0.4] - 2026-05-31  
+**Retro Pixel LED Lite : "Particles & System Stability"**
 
+#### ✨ Ajouté  
+- **Transition "Explosion de Particules" :** Nouvel effet dynamique pour l’horloge à l’apparition et disparition, améliorant la fluidité visuelle.  
+- **Sélection de Couleur via OSD :** Nouvelle option dans le menu pour changer la couleur de l’horloge en temps réel sans avoir besoin de modifier les fichiers `.ini`.  
+- **Serveur FTP Intégré :** Protocole de transfert de fichiers sans fil pour gérer les playlists et configurations directement sur la carte SD.  
+- **Télécommande IR :** Mappage dynamique des fonctions pour naviguer dans les menus, régler la luminosité et contrôler le panneau à distance.  
+
+#### ⚙️ Améliorations  
+- **Implémentation de Single Buffer :** Refactorisation de la logique de dessin pour éliminer les scintillements dans l’horloge et les menus.  
+- **Optimisation de la RAM :** Migration complète des objets `String` vers `char[]` et usage étendu de `PSTR()` / `F()` pour libérer le Heap et éviter la fragmentation.  
+- **Système Anti-Panic :** Vérification de sécurité dans `display->begin()` avec basculement automatique vers Single Buffer en cas de fragmentation de mémoire suite à l’utilisation du WiFi.  
+- **Confirmation Sécurisée (Appui Long) :** Mise en place de la détection d’une pression longue sur le bouton physique pour éviter les entrées accidentelles dans les menus.  
+- **Configuration Universelle des Couleurs :** Traitement dynamique du paramètre `colorOrder` (RGB/RBG/GBR) depuis `config.ini` pour compatibilité avec tout panneau HUB75.  
+
+#### 🛡️ Corrections  
+- **Stabilité du Rendu :** Élimination des erreurs d’allocation mémoire (*StoreProhibited*) lors de charges réseau élevées.  
+- **Nettoyage des Logs :** Amélioration du diagnostic d’initialisation du système pour détecter précocement les échecs dans l’allocation du buffer.  
+  
 ---
 
 ### [v2.1.4] - 2026-04-24  
