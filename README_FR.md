@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v3.0.1
+# ✨ Retro Pixel LED Lite v3.0.4
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_FR.md)**
 
 ### **[✈️ Rejoindre le Groupe Telegram : Retro Pixel LED pour rester informé des mises à jour](https://t.me/RetroPixelLed)**
@@ -23,16 +23,10 @@ Voulez-vous créer vos propres GIFs ? Voici deux outils magnifiques.
 
 ---
 
-## 🆕 Nouveautés de la Version v3.0.1 Lite
-
-| Caractéristique           | Détail Technique                                                                                  | Bénéfice                                                                                       |
-| :---------------------- | :----------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------- |
-| **🧠 Optimisation de la RAM** | Refactorisation des objets `String` en `char[]` et usage massif de `PSTR()` / `F()`. | **Aucune fragmentation.** Les textes sont stockés en Flash, libérant le Heap pour le Double Buffer. |
-| **🛡️ Système Anti-Panique** | Vérification de `display->begin()` avec basculement en Single Buffer en cas d’échec d’allocation RAM. | **Stabilité totale.** Évite les plantages (`StoreProhibited`) si la mémoire se fragmente après usage du WiFi. |
-| **🖱️ Confirmation Sécurisée** | Logique de détection basée sur la durée d’appui (*Long Press*) pour le bouton physique.          | **Navigation précise.** Évite les entrées accidentelles dans les menus ; la confirmation se fait désormais via un appui prolongé.               |
-| **📂 Serveur FTP Intégré** | Protocole de transfert de fichiers sans fil directement vers la carte SD de l’ESP32.         | **Confort.** Gérez vos playlists, fichiers `.ini` et `.json` sans avoir à extraire la MicroSD.                 |
-| **📡 Télécommande IR** | Mappage dynamique des fonctions et navigation des menus via récepteur infrarouge.               | **Contrôle à distance.** Gérez la luminosité, allumez ou éteignez le panneau et naviguez dans le menu confortablement depuis une télécommande. |
-| **🎨 Configuration des Couleurs** | Paramètre `colorOrder` (RGB/RBG/GBR) traité dynamiquement depuis le `config.ini`.             | **Polyvalence.** Compatible avec tous les panneaux HUB75 du marché sans nécessiter de reprogrammation.                 |
+## 🆕 Nouveautés de la Version v3.0.4 Lite
+* **💥 Transition "Explosion de Particules" :** L’horloge prend vie à son apparition et disparition. Nous avons implémenté un effet dynamique de particules qui remplace les transitions statiques, offrant une sensation beaucoup plus fluide et professionnelle à l’écran.  
+* **🎨 Sélection de Couleur via OSD :** Oubliez l’édition des fichiers `.ini` pour changer la couleur de l’horloge. Vous pouvez désormais accéder au menu OSD et sélectionner votre combinaison favorite directement depuis la télécommande.  
+* **⚡ Élimination des Scintillements (Single Buffer) :** J’ai refactorisé la logique de dessin pour l’horloge et le menu. En utilisant un mode *Single Buffer* optimisé, nous avons supprimé les scintillements gênants qui survenaient lors du rendu d’interfaces rapides, garantissant une image nette et stable.
 
 ---
 
@@ -52,11 +46,14 @@ Cette version Lite introduit une prise en charge avancée pour les systèmes de 
 
 ## 📜 Historique détaillé des changements (v3.0.0 -> v3.0.1)
 
-| Type             | Composant   | Description du changement                                                                                  |
+| Caractéristique | Détail Technique | Bénéfice |                                                                                |
 | :--------------- | :---------- | :-------------------------------------------------------------------------------------------------------- |
-| **🧠 Optimisation** | **RAM**. | **Aucune fragmentation.** Les textes sont stockés en Flash, libérant le Heap pour le Double Buffer. |
-| **🛡️ Stabilité** | **Noyau (DMA)** | **Système Anti-Panique :** Détection de fragmentation de la RAM, bascule automatique en Single Buffer. |
-
+| **🧠 Optimisation de la RAM**                        | Refactorisation des objets `String` en `char[]` et utilisation massive de `PSTR()` / `F()`.             | **Aucune fragmentation.** Les textes sont stockés en Flash, libérant le Heap pour le Double Buffer.                            |
+| **🛡️ Système Anti-Panique**                          | Vérification de `display->begin()` avec basculement vers Single Buffer en cas d’échec d’allocation RAM. | **Stabilité totale.** Evite les plantages (`StoreProhibited`) si la mémoire est fragmentée après l’utilisation du WiFi.         |
+| **🖱️ Confirmation Sécurisée**                        | Logique de détection basée sur la durée d’appui (*Long Press*) du bouton physique.                      | **Navigation précise.** Evite les entrées accidentelles dans les menus ; confirmation par appui prolongé.                      |
+| **📂 Serveur FTP Intégré**                            | Protocole de transfert de fichiers sans fil direct vers la carte SD de l’ESP32.                         | **Confort.** Gère les playlists, fichiers `.ini` et `.json` sans extraire la MicroSD.                                         |
+| **📡 Télécommande IR**                               | Mappage dynamique des fonctions et navigation dans les menus via récepteur infrarouge.                 | **Contrôle à distance.** Réglage de la luminosité, mise sous/hors tension du panneau, navigation aisée via la télécommande.   |
+| **🎨 Configuration des Couleurs**                    | Paramètre `colorOrder` (RGB/RBG/GBR) traité dynamiquement depuis le `config.ini`.                       | **Polyvalence.** Compatible avec tout panneau HUB75 sans nécessité de reprogrammation.                                         |
 ---
 
 ### 🖥️ Structure du Menu OSD (Navigation Intelligente)
@@ -98,7 +95,9 @@ Le système est contrôlé au moyen d’un **seul bouton**. Il utilise une logiq
 │   ├── 🔄 Activer : [OUI / NON]  
 │   ├── 🖼️ Toutes les : [1...20] GIFs  
 │   ├── ⏳ Afficher : [5...30] sec  
-│   └── 🎨 Style Horloge : [Matrix, Solid, Rainbow, Pulse, Gradient]  
+│   └── 🎨 Style Horloge : [Matrix, Solid, Rainbow, Pulse, Gradient]
+│   └── 🎨 Couleur : [Blanc, Rouge, Vert, Bleu, Jaune, Cyan, Magenta, Orange et Rose]
+│   ├── 🔄 Transition : [OUI / NON]  
 │   └── 🔙 Retour  
 ├── 🌡️ Météo : [ON / OFF]  
 │   └── 🔄 Activer : [OUI / NON]  
@@ -215,7 +214,7 @@ Le fichier nommé `config.ini` que vous trouverez dans le dossier "Contenido SD"
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v3.0.0 - FICHIER DE CONFIGURATION
+# 🕹️ RETRO PIXEL LED LITE v3.0.4 - FICHIER DE CONFIGURATION
 # ============================================================
 # Remarque : Ne laissez pas d'espaces autour du symbole '='.
 # Exemple correct : BRIGHTNESS=40
@@ -259,8 +258,10 @@ AUTO_CLOCK_INT=6
 CLOCK_DURATION=10
 # Styles : 0=Matrix, 1=Solide, 2=Arc-en-ciel, 3=Pulsation, 4=Gradient
 CLOCK_STYLE=2
-# Couleur de l'horloge (format HEX)
-CLOCK_COLOR=#FF0055
+# Active la transition de l’horloge en GIFs avec une explosion de particules : 0=OFF, 1=ON
+TRANSITION_ENABLE=1
+# Couleur de l’horloge (0= Blanc, 1=Rouge, 2=Vert, 3=Bleu, 4=Jaune, 5=Cyan, 6=Magenta, 7=Orange, 8=Rose)
+CLOCK_COLOR=6
 
 [WEATHER]
 # Active la météo : 0=OFF, 1=ON (requiert CLOCK_ENABLE=1)
@@ -566,3 +567,4 @@ Remerciements spéciaux aux développeurs des bibliothèques de base :
 * **Communauté Telegram DMDos** : en la découvrant et en voyant ce dont DMDos était capable, j’ai été motivé à développer **Retro Pixel LED**.
 * **RpiTe@m** pour l’incroyable compilation de [GIFs.](https://www.neo-arcadia.com/forum/viewtopic.php?t=67065)
 * **shan-aya** pour la traduction en français et son logiciel magnifique pour créer des [GIFs.](https://github.com/shan-aya/DMD_GIF_converter)
+* **joseAveleira** pour l’effet de particules dans l’Horloge. [GitHub](https://github.com/joseAveleira/RelojPixel/tree/main)
