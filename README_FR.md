@@ -47,17 +47,18 @@ Cette version Lite introduit une prise en charge avancée pour les systèmes de 
 
 ## 📜 Historique détaillé des changements (v3.0.1 -> v3.0.5)
 
-| Caractéristique | Détail Technique | Bénéfice |                                                                                |
-| :--------------- | :---------- | :-------------------------------------------------------------------------------------------------------- |
+| Caractéristique | Détail Technique | Bénéfice |
+| :--- | :--- | :--- |
 | **💥 Transition de Particules** | Moteur de particules dynamique intégré pour les effets d’entrée et de sortie de l’heure. | **Fluidité visuelle.** Élimine les coupures statiques pour un effet fluide et professionnel. |
 | **🎨 Sélection de Couleur OSD** | Menu interactif à l’écran mappé avec le récepteur IR et la mémoire EEPROM/SD. | **Personnalisation.** Change la couleur de l’horloge à la volée depuis la télécommande sans modifier le `config.ini`. |
 | **⚡ Horloge Sans Scintillement** | Refactorisation de la logique de rendu utilisant un mode *Single Buffer* optimisé pour les interfaces. | **Image nette.** Élimination totale du *flicker* (scintillement) lors de la mise à jour rapide des données. |
-| **🧠 Optimisation de la RAM**                        | Refactorisation des objets `String` en `char[]` et utilisation massive de `PSTR()` / `F()`.             | **Aucune fragmentation.** Les textes sont stockés en Flash, libérant le Heap pour le Double Buffer.                            |
-| **🛡️ Système Anti-Panique**                          | Vérification de `display->begin()` avec basculement vers Single Buffer en cas d’échec d’allocation RAM. | **Stabilité totale.** Evite les plantages (`StoreProhibited`) si la mémoire est fragmentée après l’utilisation du WiFi.         |
-| **🖱️ Confirmation Sécurisée**                        | Logique de détection basée sur la durée d’appui (*Long Press*) du bouton physique.                      | **Navigation précise.** Evite les entrées accidentelles dans les menus ; confirmation par appui prolongé.                      |
-| **📂 Serveur FTP Intégré**                            | Protocole de transfert de fichiers sans fil direct vers la carte SD de l’ESP32.                         | **Confort.** Gère les playlists, fichiers `.ini` et `.json` sans extraire la MicroSD.                                         |
-| **📡 Télécommande IR**                               | Mappage dynamique des fonctions et navigation dans les menus via récepteur infrarouge.                 | **Contrôle à distance.** Réglage de la luminosité, mise sous/hors tension du panneau, navigation aisée via la télécommande.   |
-| **🎨 Configuration des Couleurs**                    | Paramètre `colorOrder` (RGB/RBG/GBR) traité dynamiquement depuis le `config.ini`.                       | **Polyvalence.** Compatible avec tout panneau HUB75 sans nécessité de reprogrammation.                                         |
+| **🧠 Optimisation de la RAM** | Refactorisation des objets `String` en `char[]` et utilisation massive de `PSTR()` / `F()`. | **Aucune fragmentation.** Les textes sont stockés en Flash, libérant le Heap pour le Double Buffer. |
+| **🛡️ Système Anti-Panique** | Vérification de `display->begin()` avec basculement vers Single Buffer en cas d’échec d’allocation RAM. | **Stabilité totale.** Evite les plantages (`StoreProhibited`) si la mémoire est fragmentée après l’utilisation du WiFi. |
+| **🖱️ Confirmation Sécurisée** | Logique de détection basée sur la durée d’appui (*Long Press*) du bouton physique. | **Navigation précise.** Evite les entrées accidentelles dans les menus ; confirmation par appui prolongé. |
+| **📂 Serveur FTP Intégré** | Protocole de transfert de fichiers sans fil direct vers la carte SD de l’ESP32. | **Confort.** Gère les playlists, fichiers `.ini` et `.json` sans extraire la MicroSD. |
+| **📡 Télécommande IR** | Mappage dynamique des fonctions et navigation dans les menus via récepteur infrarouge. | **Contrôle à distance.** Réglage de la luminosité, mise sous/hors tension du panneau, navigation aisée via la télécommande. |
+| **🎨 Configuration des Couleurs** | Paramètre `colorOrder` (RGB/RBG/GBR) traité dynamiquement desde el `config.ini`. | **Polyvalence.** Compatible avec tout panneau HUB75 sans nécessité de reprogrammation. |
+
 ---
 
 ### 🖥️ Structure du Menu OSD (Navigation Intelligente)
