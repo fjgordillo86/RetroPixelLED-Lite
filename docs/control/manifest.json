@@ -1,8 +1,8 @@
 {
   "name": "RetroPixel LED",
   "short_name": "RetroPixel",
-  "start_url": "/RetroPixelLED-Lite/control/index.html",
-  "scope": "/RetroPixelLED-Lite/control/",
+  "start_url": "/RetroPixelLED-Lite/docs/control/index.html",
+  "scope": "/RetroPixelLED-Lite/docs/control/",
   "display": "standalone",
   "background_color": "#0A0D12", 
   "theme_color": "#0A0D12",
