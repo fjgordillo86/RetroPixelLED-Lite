@@ -1,9 +1,21 @@
 {
   "name": "RetroPixel LED",
   "short_name": "RetroPixel",
-  "start_url": "https://fjgordillo86.github.io/RetroPixelLED-Lite/control/index.html", 
-  "scope": "https://fjgordillo86.github.io/RetroPixelLED-Lite/control/",
+  "start_url": "/RetroPixelLED-Lite/control/index.html",
+  "scope": "/RetroPixelLED-Lite/control/",
   "display": "standalone",
   "background_color": "#000000",
-  "icons": [ ... ]
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
