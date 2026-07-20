@@ -24,7 +24,8 @@
     "titulo": "PLAYBACK ",
 	"modo": "Mode: ",
 	"aleatorio": "Random: ",
-	"arcade": "Arcade: "
+	"arcade": "Arcade: ",
+	"texto": "Text: "
   },
   "SUBMENU_BRILLO": {
     "titulo": "BRIGHTNESS",
