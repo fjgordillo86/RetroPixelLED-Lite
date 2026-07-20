@@ -24,7 +24,8 @@
     "titulo": "REPRODUCCION ",
 	"modo": "Modo: ",
 	"aleatorio": "Aleatorio: ",
-	"arcade": "Arcade: "
+	"arcade": "Arcade: ",
+	"texto": "Texto: "
   },
   "SUBMENU_BRILLO": {
     "titulo": "BRILLO",
