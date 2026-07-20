@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v3.0.8
+# ✨ Retro Pixel LED Lite v3.0.9
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_FR.md)**
 
 ### **[✈️ Unirse al Grupo de Telegram: Retro Pixel LED para estár al día de las actualizaciones](https://t.me/RetroPixelLed)**
@@ -22,20 +22,19 @@ Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](htt
 - [Video a GIF](https://p4blogc.github.io/dmdos-converter/) creada por **p4bloGC**.
 
 
-## 🆕 Novedades de la Versión v3.0.8 Lite
+## 🆕 Novedades de la Versión v3.0.9 Lite
 
 #### 🚀 Nuevas Características (Features)
-* **Soporte Nativo para RePlayOS (Modo Arcade por Red):** Integración directa con el sistema operativo RePlayOS mediante consultas HTTP asíncronas y no bloqueantes a su API REST. El firmware monitoriza el estado del frontend en segundo plano, detecta cuándo se inicia un juego (`view_id: 2`) de forma automática y conmuta la pantalla sin intervención de scripts externos.
-* **Gestión de Fallback Inteligente de GIFs:** Optimización del ciclo de renderizado en el Modo Arcade. Si un juego o sistema monitorizado carece de arte estático en la tarjeta SD, el control se devuelve inmediatamente al motor de animaciones para seguir reproduciendo GIFs.
+* **Control Remoto de Texto en Scroll:** Incorporación de la nueva interfaz web para enviar mensajes personalizados al panel en tiempo real, con opciones avanzadas de selección de color, paleta cromática y ajuste de velocidad de desplazamiento por HTTP.
+  * 🌐 **[Probar / Instalar Web App en línea](https://fjgordillo86.github.io/RetroPixelLED-Lite/control/)** *(Acceso directo a la interfaz web)*
 
 #### 🛡️ Corrección de Errores (Fixes)
-* **Estabilidad del Efecto Rainbow:** Corregido el renderizado del efecto dinámico *Rainbow* (Arcoíris), el cual se veía afectado negativamente por la optimización anti-parpadeo del reloj cuando el *Double Buffer* estaba desactivado.
-* **Refresco de Brillo en OSD:** Corregido el fallo visual en el menú OSD; ahora el porcentaje de brillo se actualiza dinámicamente en la pantalla en tiempo real mientras se ajusta con el mando IR.
+* **Ciclo de Ajuste de Brillo:** Corregido el error de lógica en el bucle de brillo que impedía reiniciar al 5% al alcanzar el 100%, permitiendo de nuevo completar el ciclo correctamente mediante el botón de control.
 
 
 ## 🕹️ Integración Especial: Modo Arcade (Batocera & RePlayOS)
 
-Esta versión Lite introduce un soporte avanzado para ecosistemas de retrogaming, permitiendo dos vías de sincronización: mediante scripts locales (**Batocera**) o mediante monitorización nativa por red local (**RePlayOS**). 
+Esta versión Lite introduce un soporte avanzado para ecosistemas de retrogaming, permitiendo dos vías de sincronización: mediante scripts locales (**Batocera**) o mediante monitorización nativa por red local (**RePlayOS**) Proximamente **Recalbox**. 
 
 A través de una jerarquía de archivos inteligente y optimizada para el hardware del ESP32, el panel gestiona el cambio de estado y muestra:
 
@@ -53,10 +52,11 @@ A través de una jerarquía de archivos inteligente y optimizada para el hardwar
 
 ---
 
-## 📜 Historial de Cambios Detallado (v3.0.0 -> v3.0.5)
+## 📜 Historial de Cambios Detallado (v3.0.0 -> v3.0.9)
 
 | Característica | Detalle Técnico | Beneficio |
 | :--- | :--- | :--- |
+| **💬 Control de Texto Scroll** | Endpoints HTTP POST y PWA web app en red local para enviar cadenas personalizadas, selección de color, paleta y velocidad de desplazamiento. | **Interactividad remota.** Muestra mensajes y avisos al vuelo desde cualquier dispositivo móvil u ordenador conectado a la red sin necesidad de reprogramar.
 | **💥 Transición de Partículas** | Motor de partículas dinámicas integrado para los efectos de entrada y salida de la hora. | **Fluidez visual.** Elimina los cortes estáticos por un efecto fluido y profesional. |
 | **🎨 Selección de Color OSD** | Menú interactivo en pantalla mapeado con el receptor IR y la memoria EEPROM/SD. | **Personalización.** Cambia el color del reloj al vuelo desde el mando sin editar el `config.ini`. |
 | **⚡ Reloj Sin Parpadeos** | Refactorización de la lógica de renderizado usando un modo *Single Buffer* optimizado para interfaces. | **Imagen limpia.** Eliminación total del *flicker* (parpadeo) al actualizar datos rápidos. |
@@ -92,6 +92,7 @@ El sistema se controla mediante un **único botón**. Utiliza una lógica de pul
 │   └── 🖼️ Modo: [GIFs / Reloj]
 │   └── 🔀 Aleatorio: [SI / NO]
 │   └── 🕹️ Arcade: [SI / NO]
+│   └── 💬 Texto: [SI / NO]
 │   └── 🔙 Volver
 ├── ☀️ Brillo
 │   └──   Brillo: [5% - 100%]
@@ -146,6 +147,21 @@ Para facilitar la configuración de las horas de encendido (`hon/mon`) y apagado
 
    
 ## 🛠️ Herramientas Exclusivas Lite
+
+### **[👉 App Web Retro Pixel LED Lite (Control de Texto Scroll)](https://fjgordillo86.github.io/RetroPixelLED-Lite/control/)**
+  <img width="400" alt="Interfaz de la App Web" src="https://github.com/user-attachments/assets/38734694-e32e-431e-be92-95d0f0feabdd" />
+
+#### ⚙️ Guía de Uso e Instalación
+
+1. **Configuración en el Panel:**
+   * Para poder mostrar los mensajes en movimiento, asegúrate de activar la función **"Texto"** dentro de la ruta **Menú > Reproducción > Texto** en tu panel LED.
+
+2. **Instalación como App (PWA):**
+   * Abre el enlace desde el navegador de tu dispositivo móvil.
+   * Por lo general, aparecerá un aviso automático para instalar la aplicación. Si no se muestra de forma automática:
+     * Toca el botón de opciones del navegador (icono de los **3 puntos ⋮**).
+     * Selecciona **"Instalar aplicación"** o **"Añadir a la pantalla de inicio"** para crear un acceso directo cómodo y rápido.
+
 
 ### 📖 Cómo usar el Script Generador de Playlists (Windows)
 
