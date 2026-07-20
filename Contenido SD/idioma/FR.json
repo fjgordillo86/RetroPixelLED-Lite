@@ -24,7 +24,8 @@
     "titulo": "AFFICHAGE",
     "modo": "Mode: ",
     "aleatorio": "Aleatoire: ",
-    "arcade": "Arcade: "
+    "arcade": "Arcade: ",
+	"texto": "Texte: "
   },
   "SUBMENU_BRILLO": {
     "titulo": "LUMINOSITE",
