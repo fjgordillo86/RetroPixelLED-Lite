@@ -1,6 +1,6 @@
 {
   "name": "RetroPixel LED",
-  "short_name": "RetroPixel",
+  "short_name": "RetroPixelLED",
   "start_url": "https://fjgordillo86.github.io/RetroPixelLED-Lite/control/",
   "scope": "https://fjgordillo86.github.io/RetroPixelLED-Lite/control/",
   "display": "standalone",
