@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A0D12">
-<title>Retro Pixel LED lite · Texto Scroll</title>
+<title>Retro Pixel LED</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -142,6 +142,66 @@
   }
   .status.ok{color:#5FDB7E;}
   .status.err{color:var(--red-alert);}
+
+  .headerBtns{display:flex; gap:8px;}
+
+  /* ---------- MODAL DE AJUSTES ---------- */
+  .modalOverlay{
+    display:none; position:fixed; inset:0; background:rgba(4,5,8,0.88);
+    z-index:50; padding:16px; overflow-y:auto;
+  }
+  .modalOverlay.open{display:block;}
+  .modalBox{
+    max-width:420px; margin:0 auto; background:var(--panel);
+    border:1px solid var(--grid-line); border-radius:12px; padding:16px 16px 20px;
+  }
+  .modalHead{display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;}
+  .modalHead h2{font-family:var(--font-pixel); font-size:11px; margin:0; letter-spacing:1px;}
+  .modalClose{background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer; padding:4px 8px;}
+  .modalSub{font-size:10px; color:var(--text-dim); margin:4px 0 16px; line-height:1.5;}
+
+  .cfgGroup{margin-bottom:18px;}
+  .cfgGroup h3{
+    font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--amber);
+    margin:0 0 10px; border-bottom:1px solid var(--grid-line); padding-bottom:6px;
+  }
+  .cfgField{margin-bottom:12px;}
+  .cfgField label{display:block; font-size:11px; color:var(--text-primary); margin-bottom:5px;}
+  .cfgField .cfgHint{font-size:9px; color:var(--text-dim); margin-top:4px;}
+  .cfgField input[type=text], .cfgField input[type=password], .cfgField input[type=number], .cfgField select{
+    width:100%; padding:9px 10px; background:var(--bg-deep); border:1px solid var(--grid-line);
+    border-radius:6px; color:var(--text-primary); font-family:var(--font-mono); font-size:13px;
+  }
+  .cfgField input[type=range]{width:100%;}
+  .cfgRangeVal{font-size:10px; color:var(--amber); float:right;}
+
+  .cfgToggleRow{display:flex; align-items:center; justify-content:space-between;}
+  .cfgSwitch{position:relative; width:42px; height:24px; flex:none;}
+  .cfgSwitch input{opacity:0; width:0; height:0;}
+  .cfgSwitch .slider{
+    position:absolute; inset:0; background:var(--grid-line); border-radius:24px; cursor:pointer; transition:.15s;
+  }
+  .cfgSwitch .slider::before{
+    content:""; position:absolute; width:18px; height:18px; left:3px; top:3px;
+    background:var(--text-dim); border-radius:50%; transition:.15s;
+  }
+  .cfgSwitch input:checked + .slider{background:var(--amber-dim);}
+  .cfgSwitch input:checked + .slider::before{transform:translateX(18px); background:var(--amber);}
+
+  .cfgWarning{
+    background:rgba(255,59,48,0.08); border:1px solid rgba(255,59,48,0.35); border-radius:8px;
+    padding:10px; font-size:10px; color:#ffb3ae; line-height:1.5; margin-top:8px;
+  }
+
+  .modalBtnRow{display:flex; gap:10px; margin-top:8px;}
+  .modalBtnRow button{
+    flex:1; padding:13px 8px; border-radius:8px; border:none; cursor:pointer;
+    font-family:var(--font-pixel); font-size:10px; letter-spacing:1px;
+  }
+  #cfgSave{background:var(--amber); color:#1a1200;}
+  #cfgCancel{background:transparent; border:2px solid var(--grid-line); color:var(--text-dim);}
+
+  .cfgLoading{text-align:center; padding:30px 0; color:var(--text-dim); font-size:11px;}
 </style>
 </head>
 <body>
@@ -150,9 +210,12 @@
   <header>
     <div class="brand">
       <div class="dot" id="connDot"></div>
-      <h1>RETRO<span style="color:var(--amber)">PIXEL</span> <span style="color:#FF3B30">L</span><span style="color:#00E676">E</span><span style="color:#0099FF">D</span> <span style="color:var(--text-primary);">lite</span></h1>
+      <h1>Retro<span style="color:var(--amber)">Pixel</span><span style="color:#FF3B30">L</span><span style="color:#00E676">E</span><span style="color:#0099FF">D</span> <span style="color:var(--text-primary);"></span></h1>
     </div>
-    <button class="gear" id="gearBtn" aria-label="Conexión">⚙</button>
+    <div class="headerBtns">
+      <button class="gear" id="settingsBtn" aria-label="Ajustes del panel">🛠</button>
+      <button class="gear" id="gearBtn" aria-label="Conexión">⚙</button>
+    </div>
   </header>
 
   <div class="conn" id="connPanel">
@@ -199,6 +262,23 @@
   </div>
   <div class="status" id="statusMsg"></div>
 
+</div>
+
+<div class="modalOverlay" id="cfgOverlay">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>AJUSTES DEL PANEL</h2>
+      <button class="modalClose" id="cfgClose">✕</button>
+    </div>
+    <div class="modalSub">
+      Se leen y escriben directamente sobre <code>config.ini</code>. El panel se reiniciará al guardar para aplicar los cambios.
+    </div>
+    <div id="cfgBody"><div class="cfgLoading">Cargando ajustes del panel...</div></div>
+    <div class="modalBtnRow">
+      <button id="cfgCancel">CANCELAR</button>
+      <button id="cfgSave">GUARDAR Y REINICIAR</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -497,6 +577,195 @@ async function detenerTexto(){
 
 document.getElementById('send').addEventListener('click', enviarTexto);
 document.getElementById('stop').addEventListener('click', detenerTexto);
+
+/* =========================================================
+   AJUSTES DEL PANEL
+   ========================================================= */
+const CONFIG_SCHEMA = [
+  { group: 'WiFi', fields: [
+    { key:'WIFI_ENABLE', label:'Wifi activo', type:'toggle', sensible:true },
+    { key:'SSID', label:'Nombre de red (SSID)', type:'text', sensible:true },
+    { key:'PASS', label:'Contraseña', type:'password', sensible:true },
+    { key:'TZ', label:'Zona horaria (POSIX)', type:'text', hint:'Ej: CET-1CEST,M3.5.0,M10.5.0/3' },
+  ]},
+  { group: 'Hardware', fields: [
+    { key:'PANEL_CHAIN', label:'Nº de paneles encadenados', type:'number', min:1, max:8 },
+    { key:'COLOR_ORDER', label:'Orden de color', type:'select', options:['RGB','RBG','GBR'] },
+    { key:'BRIGHTNESS', label:'Brillo (0-255)', type:'range', min:0, max:255 },
+    { key:'I2S_SPEED', label:'Velocidad I2S', type:'select', options:[
+        {v:0,l:'8 MHz'},{v:1,l:'10 MHz'},{v:2,l:'16 MHz'},{v:3,l:'20 MHz (Turbo)'}] },
+    { key:'REFRESH_MIN', label:'Refresco mínimo (Hz)', type:'number', min:30, max:120 },
+    { key:'DOUBLE_BUFF', label:'Doble buffer', type:'toggle' },
+    { key:'LATCH_BLANK', label:'Anti-ghosting (1-4)', type:'number', min:1, max:4 },
+  ]},
+  { group: 'Reproducción', fields: [
+    { key:'PLAY_MODE', label:'Modo de visualización', type:'select', options:[{v:0,l:'GIFs'},{v:1,l:'Solo reloj'}] },
+	{ key:'RANDOM_MODE', label:'Orden aleatorio', type:'toggle' },
+    { key:'ARCADE_ENABLE', label:'Sistema Arcade', type:'select', options:[
+        {v:0,l:'OFF'},{v:1,l:'Batocera'},{v:2,l:'Recalbox'},{v:3,l:'ReplayOS'}] },
+    { key:'TEXT_ENABLE', label:'Texto scroll', type:'toggle' },
+    { key:'CLOCK_ENABLE', label:'Reloj activo', type:'toggle' },
+    { key:'AUTO_CLOCK_INT', label:'Intervalo del reloj (nº de GIFs)', type:'number', min:0, max:99 },
+    { key:'CLOCK_DURATION', label:'Duración del reloj (segundos)', type:'number', min:1, max:120 },
+    { key:'CLOCK_STYLE', label:'Estilo del reloj', type:'select', options:[
+        {v:0,l:'Matrix'},{v:1,l:'Solid'},{v:2,l:'Rainbow'},{v:3,l:'Pulse'},{v:4,l:'Gradient'}] },
+    { key:'TRANSITION_ENABLE', label:'Transición con partículas', type:'toggle' },
+    { key:'CLOCK_COLOR', label:'Color del reloj', type:'select', options:[
+        {v:0,l:'Blanco'},{v:1,l:'Rojo'},{v:2,l:'Verde'},{v:3,l:'Azul'},{v:4,l:'Amarillo'},
+        {v:5,l:'Cian'},{v:6,l:'Magenta'},{v:7,l:'Naranja'},{v:8,l:'Rosa'}] },
+  ]},
+  { group: 'Clima', fields: [
+    { key:'WEATHER_ENABLE', label:'Clima activo', type:'toggle' },
+    { key:'CITY', label:'Ciudad', type:'text', hint:'Madrid,ES' },
+    { key:'API_KEY', label:'API Key OpenWeatherMap', type:'text' },
+    { key:'WEATHER_INT', label:'Intervalo de actualización (min)', type:'number', min:1, max:180 },
+    { key:'WEATHER_MSG', label:'Texto sobre el reloj', type:'text' },
+  ]},
+  { group: 'Idioma', fields: [
+    { key:'LANGUAGE', label:'Idioma (código)', type:'text', hint:'ES, EN, FR...' },
+  ]},
+  { group: 'ReplayOS', fields: [
+    { key:'IP', label:'IP de ReplayOS', type:'text' },
+    { key:'TOKEN', label:'Token ReplayOS', type:'text' },
+  ]},
+];
+
+const cfgOverlay = document.getElementById('cfgOverlay');
+const cfgBody = document.getElementById('cfgBody');
+let cfgOriginal = null; // valores tal como llegaron del panel, para detectar cambios sensibles
+
+function cfgFieldHtml(f, value){
+  const id = 'cfg_' + f.key;
+  if (f.type === 'toggle'){
+    const checked = (String(value) === '1' || value === true) ? 'checked' : '';
+    return `
+      <div class="cfgField cfgToggleRow">
+        <label for="${id}">${f.label}</label>
+        <label class="cfgSwitch">
+          <input type="checkbox" id="${id}" data-key="${f.key}" ${checked}>
+          <span class="slider"></span>
+        </label>
+      </div>`;
+  }
+  if (f.type === 'select'){
+    const opts = f.options.map(o => {
+      const v = (typeof o === 'object') ? o.v : o;
+      const l = (typeof o === 'object') ? o.l : o;
+      const sel = (String(v) === String(value)) ? 'selected' : '';
+      return `<option value="${v}" ${sel}>${l}</option>`;
+    }).join('');
+    return `
+      <div class="cfgField">
+        <label for="${id}">${f.label}</label>
+        <select id="${id}" data-key="${f.key}">${opts}</select>
+      </div>`;
+  }
+  if (f.type === 'range'){
+    return `
+      <div class="cfgField">
+        <label for="${id}">${f.label} <span class="cfgRangeVal" id="${id}_val">${value}</span></label>
+        <input type="range" id="${id}" data-key="${f.key}" min="${f.min}" max="${f.max}" value="${value}"
+          oninput="document.getElementById('${id}_val').textContent=this.value">
+      </div>`;
+  }
+  const inputType = f.type === 'password' ? 'password' : (f.type === 'number' ? 'number' : 'text');
+  const minmax = f.type === 'number' ? `min="${f.min}" max="${f.max}"` : '';
+  return `
+    <div class="cfgField">
+      <label for="${id}">${f.label}</label>
+      <input type="${inputType}" id="${id}" data-key="${f.key}" value="${value ?? ''}" ${minmax}>
+      ${f.hint ? `<div class="cfgHint">${f.hint}</div>` : ''}
+    </div>`;
+}
+
+function renderConfigForm(data){
+  cfgOriginal = data;
+  let html = '';
+  for (const grupo of CONFIG_SCHEMA){
+    html += `<div class="cfgGroup"><h3>${grupo.group}</h3>`;
+    for (const f of grupo.fields){
+      html += cfgFieldHtml(f, data[f.key]);
+    }
+    if (grupo.group === 'WiFi'){
+      html += `<div class="cfgWarning">⚠ Si el SSID o la contraseña son incorrectos, el panel no podrá reconectarse y solo podrás recuperarlo editando la tarjeta SD a mano.</div>`;
+    }
+    html += `</div>`;
+  }
+  cfgBody.innerHTML = html;
+}
+
+function collectConfigValues(){
+  const out = {};
+  cfgBody.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    if (el.type === 'checkbox') out[key] = el.checked ? 1 : 0;
+    else out[key] = el.value;
+  });
+  return out;
+}
+
+async function abrirAjustes(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configura la IP del panel (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  cfgOverlay.classList.add('open');
+  cfgBody.innerHTML = '<div class="cfgLoading">Cargando ajustes del panel...</div>';
+
+  try {
+    const res = await fetch(`http://${ip}/config`, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    renderConfigForm(data);
+  } catch (e){
+    cfgBody.innerHTML = '<div class="cfgLoading">No se pudo cargar la configuración del panel.</div>';
+  }
+}
+
+async function cerrarAjustesSinGuardar(){
+  const ip = ipEl.value.trim();
+  cfgOverlay.classList.remove('open');
+  if (!ip) return;
+  try {
+    await fetch(`http://${ip}/config/exit`, { method: 'POST', signal: AbortSignal.timeout(3000) });
+  } catch (e) { /* si no responde, no pasa nada: el panel seguirá mostrando "Configuración APP" hasta el próximo reinicio manual */ }
+}
+
+async function guardarAjustes(){
+  const ip = ipEl.value.trim();
+  if (!ip || !cfgOriginal) return;
+
+  const nuevo = collectConfigValues();
+  const cambioSensible = ['WIFI_ENABLE','SSID','PASS'].some(k => String(nuevo[k]) !== String(cfgOriginal[k]));
+  if (cambioSensible){
+    const ok = confirm('Vas a cambiar los ajustes de WiFi. Si son incorrectos perderás la conexión con el panel. ¿Continuar?');
+    if (!ok) return;
+  }
+
+  cfgBody.innerHTML = '<div class="cfgLoading">Guardando y reiniciando el panel...</div>';
+  try {
+    const res = await fetch(`http://${ip}/config`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevo),
+      signal: AbortSignal.timeout(5000)
+    });
+    if (res.ok){
+      cfgBody.innerHTML = '<div class="cfgLoading">Guardado ✓ El panel se está reiniciando...</div>';
+      setTimeout(() => { cfgOverlay.classList.remove('open'); }, 2500);
+    } else {
+      cfgBody.innerHTML = '<div class="cfgLoading">El panel respondió con error (' + res.status + ')</div>';
+    }
+  } catch (e){
+    // El ESP32 se reinicia justo tras responder: es normal que la conexión se corte aquí.
+    cfgBody.innerHTML = '<div class="cfgLoading">Guardado ✓ El panel se está reiniciando...</div>';
+    setTimeout(() => { cfgOverlay.classList.remove('open'); }, 2500);
+  }
+}
+
+document.getElementById('settingsBtn').addEventListener('click', abrirAjustes);
+document.getElementById('cfgClose').addEventListener('click', cerrarAjustesSinGuardar);
+document.getElementById('cfgCancel').addEventListener('click', cerrarAjustesSinGuardar);
+document.getElementById('cfgSave').addEventListener('click', guardarAjustes);
 
 /* Estado inicial */
 setColor('#FFB000');
