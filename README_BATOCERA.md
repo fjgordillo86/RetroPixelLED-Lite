@@ -1,5 +1,7 @@
 # 🕹️ Integración con Batocera (Modo Arcade Lite)
 
+¡¡¡¡ EN CONSTRUCCIÓN PARA LA NUEVA VERSIÓN 3.1.0 !!!!
+
 El **Modo Arcade** en la versión Lite permite que tu matriz LED funcione como una marquesina dinámica. El panel detectará qué juego estás lanzando en **Batocera** y mostrará automáticamente su logo en formato BMP de 24 bits.
 
 #### Aprovechamiento de Recursos (Scraping)
