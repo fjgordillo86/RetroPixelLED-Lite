@@ -1,4 +1,4 @@
-# 🕹️ Integración con Batocera (Modo Arcade Lite)
+# 🕹️ Integración con Batocera
 
 **¡¡¡¡ EN CONSTRUCCIÓN PARA LA NUEVA VERSIÓN 3.1.0 !!!!**
 
@@ -8,18 +8,17 @@ El **Modo Arcade** en la versión Lite permite que tu matriz LED funcione como u
 La principal ventaja de este sistema es que **utiliza las imágenes que ya has scrapeado en Batocera** (marquesinas/wheel art). El script de PowerShell se encarga de buscarlas, redimensionarlas y convertirlas automáticamente.
 
 ## 1. Preparación de Assets (Script de PowerShell)
-Para que el ESP32 encuentre los archivos de forma instantánea entre miles de juegos. Para ello, los archivos deben estar indexados y procesados correctamente.
+Para que el ESP32 encuentre los archivos de forma instantánea entre miles de juegos, los archivos deben estar indexados y procesados correctamente.
 
 ### 1.1 🛠️ Cómo usar el Script (Ejecutar Script Marquesinas)
 El script se encuentra en la carpeta `Arcade/Marquesinas/` del proyecto [aquí](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Arcade/Marquesinas). Consta de dos archivos `Ejecutar Script Marquesinas Batocera.bat` y `Script Marquesinas Batocera.ps1`.
 
-1.  **Conecta la SD** de tu Retro Pixel LED al PC.
-2.  **Ejecuta el archivo** ``Ejecutar Script Marquesinas Batocera.bat` (Lanzador para evitar bloqueos de Windows).
-3.  **Configuración de rutas:**
+1.  **Ejecuta el archivo** ``Ejecutar Script Marquesinas Batocera.bat` (Lanzador para evitar bloqueos de Windows).
+2.  **Configuración de rutas:**
     * **Origen:** Introduce la ruta de tus ROMs de Batocera (ej: `\\192.168.1.119\share\roms`).
     * **Destino:** Introduce la ruta `C:\marquesinas`.
-4.  **Selección de Sistema:** El script detectará automáticamente qué sistemas tienen un archivo `gamelist.xml`. Puedes elegir procesar uno solo por su número, varios o **Todos (0)**.
-5.  **Copiar:** Si seleccionaste la ruta `C:\marquesinas` copia la carpeta  `marquesinas` y todo su contenido en la SD o SSD donde está instalado Batocera `roms/`, como se indica en siguiente punto.
+3.  **Selección de Sistema:** El script detectará automáticamente qué sistemas tienen un archivo `gamelist.xml`. Puedes elegir procesar uno solo por su número, varios o **Todos (0)**.
+4.  **Copiar:** Si seleccionaste la ruta `C:\marquesinas` copia la carpeta  `marquesinas` y todo su contenido en la SD o SSD donde está instalado Batocera `roms/`, como se indica en el punto 3. Estructura de archivos en la SD o SSD de Batocera
 
 <img width="1111" height="619" alt="image" src="https://github.com/user-attachments/assets/cac94465-3382-477c-98e8-b73e5de22939" />
 
@@ -36,11 +35,8 @@ El script se encuentra en la carpeta `Arcade/Marquesinas/` del proyecto [aquí](
 
 ## 3. Estructura de archivos en la SD o SSD de Batocera
 
-
 Para que la integración funcione correctamente, debemos de pegar la carpeta marquesinas en la carpeta roms/ (es donde tenemos todos los juegos)
 * **`roms/marquesinas/Arcade/sistema/rom_name.bmp`** (Marquesina del juego procesada, ej: `mslug.bmp`)
-
-
 
 #### Ejemplo visual de carpetas:
 ```
