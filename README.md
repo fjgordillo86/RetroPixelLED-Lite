@@ -158,6 +158,8 @@ El sistema se controla mediante un **único botón**. Utiliza una lógica de pul
 
 La PWA es una aplicación web moderna, instalable en cualquier dispositivo (móvil, tablet, ordenador) que se conecte a la misma red local que el panel. No requiere servidor externo, funciona completamente en la red local y es accesible offline una vez instalada.
 
+https://github.com/user-attachments/assets/f5231448-7862-4476-901e-ac25ac7f4248
+
 #### 🎯 Características Principales
 
 La interfaz se divide en **5 secciones independientes** accesibles desde la barra de navegación:
