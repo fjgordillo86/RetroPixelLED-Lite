@@ -9,7 +9,7 @@
 
 Si la rama 2.x.x introdujo el Menú OSD, la nueva **v3.0.0** supone el salto definitivo hacia la independencia del hardware. Esta versión transforma el panel LED en un dispositivo inteligente autónomo, eliminando por completo la necesidad de conectar el ESP32 al ordenador para tareas de mantenimiento o configuración.
 Por primera vez, el sistema permite la edición de archivos de configuración (`config.ini`) y la gestión de librerías de playlists directamente desde el Explorador de Windows o clientes FTP, convirtiendo la tarjeta SD en una unidad de red inalámbrica.
-Se integra soporte nativo para mandos a distancia, permitiendo navegar por el Menú OSD, ajustar el brillo dinámico y controlar el encendido/apagado desde el sofá. ¡¡¡A partir de la versión 3.1.0 podemos controlar el panel LED desde la APP!!!
+Se integra soporte nativo para mandos a distancia, permitiendo navegar por el Menú OSD, ajustar el brillo dinámico y controlar el encendido/apagado desde el sofá. **¡¡¡A partir de la versión 3.1.0 podemos controlar el panel LED desde la APP!!!**
 
 
 ¿Quieres hacer tus propios GIFs?  Aquí tienes tres herramientas magínificas.
