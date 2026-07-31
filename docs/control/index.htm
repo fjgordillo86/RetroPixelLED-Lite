@@ -202,6 +202,103 @@
   #cfgCancel{background:transparent; border:2px solid var(--grid-line); color:var(--text-dim);}
 
   .cfgLoading{text-align:center; padding:30px 0; color:var(--text-dim); font-size:11px;}
+  .otaResult{margin-top:10px; font-size:11px; text-align:center; color:var(--text-dim);}
+  .otaResult.ok{color:#5FDB7E;}
+  .otaResult.err{color:var(--red-alert);}
+
+  /* ---------- LISTA DE PLAYLISTS ---------- */
+  .plList{display:flex; flex-direction:column; gap:8px;}
+  .plItem{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 14px; background:var(--bg-deep); border:1px solid var(--grid-line);
+    border-radius:8px; cursor:pointer; font-size:13px;
+  }
+  .plItem.active{border-color:var(--amber); color:var(--amber);}
+  .plItem .plCheck{opacity:0; font-size:14px;}
+  .plItem.active .plCheck{opacity:1;}
+
+  /* ---------- BLOQUE OTA (dentro de Ajustes) ---------- */
+  .otaBox{
+    background:var(--bg-deep); border:1px solid var(--grid-line); border-radius:10px;
+    padding:12px; margin-bottom:18px;
+  }
+  .otaBox h3{
+    font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--amber);
+    margin:0 0 8px;
+  }
+  .otaBox p{font-size:10px; color:var(--text-dim); line-height:1.5; margin:0 0 10px;}
+  #otaBtn{
+    width:100%; padding:11px; border-radius:8px; border:2px solid var(--amber);
+    background:transparent; color:var(--amber); font-family:var(--font-pixel);
+    font-size:10px; letter-spacing:1px; cursor:pointer;
+  }
+
+  /* ---------- ENCENDIDO/APAGADO (home) ---------- */
+  .powerSection{margin-bottom:16px;}
+  .powerBtn{
+    width:100%; padding:14px; border-radius:10px; cursor:pointer;
+    font-family:var(--font-pixel); font-size:11px; letter-spacing:1px;
+    border:2px solid var(--red-alert); background:transparent; color:var(--red-alert);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .powerBtn.sleeping{border-color:var(--amber); color:var(--amber); background:rgba(255,176,0,0.08);}
+
+  /* ---------- BRILLO ---------- */
+  .brightSection{margin-bottom:16px;}
+
+  /* ---------- PESTAÑAS DE MODO ---------- */
+  .modeTabs{display:flex; gap:6px; margin-bottom:16px;}
+  .modeTab{
+    flex:1; padding:10px 4px; border-radius:8px; border:1px solid var(--grid-line);
+    background:var(--panel); color:var(--text-dim); font-family:var(--font-mono);
+    font-size:11px; font-weight:700; cursor:pointer; letter-spacing:.3px;
+  }
+  .modeTab.active{border-color:var(--amber); color:var(--amber); background:rgba(255,176,0,0.08);}
+  .modePanel{display:none;}
+  .modePanel.active{display:block;}
+
+  /* ---------- PLAYLIST ACTIVA (fila resumen en modo GIF) ---------- */
+  .plCurrentRow{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 14px; background:var(--panel); border:1px solid var(--grid-line);
+    border-radius:8px; cursor:pointer; font-size:13px;
+  }
+  .plChevron{color:var(--text-dim);}
+
+  /* ---------- SELECTOR DE ESTILO DE RELOJ ---------- */
+  .pillRow{display:flex; flex-wrap:wrap; gap:8px;}
+  .pill{
+    padding:9px 14px; border-radius:20px; border:1px solid var(--grid-line);
+    background:var(--panel); color:var(--text-dim); font-size:11px; cursor:pointer;
+  }
+  .pill.active{border-color:var(--amber); color:var(--amber); background:rgba(255,176,0,0.08);}
+
+  .applyModeRow{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:var(--panel); border:1px solid var(--grid-line); border-radius:8px;
+    padding:12px 14px; margin-bottom:16px; font-size:12px; color:var(--text-dim);
+  }
+  .applyModeRow .pill{white-space:nowrap;}
+  .applyModeRow .pill:disabled{opacity:.5; cursor:default;}
+
+  /* ---------- TEMPORIZADOR ---------- */
+  .timerStatus{
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--bg-deep); border:1px solid var(--grid-line); border-radius:8px;
+    padding:12px 14px; margin-bottom:18px; font-size:12px;
+  }
+  .timerStatus .tsDot{width:8px; height:8px; border-radius:50%; margin-right:8px; display:inline-block;}
+  .timerRow{display:flex; align-items:center; gap:12px; margin-bottom:14px;}
+  .timerRow label{flex:1; font-size:12px;}
+  .timerRow input[type=time]{
+    background:var(--bg-deep); border:1px solid var(--grid-line); border-radius:6px;
+    color:var(--text-primary); font-family:var(--font-mono); font-size:14px; padding:8px 10px;
+  }
+  #timerToggleBtn{
+    width:100%; padding:12px; border-radius:8px; border:2px solid var(--grid-line);
+    background:transparent; color:var(--text-primary); font-family:var(--font-pixel);
+    font-size:10px; letter-spacing:1px; cursor:pointer; margin-top:6px;
+  }
 </style>
 </head>
 <body>
@@ -210,9 +307,11 @@
   <header>
     <div class="brand">
       <div class="dot" id="connDot"></div>
-      <h1>Retro<span style="color:var(--amber)">Pixel</span><span style="color:#FF3B30">L</span><span style="color:#00E676">E</span><span style="color:#0099FF">D</span> <span style="color:var(--text-primary);"></span></h1>
+      <h1>Retro<span style="color:var(--amber)">Pixel</span> <span style="color:#FF3B30">L</span><span style="color:#00E676">E</span><span style="color:#0099FF">D</span> <span style="color:var(--text-primary);"></span></h1>
     </div>
     <div class="headerBtns">
+      <button class="gear" id="timerBtn" aria-label="Temporizador">⏰</button>
+      <button class="gear" id="updateBtn" aria-label="Actualización">🔄</button>
       <button class="gear" id="settingsBtn" aria-label="Ajustes del panel">🛠</button>
       <button class="gear" id="gearBtn" aria-label="Conexión">⚙</button>
     </div>
@@ -221,45 +320,104 @@
   <div class="conn" id="connPanel">
     <label for="ip">IP del panel en la red local</label>
     <input type="text" id="ip" placeholder="192.168.1.50" inputmode="decimal">
-    <div class="hint">La app envía peticiones a <code>http://IP/texto</code>. Debe estar en la misma red WiFi que el panel.</div>
+    <div class="hint">La app envía peticiones a <code>http://IP/</code>. Debe estar en la misma red WiFi que el panel.</div>
   </div>
 
-  <div class="panel-frame">
-    <div class="rivet-row">
-      <div class="rivet"></div><div class="rivet"></div><div class="rivet"></div><div class="rivet"></div>
+  <section class="powerSection">
+    <button class="powerBtn" id="powerBtn">⏻ APAGAR PANEL</button>
+  </section>
+
+  <section class="brightSection">
+    <div class="label-row"><span class="l">☀ Brillo</span><span class="v" id="brightVal">40%</span></div>
+    <input type="range" id="brightness" min="0" max="100" step="1" value="40">
+  </section>
+
+  <div class="modeTabs">
+    <button class="modeTab active" id="tabGif" data-mode="gif">🎞 GIF</button>
+    <button class="modeTab" id="tabReloj" data-mode="reloj">🕐 RELOJ</button>
+    <button class="modeTab" id="tabTexto" data-mode="texto">🔤 TEXTO</button>
+  </div>
+
+  <!-- ---------- PANEL: MODO GIF ---------- -->
+  <div class="modePanel" id="modeGif">
+    <section>
+      <div class="label-row"><span class="l">Playlist activa</span></div>
+      <div class="plCurrentRow" id="plCurrentBtn">
+        <span id="plCurrentName">—</span>
+        <span class="plChevron">▸</span>
+      </div>
+    </section>
+    <section>
+      <div class="cfgToggleRow">
+        <label for="randomToggle">Reproducción aleatoria</label>
+        <label class="cfgSwitch">
+          <input type="checkbox" id="randomToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </section>
+  </div>
+
+  <!-- ---------- PANEL: MODO RELOJ ---------- -->
+  <div class="modePanel" id="modeReloj">
+    <div class="applyModeRow">
+      <span id="clockModeStatus">Modo actual: GIF</span>
+      <button class="pill" id="applyClockModeBtn">Cambiar a Reloj</button>
     </div>
-    <div class="screen">
-      <canvas id="matrix"></canvas>
+    <section>
+      <div class="label-row"><span class="l">Estilo</span></div>
+      <div class="pillRow" id="clockStyleRow"></div>
+    </section>
+    <section>
+      <div class="label-row"><span class="l">Color</span></div>
+      <div class="swatches" id="clockSwatches"></div>
+    </section>
+  </div>
+
+  <!-- ---------- PANEL: MODO TEXTO ---------- -->
+  <div class="modePanel" id="modeTexto">
+    <div class="cfgWarning" id="textoDisabledWarning" style="display:none;">
+      El modo texto está desactivado en el panel. Actívalo en Ajustes (🛠 → Reproducción → "Texto scroll") y reinicia el panel para poder usarlo.
     </div>
-    <div class="panel-caption">
-      <span>VISTA PREVIA</span>
-      <span id="capSpeed">50 ms/paso</span>
+
+    <div class="panel-frame">
+      <div class="rivet-row">
+        <div class="rivet"></div><div class="rivet"></div><div class="rivet"></div><div class="rivet"></div>
+      </div>
+      <div class="screen">
+        <canvas id="matrix"></canvas>
+      </div>
+      <div class="panel-caption">
+        <span>VISTA PREVIA</span>
+        <span id="capSpeed">50 ms/paso</span>
+      </div>
+    </div>
+
+    <section>
+      <div class="label-row"><span class="l">Mensaje</span><span class="v" id="msgLen">0</span></div>
+      <textarea id="msg" maxlength="80" placeholder="Escribe el texto a mostrar..."></textarea>
+    </section>
+
+    <section>
+      <div class="label-row"><span class="l">Color</span></div>
+      <div class="swatches" id="swatches"></div>
+      <div class="hexrow">
+        <input type="color" id="colorPicker" value="#FFB000">
+        <input type="text" id="colorHex" value="#FFB000" maxlength="7">
+      </div>
+    </section>
+
+    <section>
+      <div class="label-row"><span class="l">Velocidad</span><span class="v" id="speedVal">50 ms</span></div>
+      <input type="range" id="speed" min="5" max="200" step="5" value="50">
+    </section>
+
+    <div class="btnrow">
+      <button class="big" id="send">▶ ENVIAR</button>
+      <button class="big" id="stop">■ STOP</button>
     </div>
   </div>
 
-  <section>
-    <div class="label-row"><span class="l">Mensaje</span><span class="v" id="msgLen">0</span></div>
-    <textarea id="msg" maxlength="80" placeholder="Escribe el texto a mostrar..."></textarea>
-  </section>
-
-  <section>
-    <div class="label-row"><span class="l">Color</span></div>
-    <div class="swatches" id="swatches"></div>
-    <div class="hexrow">
-      <input type="color" id="colorPicker" value="#FFB000">
-      <input type="text" id="colorHex" value="#FFB000" maxlength="7">
-    </div>
-  </section>
-
-  <section>
-    <div class="label-row"><span class="l">Velocidad</span><span class="v" id="speedVal">50 ms</span></div>
-    <input type="range" id="speed" min="5" max="200" step="5" value="50">
-  </section>
-
-  <div class="btnrow">
-    <button class="big" id="send">▶ ENVIAR</button>
-    <button class="big" id="stop">■ STOP</button>
-  </div>
   <div class="status" id="statusMsg"></div>
 
 </div>
@@ -276,7 +434,74 @@
     <div id="cfgBody"><div class="cfgLoading">Cargando ajustes del panel...</div></div>
     <div class="modalBtnRow">
       <button id="cfgCancel">CANCELAR</button>
-      <button id="cfgSave">GUARDAR Y REINICIAR</button>
+      <button id="cfgSave">GUARDAR</button>
+    </div>
+  </div>
+</div>
+
+<div class="modalOverlay" id="plOverlay">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>PLAYLISTS</h2>
+      <button class="modalClose" id="plClose">✕</button>
+    </div>
+    <div class="modalSub">Toca una playlist para activarla en el panel al instante.</div>
+    <div id="plBody"><div class="cfgLoading">Cargando playlists...</div></div>
+  </div>
+</div>
+
+<div class="modalOverlay" id="timerOverlay">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>TEMPORIZADOR</h2>
+      <button class="modalClose" id="timerClose">✕</button>
+    </div>
+    <div class="modalSub">Enciende y apaga el panel automáticamente a las horas que indiques. Los cambios se aplican y guardan al instante.</div>
+
+    <div class="timerStatus">
+      <span><span class="tsDot" id="timerStatusDot"></span><span id="timerStatusText">—</span></span>
+      <span id="timerNowClock" style="color:var(--text-dim);"></span>
+    </div>
+
+    <div class="cfgToggleRow" style="margin-bottom:16px;">
+      <label for="timerEnableToggle">Temporizador activo</label>
+      <label class="cfgSwitch">
+        <input type="checkbox" id="timerEnableToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="timerRow">
+      <label>Encendido</label>
+      <input type="time" id="timerOn" step="300">
+    </div>
+    <div class="timerRow">
+      <label>Apagado</label>
+      <input type="time" id="timerOff" step="300">
+    </div>
+
+    <button id="timerToggleBtn">APAGAR AHORA</button>
+  </div>
+</div>
+
+<div class="modalOverlay" id="updateOverlay">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>ACTUALIZACIÓN</h2>
+      <button class="modalClose" id="updateClose">✕</button>
+    </div>
+
+    <div class="otaBox">
+      <h3>Firmware (OTA)</h3>
+      <p>Comprueba si hay una versión nueva publicada y, si la hay, la descarga e instala. El panel se reiniciará automáticamente durante el proceso.</p>
+      <button id="otaBtn">⬆ BUSCAR ACTUALIZACIÓN</button>
+    </div>
+
+    <div class="otaBox">
+      <h3>Archivos de idioma</h3>
+      <p>Descarga desde GitHub todos los <code>.json</code> de la carpeta de idioma y los guarda en <code>/idioma</code> de la SD, sustituyendo los que ya existan. <span style="color: white;">¡Disponible en la próxima versión!</span></p>
+      <button id="idiomasBtn">📥 DESCARGAR IDIOMAS</button>
+      <div class="otaResult" id="idiomasResultado" style="display:none;"></div>
     </div>
   </div>
 </div>
@@ -312,6 +537,8 @@ const GLYPHS = {
   'X':['#...#','.#.#.','..#..','..#..','..#..','.#.#.','#...#'],
   'Y':['#...#','.#.#.','..#..','..#..','..#..','..#..','..#..'],
   'Z':['#####','....#','...#.','..#..','.#...','#....','#####'],
+  
+  // ESPAÑOL
   'Ñ':['.#.#.','#...#','##..#','#.#.#','#..##','#...#','#...#'],
   'Á':['..#..','.###.','#...#','#####','#...#','#...#','#...#'],
   'É':['..#..','#####','#....','####.','#....','#....','#####'],
@@ -319,6 +546,18 @@ const GLYPHS = {
   'Ó':['..#..','.###.','#...#','#...#','#...#','#...#','.###.'],
   'Ú':['..#..','#...#','#...#','#...#','#...#','#...#','.###.'],
   'Ü':['.#.#.','#...#','#...#','#...#','#...#','#...#','.###.'],
+
+  // POLACO (Nuevos)
+  'Ą':['.###.','#...#','#...#','#####','#...#','#...#','#..#.'],
+  'Ć':['..#..','.####','#....','#....','#....','#....','.####'],
+  'Ę':['#####','#....','#....','####.','#....','#####','...#.'],
+  'Ł':['#....','#....','#.##.','##...','#....','#....','#####'],
+  'Ń':['..#..','#...#','##..#','#.#.#','#..##','#...#','#...#'],
+  'Ś':['..#..','.####','#....','.###.','....#','....#','####.'],
+  'Ź':['...#.','#####','...#.','..#..','.#...','#....','#####'],
+  'Ż':['..#..','#####','...#.','..#..','.#...','#....','#####'],
+
+  // NÚMEROS Y SÍMBOLOS
   '0':['.###.','#...#','#..##','#.#.#','##..#','#...#','.###.'],
   '1':['.#.','##.','.#.','.#.','.#.','.#.','###'],
   '2':['.###.','#...#','....#','...#.','..#..','.#...','#####'],
@@ -341,6 +580,19 @@ const GLYPHS = {
   "'":['#.','#.','..','..','..','..','..'],
 };
 
+// Aliases para mapear automáticamente las posiciones de memoria 0x80-0x8F al Canvas web
+const MAPA_ALIAS_POLACO = {
+  '\x80': GLYPHS['Ą'], '\x81': GLYPHS['Ą'],
+  '\x82': GLYPHS['Ć'], '\x83': GLYPHS['Ć'],
+  '\x84': GLYPHS['Ę'], '\x85': GLYPHS['Ę'],
+  '\x86': GLYPHS['Ł'], '\x87': GLYPHS['Ł'],
+  '\x88': GLYPHS['Ń'], '\x89': GLYPHS['Ń'],
+  '\x8A': GLYPHS['Ś'], '\x8B': GLYPHS['Ś'],
+  '\x8C': GLYPHS['Ź'], '\x8D': GLYPHS['Ź'],
+  '\x8E': GLYPHS['Ż'], '\x8F': GLYPHS['Ż']
+};
+Object.assign(GLYPHS, MAPA_ALIAS_POLACO);
+
 function glyphColumns(ch){
   const rows = GLYPHS[ch] || GLYPHS['?'];
   const width = rows[0].length;
@@ -355,10 +607,39 @@ function glyphColumns(ch){
   return cols;
 }
 
+/* =========================================================
+   Función para mapear caracteres polacos a códigos 0x80-0x8F
+   ========================================================= */
+function utf8ToExtended(str) {
+    const map = {
+        'Ą': 0x80, 'ą': 0x81, 'Ć': 0x82, 'ć': 0x83,
+        'Ę': 0x84, 'ę': 0x85, 'Ł': 0x86, 'ł': 0x87,
+        'Ń': 0x88, 'ń': 0x89, 'Ś': 0x8A, 'ś': 0x8B,
+        'Ź': 0x8C, 'ź': 0x8D, 'Ż': 0x8E, 'ż': 0x8F
+    };
+    
+    let codes = [];
+    for (let char of str) {
+        if (map[char]) {
+            codes.push(map[char]);
+        } else {
+            let code = char.charCodeAt(0);
+            codes.push(code <= 0xFF ? code : 63); // 63 es '?'
+        }
+    }
+    return codes;
+}
+
 function buildColumns(text){
   const cols = [];
   const clean = text.toUpperCase();
-  for (const ch of clean){
+  // Aplicamos la conversión para obtener el array de caracteres/códigos
+  const mappedCodes = utf8ToExtended(clean);
+  
+  for (const code of mappedCodes){
+    // Si es un código especial remapeado (>127), buscamos su clave en GLYPHS si decidieras 
+    // añadir el dibujo manual, o lo pasamos directamente como carácter estándar.
+    const ch = typeof code === 'number' && code > 127 ? String.fromCharCode(code) : String.fromCharCode(code);
     cols.push(...glyphColumns(ch));
     cols.push(0); // separación entre caracteres
   }
@@ -512,6 +793,7 @@ gearBtn.addEventListener('click', () => connPanel.classList.toggle('open'));
 ipEl.addEventListener('change', () => {
   saveIp(ipEl.value.trim());
   pingPanel();
+  cargarEstadoPanel();
 });
 
 /* ---------- Envío al panel ---------- */
@@ -536,12 +818,224 @@ async function pingPanel(){
 }
 pingPanel();
 
+/* =========================================================
+   ESTADO GENERAL DEL PANEL (brillo, modo, playlist, reloj...)
+   ========================================================= */
+const CLOCK_STYLES = ['Matrix', 'Solid', 'Rainbow', 'Pulse', 'Gradient'];
+let panelStatus = null; // última foto de /status
+let currentTab = 'gif';
+
+async function enviarControl(cambios){
+  const ip = ipEl.value.trim();
+  if (!ip) return false;
+  try {
+    const res = await fetch(`http://${ip}/control`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cambios),
+      signal: AbortSignal.timeout(4000)
+    });
+    return res.ok;
+  } catch (e){
+    setStatus('No se pudo conectar con el panel', 'err');
+    return false;
+  }
+}
+
+async function cargarEstadoPanel(){
+  const ip = ipEl.value.trim();
+  if (!ip) return;
+  try {
+    const res = await fetch(`http://${ip}/status`, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return;
+    panelStatus = await res.json();
+    aplicarEstadoPanelAUI(panelStatus);
+  } catch (e) { /* sin conexión: dejamos los valores por defecto */ }
+}
+
+function aplicarEstadoPanelAUI(st){
+  // Brillo
+  const b = Math.round((st.brightness / 255) * 100);
+  document.getElementById('brightness').value = b;
+  document.getElementById('brightVal').textContent = b + '%';
+
+  // Playlist activa
+  document.getElementById('plCurrentName').textContent = st.activePlaylist || '(ninguna)';
+
+  // Aleatorio
+  document.getElementById('randomToggle').checked = !!st.randomMode;
+
+  // Reloj: estilo
+  renderClockStylePills(st.clockStyle);
+  // Reloj: color
+  refreshClockSwatchSelection(st.clockColorIndex);
+
+  // Texto activado en firmware
+  document.getElementById('textoDisabledWarning').style.display = st.textEnable ? 'none' : 'block';
+  document.getElementById('send').disabled = !st.textEnable;
+
+  // Encendido/apagado
+  actualizarEstadoEnergia(st.isSleeping);
+
+  // Modo real actual del panel (independiente de la pestaña que se esté mirando)
+  panelPlayModeActual = st.playMode;
+  actualizarClockModeUI(panelPlayModeActual);
+
+  // Pestaña inicial: si hay texto reproduciéndose ahora mismo, abrimos ahí
+  if (st.textoActivo) selectMode('texto', false);
+  else selectMode(st.playMode == 1 ? 'reloj' : 'gif', false);
+}
+/* ---------- Encendido y Apagado (Botón principal Home) ---------- */
+const powerBtn = document.getElementById('powerBtn');
+
+function actualizarEstadoEnergia(isSleeping) {
+  // 1. Actualiza el estilo y texto del botón principal de la Home
+  if (isSleeping) {
+    powerBtn.classList.add('sleeping');
+    powerBtn.innerHTML = '⏻ ENCENDER PANEL';
+  } else {
+    powerBtn.classList.remove('sleeping');
+    powerBtn.innerHTML = '⏻ APAGAR PANEL';
+  }
+  
+  // 2. Sincroniza también los textos y el punto verde del menú Temporizador
+  pintarEstadoTemporizador(isSleeping);
+}
+
+powerBtn.addEventListener('click', async () => {
+  const ip = ipEl.value.trim();
+  if (!ip) {
+    setStatus('Configura la IP del panel (⚙)', 'err');
+    connPanel.classList.add('open');
+    return;
+  }
+  
+  powerBtn.disabled = true;
+  try {
+    const res = await fetch(`http://${ip}/timer/toggle`, { 
+      method: 'POST', 
+      signal: AbortSignal.timeout(4000) 
+    });
+    
+    if (res.ok) {
+      const data = await res.json();
+      actualizarEstadoEnergia(!!data.isSleeping);
+    } else {
+      setStatus('El panel respondió con error (' + res.status + ')', 'err');
+    }
+  } catch (e) {
+    setStatus('No se pudo conectar con el panel', 'err');
+  }
+  powerBtn.disabled = false;
+});
+
+/* ---------- Brillo ---------- */
+const brightEl = document.getElementById('brightness');
+const brightValEl = document.getElementById('brightVal');
+brightEl.addEventListener('input', () => { brightValEl.textContent = brightEl.value + '%'; });
+brightEl.addEventListener('change', async () => {
+  const brightness255 = Math.round((parseInt(brightEl.value, 10) / 100) * 255);
+  await enviarControl({ brightness: brightness255 });
+});
+
+/* ---------- Pestañas de modo ---------- */
+let panelPlayModeActual = 0; // 0 = GIF, 1 = Reloj (estado real confirmado por el panel)
+
+function selectMode(mode, avisarPanel = true){
+  currentTab = mode;
+  document.querySelectorAll('.modeTab').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  document.getElementById('modeGif').classList.toggle('active', mode === 'gif');
+  document.getElementById('modeReloj').classList.toggle('active', mode === 'reloj');
+  document.getElementById('modeTexto').classList.toggle('active', mode === 'texto');
+
+  if (mode === 'reloj') actualizarClockModeUI(panelPlayModeActual);
+
+  if (!avisarPanel) return;
+
+  if (mode === 'gif'){
+    enviarControl({ playMode: 0 });
+    panelPlayModeActual = 0;
+    actualizarClockModeUI(0);
+  }
+  // 'reloj' ya no cambia el panel solo con abrir la pestaña: hay que pulsar "Cambiar a Reloj".
+  // 'texto' tampoco fuerza nada: solo se activa al pulsar ENVIAR.
+}
+
+document.querySelectorAll('.modeTab').forEach(btn => {
+  btn.addEventListener('click', () => selectMode(btn.dataset.mode));
+});
+
+/* ---------- Aplicar modo Reloj explícitamente ---------- */
+function actualizarClockModeUI(playModeActual){
+  const status = document.getElementById('clockModeStatus');
+  const btn = document.getElementById('applyClockModeBtn');
+  if (playModeActual === 1){
+    status.textContent = 'Modo actual: Reloj ✓';
+    btn.textContent = 'Activo';
+    btn.disabled = true;
+  } else {
+    status.textContent = 'Modo actual: GIF';
+    btn.textContent = 'Cambiar a Reloj';
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('applyClockModeBtn').addEventListener('click', async () => {
+  const ok = await enviarControl({ playMode: 1 });
+  if (ok !== false){
+    panelPlayModeActual = 1;
+    actualizarClockModeUI(1);
+  }
+});
+
+/* ---------- Modo GIF: playlist activa + aleatorio ---------- */
+document.getElementById('plCurrentBtn').addEventListener('click', abrirPlaylists);
+
+document.getElementById('randomToggle').addEventListener('change', async (e) => {
+  await enviarControl({ randomMode: e.target.checked ? 1 : 0 });
+});
+
+/* ---------- Modo RELOJ: estilo + color ---------- */
+function renderClockStylePills(activeIndex){
+  const row = document.getElementById('clockStyleRow');
+  row.innerHTML = CLOCK_STYLES.map((name, i) => `
+    <button class="pill ${i === activeIndex ? 'active' : ''}" data-style="${i}">${name}</button>
+  `).join('');
+  row.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', async () => {
+      row.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      await enviarControl({ clockStyle: parseInt(p.dataset.style, 10) });
+    });
+  });
+}
+
+const clockSwatchesEl = document.getElementById('clockSwatches');
+PALETTE.forEach((p, i) => {
+  const div = document.createElement('div');
+  div.className = 'swatch';
+  div.style.background = p.c;
+  div.title = p.n;
+  div.dataset.index = i;
+  div.addEventListener('click', async () => {
+    refreshClockSwatchSelection(i);
+    await enviarControl({ clockColorIndex: i });
+  });
+  clockSwatchesEl.appendChild(div);
+});
+
+function refreshClockSwatchSelection(index){
+  clockSwatchesEl.querySelectorAll('.swatch').forEach(s => {
+    const isActive = parseInt(s.dataset.index, 10) === index;
+    s.classList.toggle('active', isActive);
+    if (isActive) s.style.color = PALETTE[index].c;
+  });
+}
+
+cargarEstadoPanel();
+
 async function enviarTexto(){
   const ip = ipEl.value.trim();
-  if (!ip){ setStatus('Configura la IP del panel (⚙)', 'err'); connPanel.classList.add('open'); return; }
-  if (!currentText){ setStatus('Escribe un mensaje primero', 'err'); return; }
-
-  setStatus('Enviando...');
   try {
     const res = await fetch(`http://${ip}/texto`, {
       method: 'POST',
@@ -579,7 +1073,7 @@ document.getElementById('send').addEventListener('click', enviarTexto);
 document.getElementById('stop').addEventListener('click', detenerTexto);
 
 /* =========================================================
-   AJUSTES DEL PANEL
+   AJUSTES DEL PANEL (config.ini remoto, excepto IR_REMOTE)
    ========================================================= */
 const CONFIG_SCHEMA = [
   { group: 'WiFi', fields: [
@@ -591,28 +1085,24 @@ const CONFIG_SCHEMA = [
   { group: 'Hardware', fields: [
     { key:'PANEL_CHAIN', label:'Nº de paneles encadenados', type:'number', min:1, max:8 },
     { key:'COLOR_ORDER', label:'Orden de color', type:'select', options:['RGB','RBG','GBR'] },
-    { key:'BRIGHTNESS', label:'Brillo (0-255)', type:'range', min:0, max:255 },
     { key:'I2S_SPEED', label:'Velocidad I2S', type:'select', options:[
         {v:0,l:'8 MHz'},{v:1,l:'10 MHz'},{v:2,l:'16 MHz'},{v:3,l:'20 MHz (Turbo)'}] },
     { key:'REFRESH_MIN', label:'Refresco mínimo (Hz)', type:'number', min:30, max:120 },
     { key:'DOUBLE_BUFF', label:'Doble buffer', type:'toggle' },
     { key:'LATCH_BLANK', label:'Anti-ghosting (1-4)', type:'number', min:1, max:4 },
   ]},
-  { group: 'Reproducción', fields: [
-    { key:'PLAY_MODE', label:'Modo de visualización', type:'select', options:[{v:0,l:'GIFs'},{v:1,l:'Solo reloj'}] },
-	{ key:'RANDOM_MODE', label:'Orden aleatorio', type:'toggle' },
+  { group: 'Arcade', fields: [
     { key:'ARCADE_ENABLE', label:'Sistema Arcade', type:'select', options:[
         {v:0,l:'OFF'},{v:1,l:'Batocera'},{v:2,l:'Recalbox'},{v:3,l:'ReplayOS'}] },
-    { key:'TEXT_ENABLE', label:'Texto scroll', type:'toggle' },
+  ]},
+  { group: 'Texto Deslizante', fields: [
+    { key:'TEXT_ENABLE', label:'Activar Texto Scroll', type:'toggle' },
+  ]},
+  { group: 'Reloj', fields: [
     { key:'CLOCK_ENABLE', label:'Reloj activo', type:'toggle' },
+    { key:'TRANSITION_ENABLE', label:'Transición con partículas', type:'toggle' },
     { key:'AUTO_CLOCK_INT', label:'Intervalo del reloj (nº de GIFs)', type:'number', min:0, max:99 },
     { key:'CLOCK_DURATION', label:'Duración del reloj (segundos)', type:'number', min:1, max:120 },
-    { key:'CLOCK_STYLE', label:'Estilo del reloj', type:'select', options:[
-        {v:0,l:'Matrix'},{v:1,l:'Solid'},{v:2,l:'Rainbow'},{v:3,l:'Pulse'},{v:4,l:'Gradient'}] },
-    { key:'TRANSITION_ENABLE', label:'Transición con partículas', type:'toggle' },
-    { key:'CLOCK_COLOR', label:'Color del reloj', type:'select', options:[
-        {v:0,l:'Blanco'},{v:1,l:'Rojo'},{v:2,l:'Verde'},{v:3,l:'Azul'},{v:4,l:'Amarillo'},
-        {v:5,l:'Cian'},{v:6,l:'Magenta'},{v:7,l:'Naranja'},{v:8,l:'Rosa'}] },
   ]},
   { group: 'Clima', fields: [
     { key:'WEATHER_ENABLE', label:'Clima activo', type:'toggle' },
@@ -766,6 +1256,214 @@ document.getElementById('settingsBtn').addEventListener('click', abrirAjustes);
 document.getElementById('cfgClose').addEventListener('click', cerrarAjustesSinGuardar);
 document.getElementById('cfgCancel').addEventListener('click', cerrarAjustesSinGuardar);
 document.getElementById('cfgSave').addEventListener('click', guardarAjustes);
+
+/* =========================================================
+   PLAYLISTS
+   ========================================================= */
+const plOverlay = document.getElementById('plOverlay');
+const plBody = document.getElementById('plBody');
+
+async function abrirPlaylists(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configura la IP del panel (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  plOverlay.classList.add('open');
+  plBody.innerHTML = '<div class="cfgLoading">Cargando playlists...</div>';
+
+  try {
+    const res = await fetch(`http://${ip}/playlists`, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    renderPlaylists(data.items || [], data.active || '');
+  } catch (e){
+    plBody.innerHTML = '<div class="cfgLoading">No se pudo cargar la lista de playlists.</div>';
+  }
+}
+
+function renderPlaylists(items, active){
+  if (!items.length){
+    plBody.innerHTML = '<div class="cfgLoading">No hay playlists en la carpeta /playlists de la SD.</div>';
+    return;
+  }
+  plBody.innerHTML = `<div class="plList">${items.map(name => `
+    <div class="plItem ${name === active ? 'active' : ''}" data-name="${name}">
+      <span>${name}</span>
+      <span class="plCheck">●</span>
+    </div>`).join('')}</div>`;
+
+  plBody.querySelectorAll('.plItem').forEach(el => {
+    el.addEventListener('click', () => seleccionarPlaylist(el.dataset.name));
+  });
+}
+
+async function seleccionarPlaylist(name){
+  const ip = ipEl.value.trim();
+  plBody.innerHTML = '<div class="cfgLoading">Activando playlist...</div>';
+  try {
+    const res = await fetch(`http://${ip}/playlist`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+      signal: AbortSignal.timeout(4000)
+    });
+    if (res.ok){
+      document.getElementById('plCurrentName').textContent = name;
+      selectMode('gif', false); // la selección de playlist ya implica reproducir GIFs
+      setTimeout(() => { plOverlay.classList.remove('open'); }, 600);
+    } else {
+      plBody.innerHTML = '<div class="cfgLoading">El panel respondió con error (' + res.status + ')</div>';
+    }
+  } catch (e){
+    plBody.innerHTML = '<div class="cfgLoading">No se pudo conectar con el panel</div>';
+  }
+}
+
+document.getElementById('plClose').addEventListener('click', () => plOverlay.classList.remove('open'));
+
+/* =========================================================
+   ACTUALIZACIÓN: OTA + Idiomas
+   ========================================================= */
+const updateOverlay = document.getElementById('updateOverlay');
+document.getElementById('updateBtn').addEventListener('click', () => updateOverlay.classList.add('open'));
+document.getElementById('updateClose').addEventListener('click', () => updateOverlay.classList.remove('open'));
+
+/* ---------- OTA (actualización de firmware) ---------- */
+async function lanzarOTA(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configura la IP del panel (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  const ok = confirm('El panel comprobará si hay una versión nueva del firmware y, si la hay, se instalará sola. Se reiniciará una o dos veces durante el proceso. ¿Continuar?');
+  if (!ok) return;
+
+  const btn = document.getElementById('otaBtn');
+  btn.disabled = true;
+  btn.textContent = 'BUSCANDO...';
+
+  try {
+    await fetch(`http://${ip}/ota`, { method: 'POST', signal: AbortSignal.timeout(4000) });
+  } catch (e) { /* el panel puede cortar la conexión al reiniciar; es normal */ }
+
+  btn.textContent = 'REINICIANDO EL PANEL...';
+  setTimeout(() => { updateOverlay.classList.remove('open'); btn.disabled = false; btn.textContent = '⬆ BUSCAR ACTUALIZACIÓN'; }, 3000);
+}
+
+document.getElementById('otaBtn').addEventListener('click', lanzarOTA);
+
+/* ---------- Idiomas (descarga desde GitHub a /idioma de la SD) ---------- */
+async function descargarIdiomas(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configura la IP del panel (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  const btn = document.getElementById('idiomasBtn');
+  const resultado = document.getElementById('idiomasResultado');
+  btn.disabled = true;
+  btn.textContent = 'DESCARGANDO...';
+  resultado.style.display = 'none';
+
+  try {
+    const res = await fetch(`http://${ip}/idiomas/actualizar`, { method: 'POST', signal: AbortSignal.timeout(20000) });
+    const data = await res.json().catch(() => null);
+
+    resultado.style.display = 'block';
+    if (res.ok && data && data.ok){
+      resultado.className = 'otaResult ok';
+      resultado.textContent = data.resumen || 'Idiomas actualizados';
+    } else {
+      resultado.className = 'otaResult err';
+      resultado.textContent = (data && data.resumen) || 'No se pudo completar la descarga';
+    }
+  } catch (e){
+    resultado.style.display = 'block';
+    resultado.className = 'otaResult err';
+    resultado.textContent = 'No se pudo conectar con el panel (puede tardar; prueba de nuevo)';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '📥 DESCARGAR IDIOMAS';
+}
+
+document.getElementById('idiomasBtn').addEventListener('click', descargarIdiomas);
+
+
+/* =========================================================
+   TEMPORIZADOR (encendido/apagado programado)
+   ========================================================= */
+const timerOverlay = document.getElementById('timerOverlay');
+const timerStatusDot = document.getElementById('timerStatusDot');
+const timerStatusText = document.getElementById('timerStatusText');
+const timerToggleBtn = document.getElementById('timerToggleBtn');
+
+function pad2(n){ return String(n).padStart(2, '0'); }
+
+function pintarEstadoTemporizador(isSleeping){
+  timerStatusDot.style.background = isSleeping ? 'var(--text-dim)' : '#5FDB7E';
+  timerStatusDot.style.boxShadow = isSleeping ? 'none' : '0 0 8px #5FDB7E';
+  timerStatusText.textContent = isSleeping ? 'Panel dormido' : 'Panel encendido';
+  timerToggleBtn.textContent = isSleeping ? 'ENCENDER AHORA' : 'APAGAR AHORA';
+}
+
+async function abrirTemporizador(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configura la IP del panel (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  timerOverlay.classList.add('open');
+  try {
+    const res = await fetch(`http://${ip}/timer`, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    document.getElementById('timerEnableToggle').checked = !!data.enable;
+    document.getElementById('timerOn').value = `${pad2(data.hOn)}:${pad2(data.mOn)}`;
+    document.getElementById('timerOff').value = `${pad2(data.hOff)}:${pad2(data.mOff)}`;
+    pintarEstadoTemporizador(!!data.isSleeping);
+  } catch (e){
+    timerStatusText.textContent = 'No se pudo cargar el temporizador';
+  }
+}
+
+async function enviarAjusteTimer(cambios){
+  const ip = ipEl.value.trim();
+  if (!ip) return;
+  try {
+    await fetch(`http://${ip}/timer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cambios),
+      signal: AbortSignal.timeout(4000)
+    });
+  } catch (e){ /* se aplica igualmente en el panel si la respuesta se pierde */ }
+}
+
+document.getElementById('timerBtn').addEventListener('click', abrirTemporizador);
+document.getElementById('timerClose').addEventListener('click', () => timerOverlay.classList.remove('open'));
+
+document.getElementById('timerEnableToggle').addEventListener('change', (e) => {
+  enviarAjusteTimer({ enable: e.target.checked ? 1 : 0 });
+});
+
+document.getElementById('timerOn').addEventListener('change', (e) => {
+  const [h, m] = e.target.value.split(':').map(Number);
+  enviarAjusteTimer({ hOn: h, mOn: m });
+});
+
+document.getElementById('timerOff').addEventListener('change', (e) => {
+  const [h, m] = e.target.value.split(':').map(Number);
+  enviarAjusteTimer({ hOff: h, mOff: m });
+});
+
+timerToggleBtn.addEventListener('click', async () => {
+  const ip = ipEl.value.trim();
+  if (!ip) return;
+  timerToggleBtn.disabled = true;
+  try {
+    const res = await fetch(`http://${ip}/timer/toggle`, { method: 'POST', signal: AbortSignal.timeout(4000) });
+    if (res.ok){
+      const data = await res.json();
+      actualizarEstadoEnergia(!!data.isSleeping);
+    }
+  } catch (e){ /* sin respuesta: el panel puede haber cambiado igualmente */ }
+  timerToggleBtn.disabled = false;
+});
 
 /* Estado inicial */
 setColor('#FFB000');
