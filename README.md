@@ -151,14 +151,7 @@ El sistema se controla mediante un **único botón**. Utiliza una lógica de pul
 ├── 💾 Guardar
 └── 🔙 Salir
 ```
-### ⏰ Funcionamiento del Submenú Temporizador
 
-Para facilitar la configuración de las horas de encendido (`hon/mon`) y apagado (`hoff/moff`), se ha implementado una lógica de saltos de 5 minutos:
-
-1.  **¿Quieres avanzar rápido?** Mantén pulsado el botón. El tiempo subirá de 5 en 5 minutos sin que tengas que soltar.
-2.  **¿Te has pasado de hora?** Realiza una pulsación larga (un segundo) y el tiempo retrocederá 5 minutos.
-
-   
 ## 📱 PWA - Progressive Web App (Control Remoto Completo)
 
 ### **[👉 Instalar o Probar Retro Pixel LED Control](https://fjgordillo86.github.io/RetroPixelLED-Lite/control/)**
