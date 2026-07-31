@@ -24,6 +24,8 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  // Nunca interceptamos ni cacheamos las peticiones al panel (POST /texto, etc.)
+  // Solo servimos desde caché el "shell" estático de la app.
   if (event.request.method !== "GET") return;
 
   const url = new URL(event.request.url);
