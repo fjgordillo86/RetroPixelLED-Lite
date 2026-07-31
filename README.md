@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v3.0.9
+# ✨ Retro Pixel LED Lite v3.1.0
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_FR.md)**
 
 ### **[✈️ Unirse al Grupo de Telegram: Retro Pixel LED para estár al día de las actualizaciones](https://t.me/RetroPixelLed)**
@@ -9,12 +9,8 @@
 
 Si la rama 2.x.x introdujo el Menú OSD, la nueva **v3.0.0** supone el salto definitivo hacia la independencia del hardware. Esta versión transforma el panel LED en un dispositivo inteligente autónomo, eliminando por completo la necesidad de conectar el ESP32 al ordenador para tareas de mantenimiento o configuración.
 Por primera vez, el sistema permite la edición de archivos de configuración (`config.ini`) y la gestión de librerías de playlists directamente desde el Explorador de Windows o clientes FTP, convirtiendo la tarjeta SD en una unidad de red inalámbrica.
-Se integra soporte nativo para mandos a distancia, permitiendo navegar por el Menú OSD, ajustar el brillo dinámico y controlar el encendido/apagado desde el sofá.
+Se integra soporte nativo para mandos a distancia, permitiendo navegar por el Menú OSD, ajustar el brillo dinámico y controlar el encendido/apagado desde el sofá. ¡¡¡A partir de la versión 3.1.0 podemos controlar el panel LED desde la APP!!!
 
-> [!TIP]
-> **🚀 Filosofía Lite:** Menos es más. Al apagar el WiFi después de sincronizar la hora y el tiempo, el sistema elimina el lag, reduce el calor del chip y evita cuelgues por saturación de red, permitiendo reproducciones fluidas de colecciones masivas.
-
-Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](https://github.com/fjgordillo86/RetroPixelLED)**
 
 ¿Quieres hacer tus propios GIFs?  Aquí tienes tres herramientas magínificas.
 - [DMD GIF converter](https://github.com/shan-aya/DMD_GIF_converter) creada por **shan-aya**.
@@ -22,41 +18,58 @@ Si quieres probar la versión estandar aquí tienes el enlace al **[GitHub.](htt
 - [Video a GIF](https://p4blogc.github.io/dmdos-converter/) creada por **p4bloGC**.
 
 
-## 🆕 Novedades de la Versión v3.0.9 Lite
+## 🆕 Novedades de la Versión v3.1.0 Lite
 
 #### 🚀 Nuevas Características (Features)
-* **Control Remoto de Texto en Scroll:** Incorporación de la nueva interfaz web para enviar mensajes personalizados al panel en tiempo real, con opciones avanzadas de selección de color, paleta cromática y ajuste de velocidad de desplazamiento por HTTP.
+* **Progressive Web App (PWA) Completa:** Interfaz web moderna e instalable que proporciona control total del panel desde cualquier dispositivo móvil o escritorio en la misma red local.
   * 🌐 **[Probar / Instalar Web App en línea](https://fjgordillo86.github.io/RetroPixelLED-Lite/control/)** *(Acceso directo a la interfaz web)*
+  * **5 Módulos de Control:**
+    - 🔤 **Texto Scroll:** Envía mensajes con color y velocidad personalizados.
+    - 🎞️ **Playlists Dinámicas:** Cambia de colección de GIFs en tiempo real.
+    - 🕐 **Selector de Reloj:** Activa/desactiva el reloj y personaliza estilos y colores.
+    - ⏰ **Temporizador Inteligente:** Programa encendido/apagado automático con override manual.
+    - 🔄 **Actualización:** OTA de firmware + descarga automática de archivos de idioma.
+  * **Ajustes Completos:** Edita `config.ini` directamente desde la app — incluye WiFi, hardware, reproducción, clima e idioma.
 
 #### 🛡️ Corrección de Errores (Fixes)
 * **Ciclo de Ajuste de Brillo:** Corregido el error de lógica en el bucle de brillo que impedía reiniciar al 5% al alcanzar el 100%, permitiendo de nuevo completar el ciclo correctamente mediante el botón de control.
 
-
-## 🕹️ Integración Especial: Modo Arcade (Batocera & RePlayOS)
-
-Esta versión Lite introduce un soporte avanzado para ecosistemas de retrogaming, permitiendo dos vías de sincronización: mediante scripts locales (**Batocera**) o mediante monitorización nativa por red local (**RePlayOS**) Proximamente **Recalbox**. 
-
-A través de una jerarquía de archivos inteligente y optimizada para el hardware del ESP32, el panel gestiona el cambio de estado y muestra:
-
-1. **Marquesina del Juego:** Imagen `.bmp` de 24 bits cargada instantáneamente gracias al sistema de búsqueda en los índices de la SD.
-2. **Logo del Sistema:** Imagen de respaldo en la raíz del directorio `/arcade/` si el juego en ejecución no dispone de un arte específico.
-3. **Reserva Maestro:** Si el sistema no está indexado o faltan tanto el logo como el juego, el panel deriva el flujo de manera fluida al motor de GIFs para seguir reproduciendo GIFs, evitando parpadeos en la matriz de LEDs.
-
-### 🔌 Métodos de Conexión
-
-* **Por Scripts (Batocera):** Envío de comandos directos al panel mediante scripts `game-start` y `game-end` que conmutan el estado inmediatamente al lanzar un juego.
-* **Por Red (RePlayOS API):** Configurando la IP y el Token de control en el firmware, el ESP32 interroga de forma limpia y no bloqueante al puerto `55356` del sistema cada 3 segundos, integrándose de forma invisible con la sesión activa del jugador.
-
-> [!IMPORTANT]
-> Se incluye una herramienta en `/Batocera/tools` para automatizar el redimensionado a 128x32, la conversión a BMP de 24 bits y la generación de índices para una respuesta instantánea del ESP32. Consulta el [README específico de Batocera](/README_BATOCERA.md) para más detalles.
+#### 🏗️ Cambios Internos
+* **Refactorización de Rutas Web:** Los endpoints HTTP se han reorganizado en un archivo `WebRoutes.ino` separado para mejorar la legibilidad y mantenibilidad del código.
+* **Soporte Multi-Idioma Remoto:** Descarga de `.json` de idioma desde GitHub directamente al panel, sin necesidad de tarjeta SD extraíble.
+* **Optimización UTF-8:** Decodificador de caracteres polacos y acentos en tiempo real, permitiendo mensajes de texto con caracteres especiales.
 
 ---
 
-## 📜 Historial de Cambios Detallado (v3.0.0 -> v3.0.9)
+## 🕹️ Integración Especial: Modo Arcade (Batocera, Recalbox & RePlayOS)
+
+Esta versión Lite introduce un soporte avanzado para ecosistemas de retrogaming, permitiendo dos vías de sincronización: mediante scripts locales (**Batocera / Recalbox**) o mediante monitorización nativa por red local (**RePlayOS**). 
+
+A través de una jerarquía de archivos inteligente y optimizada para el hardware del ESP32, el panel gestiona el cambio de estado y muestra:
+
+1. **Marquesina del Juego:** Imagen `.bmp` de 24 bits cargada instantáneamente.
+2. **Logo del Sistema:** Imagen `.bmp` de 24 bits cargada instantáneamente mientras navegamos por los sistemas.
+
+
+### 🔌 Métodos de Conexión
+
+* **Por Scripts (Batocera y Recalbox):** Envío de comandos directos al panel mediante scripts que conmutan el estado mientras navegamos por el menú de los sistemas o al lanzar un juego.
+* **Por Red (RePlayOS API):** Configurando la IP y el Token de control en el firmware, el ESP32 interroga de forma limpia y no bloqueante al puerto `55356` del sistema cada 3 segundos, integrándose de forma invisible con la sesión activa del jugador.
+---
+
+## 📜 Historial de Cambios Detallado (v3.0.0 -> v3.1.0)
 
 | Característica | Detalle Técnico | Beneficio |
 | :--- | :--- | :--- |
-| **💬 Control de Texto Scroll** | Endpoints HTTP POST y PWA web app en red local para enviar cadenas personalizadas, selección de color, paleta y velocidad de desplazamiento. | **Interactividad remota.** Muestra mensajes y avisos al vuelo desde cualquier dispositivo móvil u ordenador conectado a la red sin necesidad de reprogramar.
+| **🎛️ PWA Control Panel** | Interfaz web progresiva (Progressive Web App) con 5 módulos de control independientes y edición remota de `config.ini`. | **Control total desde cualquier dispositivo.** Geolocalización-independent, funciona en la misma red local sin servidor externo. |
+| **☀️ Control de Brillo** | Slider deslizante en tiempo real (0-100%) con aplicación instantánea, sin reinicio. | **Ajuste fluido.** Adapta el brillo a la iluminación ambiental en el mismo instante. |
+| **🔤 Texto Scroll con UTF-8** | Motor de scroll de texto con decodificador UTF-8→Latin-1 en tiempo real, soporte para caracteres polacos y acentuados. | **Internacionalización completa.** Mensajes con ñ, á, ł, ą sin limitaciones. |
+| **🎨 Modo GIF / Reloj / Texto** | Selector de modo en la home de la PWA; cambio instantáneo sin reinicio. | **Experiencia inmediata.** Cambios visibles en el panel al instante. |
+| **🎞️ Playlists Dinámicas** | Cambio de playlist en tiempo real desde la PWA; recarga de índices al vuelo. | **Flexibilidad máxima.** Alterna entre colecciones sin interrumpir la reproducción. |
+| **⏰ Temporizador Inteligente** | Encendido/apagado programado con interfaz de selector de horario; override manual por botón o PWA. | **Automatización completa.** Enciende el panel a una hora, se apaga a otra; un botón anula el programa. |
+| **🔄 Actualización Remota (OTA + Idiomas)** | Página de Actualización independiente en la PWA; descarga de firmware e idiomas desde GitHub sin extracción de SD. | **Mantenimiento sin cables.** Actualiza el panel completamente wireless, incluidos los archivos de idioma en JSON. |
+| **⚙️ Ajustes Completos Remotos** | Edición remota de `config.ini` secciones: WiFi, Hardware (panel, velocidad I2S, refresco), Reproducción (arcade, reloj), Clima, Idioma. | **Configuración inalámbrica.** Modifica todo el comportamiento del panel desde la PWA; reinicio automático si es necesario. |
+| **💬 Control de Texto Scroll** | Endpoints HTTP POST y PWA web app en red local para enviar cadenas personalizadas, selección de color, paleta y velocidad de desplazamiento. | **Interactividad remota.** Muestra mensajes y avisos al vuelo desde cualquier dispositivo móvil u ordenador conectado a la red sin necesidad de reprogramar. |
 | **💥 Transición de Partículas** | Motor de partículas dinámicas integrado para los efectos de entrada y salida de la hora. | **Fluidez visual.** Elimina los cortes estáticos por un efecto fluido y profesional. |
 | **🎨 Selección de Color OSD** | Menú interactivo en pantalla mapeado con el receptor IR y la memoria EEPROM/SD. | **Personalización.** Cambia el color del reloj al vuelo desde el mando sin editar el `config.ini`. |
 | **⚡ Reloj Sin Parpadeos** | Refactorización de la lógica de renderizado usando un modo *Single Buffer* optimizado para interfaces. | **Imagen limpia.** Eliminación total del *flicker* (parpadeo) al actualizar datos rápidos. |
@@ -91,7 +104,7 @@ El sistema se controla mediante un **único botón**. Utiliza una lógica de pul
 ├── 📂 Reproducción
 │   └── 🖼️ Modo: [GIFs / Reloj]
 │   └── 🔀 Aleatorio: [SI / NO]
-│   └── 🕹️ Arcade: [SI / NO]
+│   └── 🕹️ Arcade: [OFF / Batocera / Recalbox / ReplayOS]
 │   └── 💬 Texto: [SI / NO]
 │   └── 🔙 Volver
 ├── ☀️ Brillo
@@ -146,22 +159,70 @@ Para facilitar la configuración de las horas de encendido (`hon/mon`) y apagado
 2.  **¿Te has pasado de hora?** Realiza una pulsación larga (un segundo) y el tiempo retrocederá 5 minutos.
 
    
-## 🛠️ Herramientas Exclusivas Lite
+## 📱 PWA - Progressive Web App (Control Remoto Completo)
 
-### **[👉 App Web Retro Pixel LED Lite (Control de Texto Scroll)](https://fjgordillo86.github.io/RetroPixelLED-Lite/control/)**
-  <img width="400" alt="Interfaz de la App Web" src="https://github.com/user-attachments/assets/38734694-e32e-431e-be92-95d0f0feabdd" />
+### **[👉 Instalar o Probar Retro Pixel LED Control](https://fjgordillo86.github.io/RetroPixelLED-Lite/control/)**
 
-#### ⚙️ Guía de Uso e Instalación
+La PWA es una aplicación web moderna, instalable en cualquier dispositivo (móvil, tablet, ordenador) que se conecte a la misma red local que el panel. No requiere servidor externo, funciona completamente en la red local y es accesible offline una vez instalada.
 
-1. **Configuración en el Panel:**
-   * Para poder mostrar los mensajes en movimiento, asegúrate de activar la función **"Texto"** dentro de la ruta **Menú > Reproducción > Texto** en tu panel LED.
+#### 🎯 Características Principales
 
-2. **Instalación como App (PWA):**
-   * Abre el enlace desde el navegador de tu dispositivo móvil.
-   * Por lo general, aparecerá un aviso automático para instalar la aplicación. Si no se muestra de forma automática:
-     * Toca el botón de opciones del navegador (icono de los **3 puntos ⋮**).
-     * Selecciona **"Instalar aplicación"** o **"Añadir a la pantalla de inicio"** para crear un acceso directo cómodo y rápido.
+La interfaz se divide en **5 secciones independientes** accesibles desde la barra de navegación:
 
+**1️⃣ Página Principal (Home)**
+- **☀️ Control de Brillo:** Slider 0-100% con aplicación instantánea, sin reinicio.
+- **🎛️ Selector de Modo:** Elige entre GIF, Reloj o Texto en tiempo real.
+  - **Modo GIF:** Muestra la playlist activa + toggle de reproducción aleatoria.
+  - **Modo Reloj:** Elige entre 5 estilos (Matrix, Solid, Rainbow, Pulse, Gradient) y 9 colores personalizados.
+  - **Modo Texto:** Vista previa en vivo de la matriz de LEDs mientras escribes, con selector de color y velocidad de scroll.
+- **🔌 Estado de Conexión:** Indicador visual (verde/rojo) del estado WiFi.
+
+**2️⃣ Temporizador (⏰)**
+- **Activar/Desactivar temporizador** con un toggle.
+- **Selector de hora de encendido** (formato 24h, rango 00:00 - 23:59).
+- **Selector de hora de apagado** (igual formato).
+- **Botón de encendido/apagado manual inmediato** (override).
+- Estado actual: panel encendido (✓ verde) o dormido (● gris).
+
+**3️⃣ Modo Texto**
+- **Vista previa de matriz 26×7:** Renderiza el texto en tiempo real mientras lo escribes, simulando exactamente cómo lo verá en el panel.
+- **Selector de color:** Paleta de 9 colores predefinidos + picker personalizado con hex.
+- **Control de velocidad:** Slider 5-200ms/paso con preview en vivo.
+- **Botones de acción:** "▶ ENVIAR" (manda el texto al panel) y "■ STOP" (cancela el scroll).
+
+**4️⃣ Actualización (🔄)**
+- **OTA de Firmware:** Comprueba GitHub y descarga/instala automáticamente si hay versión nueva.
+- **Descarga de Idiomas:** Obtiene todos los `.json` desde la carpeta de idiomas del repo de GitHub y los guarda en `/idiomas` de la SD, sustituyendo los anteriores.
+
+**5️⃣ Ajustes (🛠)**
+- **Edición remota de config.ini** completa, organizada en 7 secciones:
+  - **WiFi:** SSID, contraseña, zona horaria.
+  - **Hardware:** Nº de paneles, orden de color (RGB/RBG/GBR), brillo, velocidad I2S, refresco mínimo, buffering, anti-ghosting.
+  - **Arcade:** Activar Batocera, Recalbox, ReplayOS, o ninguno.
+  - **Texto Deslizante:** Activar scroll de texto remoto.
+  - **Reloj:** Activo/inactivo, transición con partículas, intervalo, duración, estilo, color.
+  - **Clima:** Activar, ciudad, API key OpenWeatherMap, intervalo de actualización, texto sobre reloj.
+  - **Idioma:** Selector (ES, EN, FR, ...).
+  - **Reinicio automático** después de guardar si se detectan cambios que lo requieran.
+
+#### ⚙️ Instalación y Configuración
+
+1. **Acceso Web:** Abre https://fjgordillo86.github.io/RetroPixelLED-Lite/control/ desde el navegador de tu dispositivo (móvil, tablet u ordenador).
+2. **Configurar IP:** En la pantalla, toca el icono de conexión (⚙) y escribe la IP local de tu panel ESP32 (ej. 192.168.1.117).
+3. **Instalar como App (Opcional):**
+   - Chrome/Edge: Debería mostrarte un aviso de instalación automático. Si no lo hace, toca el menú (⋮) y selecciona "Instalar aplicación".
+   - Firefox/Safari: Toca el menú compartir (↗) y elige "Añadir a pantalla de inicio".
+4. **Uso:** Una vez instalada, aparecerá como una app normal en tu dispositivo — acceso rápido sin escribir URLs.
+
+#### 📝 Requisitos Previos
+
+- El panel debe estar conectado a la misma red WiFi que tu dispositivo.
+- Debe estar **activado** en el panel (`CONFI_APP_ENABLE=1`) para controlar el Panel LED desde la APP.
+- El modo **Texto Scroll** debe estar **activado** en el panel (`config.ini: TEXT_ENABLE=1`) para que funcionen los controles de envío de mensajes.
+- Para actualizar firmware o idiomas, el panel necesita conexión a internet (salida a GitHub).
+- Los archivos de idioma se descargan una sola vez; una vez guardados en la SD, funcionan sin conexión.
+
+---
 
 ### 📖 Cómo usar el Script Generador de Playlists (Windows)
 
@@ -216,19 +277,9 @@ Formatea tu MicroSD en **FAT32** añade todo el contenido de la carpeta [Conteni
 │   ├── Computers.txt            <-- Lista .txt.
 │   ├── Consolas.txt             <-- Lista .txt.
 │   └── Todos.txt                <-- Lista .txt.
-├── arcade/                      <-- Integración con Batocera Marquesinas. (Solo Si haces uso de Modo Arcade)
-│   ├── neogeo.txt               <-- Lista marquesinas.txt. (Solo Si haces uso de Modo Arcade)
-│   ├── mame.txt                 <-- Lista marquesinas.txt. (Solo Si haces uso de Modo Arcade)
-│   ├── neogeo/                  <-- Carpetas con marquesinas para sistema neogeo. (Solo Si haces uso de Modo Arcade)
-│   │   ├── mslug.bmp            <-- Imagen de marquesina. (Solo Si haces uso de Modo Arcade)
-│   │   └── kof98.bmp            <-- Imagen de marquesina. (Solo Si haces uso de Modo Arcade)
-│   ├── mame/                    <-- Carpetas con marquesinas para sistema mame. (Solo Si haces uso de Modo Arcade)
-│   │   ├── logo.bmp             <-- Imagen de marquesina. (Solo Si haces uso de Modo Arcade)
-│   └── └── pacman.bmp           <-- Imagen de marquesina. (Solo Si haces uso de Modo Arcade)
 ├── config.ini                   <-- Configuración de WiFi y Panel.
 └── Generador de Playlists.bat   <-- Script para generar las Playlist.
 ```
-`La carpeta arcade solo es necesaria si se utiliza el "Modo Arcade" y la genera automáticamente el script Marquesinas. Para mas info lee el punto 9.`
 
 >[!IMPORTANT]
 >Si añades, borras o mueves GIFs dentro de la carpeta /gifs/, asegúrate de ejecutar el script **Generador de Playlists.bat** de nuevo para actualizar el índice.
@@ -238,7 +289,7 @@ El archivo llamado `config.ini` que lo encontrarás en la carpeta "Contenido SD"
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v3.0.4 - ARCHIVO DE CONFIGURACIÓN
+# 🕹️ RETRO PIXEL LED LITE v3.1.0 - ARCHIVO DE CONFIGURACIÓN
 # ============================================================
 # Nota: No dejes espacios alrededor del símbolo '='.
 # Ejemplo correcto: BRIGHTNESS=40
@@ -257,21 +308,25 @@ PANEL_CHAIN=2
 # Orden de colores del Panel: RGB, RBG o GBR
 COLOR_ORDER=RGB
 # Brillo (0 a 255)
-BRIGHTNESS=43
+BRIGHTNESS=38
 # Velocidad I2S: 0=8MHz, 1=10MHz, 2=16MHz, 3=20MHz (Turbo)
 I2S_SPEED=2
 # Refresco Minimo (Hz): 30 a 120
 REFRESH_MIN=120
 # Doble Buffer: 0=OFF, 1=ON (Elimina parpadeos)
-DOUBLE_BUFF=1
+DOUBLE_BUFF=0
 # Anti-Ghosting: 1 a 4 (Sube si ves brillo fantasma)
 LATCH_BLANK=1
 
 [LOGIC]
 # Modo de visualizacion: 0=GIFs, 1=Solo Reloj
 PLAY_MODE=0
-# Activa la recepcion de marquesinas desde Batocera: 0=OFF, 1=ON
+# Activa o desactiva la configuracion mediante la APP: 0=OFF, 1=ON (Requiere WiFi)
+CONFI_APP_ENABLE=1
+# Selecciona tu sistema Arcade: 0=OFF, 1=Batocera, 2=Recalbox, 3=ReplayOS
 ARCADE_ENABLE=0
+# Activa o desactiva el texto en scroll: 0=OFF, 1=ON (Requiere WiFi)
+TEXT_ENABLE=1
 # Activa o desactiva el reloj: 0=OFF, 1=ON (Requiere WiFi)
 CLOCK_ENABLE=1
 # Modo de reproduccion: 0=Secuencial, 1=Aleatorio
@@ -285,16 +340,16 @@ CLOCK_STYLE=2
 # Activa la transicion del reloj a GIFs con una explosion de particulas : 0=OFF, 1=ON
 TRANSITION_ENABLE=1
 # Color del reloj (0= Blanco, 1=Rojo, 2=Verde, 3=Azul, 4=Amarillo, 5=Cian, 6=Magenta, 7=Naranja, 8=Rosa)
-CLOCK_COLOR=6
+CLOCK_COLOR=4
 
 [WEATHER]
-# Activa el clima: 0=OFF, 1=ON (Requiere CLOCK_ENABLE=1)
+# Activa el clima: 0=OFF, 1=ON (Requiere WiFi)
 WEATHER_ENABLE=1
 # Tu ciudad (Sin espacios, usa '+' si es necesario: Madrid,ES o Buenos+Aires,AR)
 CITY=Navalmoral+de+la+Mata,ES
 # Tu API Key gratuita de OpenWeatherMap
 API_KEY=xxxxxxxxxxxxxxxxxxxxxxx
-# Intervalo de actualización en MINUTOS
+# Intervalo de actualizacion del clima en MINUTOS
 WEATHER_INT=60
 # Texto que se muestra encima del reloj
 WEATHER_MSG=Game Room
@@ -316,7 +371,7 @@ BTN_BAJAR=B34CFF00
 
 [REPLAY_OS]
 # IP que tiene asignada ReplayOS
-IP=192.168.1.105
+IP=192.168.1.101
 # Token ReplayOS: SYSTEM > INFORMATION > NET CONTROL CODE
 TOKEN=xxxxxx
 
@@ -464,20 +519,25 @@ Si no deseas instalar software adicional como FileZilla, puedes integrar la tarj
 * **Salida segura:** Para cerrar el servidor y volver al modo normal, presiona el botón físico o utiliza la tecla "Validar" de tu mando IR.
 * **Cuidado con el apagado:** No desconectes la alimentación mientras estés editando un archivo vía FTP, ya que el archivo podría quedar corrupto.
 
-### 9. 🕹️ Integración con Batocera (Arcade)
-Si queremos activar que Rretro Pixel LED lite muestre las marquesinas del juego que estamos lanzando en Batocera debes de activar en el menú la opción **Arcade**.
+### 9. 🕹️ Integración con Batocera, Recalbos o ReplayOS (Arcade)
+Si queremos activar que Rretro Pixel LED lite muestre las marquesinas del juego que estamos lanzando o el  sistema en el que estamos debes de activar en el menú la opción **Arcade**.
 ```
 🏠 MENÚ PRINCIPAL
 ├── 📂 Reproducción
 │   └── 🖼️ Modo: [GIFs / Reloj]
 │   └── 🔀 Aleatorio: [SI / NO]
-│   └── 🕹️ Arcade: [SI / NO]   <-- AQUÍ
+│   └── 🕹️ Arcade: [OFF / Batocera / Recalbox / ReplayOS]   <-- AQUÍ
 │   └── 🔙 Volver
 ```
 > [!IMPORTANT]
-> ### 🕹️ Configuración de Batocera
+> ### 🕹️ Configuración de Batocera, Recalbox o ReplayOS
 > Para aprender a sincronizar tus ROMs, usar el script de PC e instalar los scripts de comunicación, consulta nuestra guía detallada:
+> 
 > **[👉 HAZ CLIC AQUÍ PARA VER LAS INSTRUCCIONES DE BATOCERA](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_BATOCERA.md)**
+> 
+> **[👉 HAZ CLIC AQUÍ PARA VER LAS INSTRUCCIONES DE RECALBOX](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_RECALBOX.md)**
+> 
+> **[👉 HAZ CLIC AQUÍ PARA VER LAS INSTRUCCIONES DE REPLAYOS](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_REPLAYOS.md)**
 ---
 
 ## 🧠 Características Core LITE
