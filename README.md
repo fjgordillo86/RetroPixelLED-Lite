@@ -51,10 +51,8 @@ A través de una jerarquía de archivos inteligente y optimizada para el hardwar
 2. **Logo del Sistema:** Imagen `.bmp` de 24 bits cargada instantáneamente mientras navegamos por los sistemas.
 
 
-### 🔌 Métodos de Conexión
+Para más información ir al punto `9. 🕹️ Integración con Batocera, Recalbos o ReplayOS (Arcade)`
 
-* **Por Scripts (Batocera y Recalbox):** Envío de comandos directos al panel mediante scripts que conmutan el estado mientras navegamos por el menú de los sistemas o al lanzar un juego.
-* **Por Red (RePlayOS API):** Configurando la IP y el Token de control en el firmware, el ESP32 interroga de forma limpia y no bloqueante al puerto `55356` del sistema cada 3 segundos, integrándose de forma invisible con la sesión activa del jugador.
 ---
 
 ## 📜 Historial de Cambios Detallado (v3.0.0 -> v3.1.0)
@@ -494,8 +492,6 @@ Se recomienda utilizar un cliente como **FileZilla** con los siguientes datos:
 * **Límite de descarga:** 20 KiB/s
 * **Límite de carga:** 20 KiB/s
 <img width="841" height="522" alt="image" src="https://github.com/user-attachments/assets/e90d3e84-9c93-45c0-b942-8b601db40041" />
-
-
 
 ---
 Si no deseas instalar software adicional como FileZilla, puedes integrar la tarjeta SD del panel directamente en tu ordenador como si fuera una carpeta más usando el **Explorador de Archivos**: 
