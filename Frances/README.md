@@ -524,7 +524,7 @@ Si vous souhaitez activer l'affichage par Retro Pixel LED Lite des marquees du j
 > ### 🕹️ Configuration de Batocera, Recalbox ou ReplayOS
 > Pour apprendre à synchroniser vos ROMs, utiliser le script PC et installer les scripts de communication, consultez notre guide détaillé :
 > 
-> **[👉 CLIQUEZ ICI POUR VOIR LES INSTRUCTIONS POUR BATOCERA](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_BATOCERA.md)**
+> **[👉 CLIQUEZ ICI POUR VOIR LES INSTRUCTIONS POUR BATOCERA](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/Frances/README_BATOCERA.md)**
 > 
 > **[👉 CLIQUEZ ICI POUR VOIR LES INSTRUCTIONS POUR RECALBOX](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_RECALBOX.md)**
 > 
