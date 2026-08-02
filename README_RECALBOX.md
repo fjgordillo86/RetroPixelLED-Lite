@@ -1,5 +1,4 @@
 # 🕹️ Integración con Recalbox
-¡¡¡¡ EN CONSTRUCCIÓN PARA LA NUEVA VERSIÓN 3.1.0 !!!!
 
 El **Modo Arcade** en la versión Lite permite que tu matriz LED funcione como una marquesina dinámica. El panel detectará el sistema y juego por el que estás navegando y te lo mostrará automáticamente.
 
