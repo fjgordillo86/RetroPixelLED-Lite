@@ -1,5 +1,28 @@
 ## 📝 Changelog (Registro de Cambios)
 
+### [v3.1.0] - 2026-08-02
+**Retro Pixel LED Lite: "PWA Total Control"**
+
+#### ✨ Añadido
+* **Progressive Web App (PWA) de control remoto:** interfaz web instalable con control total del panel desde cualquier dispositivo de la red local:
+  - **Página principal:** brillo en tiempo real y selector de modo GIF / Reloj / Texto, cada uno mostrando solo sus controles relevantes (playlist + aleatorio en GIF; estilo + color en Reloj; vista previa en vivo de la matriz + color + velocidad en Texto).
+  - **Temporizador:** horario de encendido/apagado con override manual inmediato desde la propia app.
+  - **Actualización:** OTA de firmware y descarga de archivos de idioma `.json` desde GitHub directamente a `/idiomas` de la SD, sin necesidad de extraerla.
+  - **Ajustes:** edición remota de `config.ini` (WiFi, Hardware, Arcade, Texto Deslizante, Reloj, Clima, Idioma), con reinicio automático cuando el cambio lo requiere.
+* **Modo Texto Scroll con soporte de fuente personalizada:** motor de texto en desplazamiento con fuente `GFXfont` propia (incluye caracteres polacos) y decodificador UTF-8 en tiempo real, activable desde la PWA con color y velocidad configurables.
+* **Segundo modo de instalación para Batocera:** igual que Recalbox, ahora se puede elegir entre "Menús y Juegos" (reacciona también al navegar por sistemas) o "Solo Juegos" (marquesina fija/reloj en menús, cambia solo al lanzar partida).
+* **Hooks de apagado/reinicio para Batocera:** nuevos scripts para los eventos `quit`, `shutdown` y `reboot` de EmulationStation, que avisan al panel para que abandone la marquesina al salir del sistema.
+#### ⚙️ Mejoras / Cambios Internos
+* **Refactorización de Rutas Web:** los más de 20 endpoints HTTP del servidor se han extraído de `setup()` a un archivo `WebRoutes.ino` independiente, organizados por función (estado, control en vivo, temporizador, config, playlists, OTA, idiomas, arcade, texto).
+* **Control en vivo sin reinicio:** brillo, modo de reproducción, aleatorio, estilo y color del reloj ahora se aplican al instante desde la PWA y se persisten en `config.ini` sin necesidad de reiniciar el panel.
+* **Animación de apagado renovada:** sustituida la carita dormida por una animación estilo apagado de tubo CRT, además de reducir a la mitad el tiempo bloqueante de la transición.
+* **Calidad de imagen en herramientas de marquesinas:** dithering Floyd-Steinberg a RGB565 y renderizado en alta calidad, portado a los conversores de Logos y Batocera, para eliminar bandas de color en degradados al mostrarse en el panel.
+* **Instalador de scripts Arcade reorganizado:** los scripts de Batocera y Recalbox ahora se distribuyen en subcarpetas `Batocera/` y `Recalbox/` en vez de mezclados en una sola carpeta.
+#### 🛡️ Fixes
+* **Ciclo de Ajuste de Brillo:** corregido el error de lógica en el bucle de brillo que impedía reiniciar al 5% al alcanzar el 100%.
+* **Temporizador y servidor web:** corregido un fallo por el que el panel dejaba de atender peticiones HTTP mientras estaba dormido, impidiendo encenderlo de forma remota desde la PWA.
+---
+
 ### [v3.0.5] - 2026-06-18
 
 #### 🛡️ Fixes
