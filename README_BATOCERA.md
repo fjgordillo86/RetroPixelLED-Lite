@@ -88,7 +88,6 @@ Usaremos el script se encuentra en la carpeta `Arcade/Marquesinas/` del proyecto
 ### ¿Qué hace el script automáticamente?
 * **Redimensionado:** Convierte tus marquesinas originales a **128x32 píxeles**.
 * **Formato:** Fuerza el color a **BMP de 24 bits** (formato compatible con el driver DMA del ESP32).
-* **Índices .txt:** Genera archivos de texto (ej: `neogeo.txt`) ordenados alfabéticamente. Estos archivos son los que lee el ESP32 para saber qué archivos existen sin explorar toda la SD.
 
 > [!CAUTION]
 > **Acceso por Red (Samba):**
@@ -102,7 +101,7 @@ Usaremos el script se encuentra en la carpeta `Arcade/Marquesinas/` del proyecto
 
  ### 4. 🛠️ Logos de Sistemas.
  Podemos usar los logos ya redimensionados que se encuentran en la carpeta `Arcade/Logos Sistemas/` del proyecto [aquí](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Arcade/Logos%20Sistemas).
- 1.  **Copiar:** Copia la carpeta  `Logos` y todo su contenido en la SD o SSD donde está instalado Batocera `roms/marquesinas/`, como se indica en el punto **3. Estructura de archivos en la SD o SSD de Batocera.**
+ 1.  **Copiar:** Copia la carpeta  `Logos` y todo su contenido en la SD o SSD donde está instalado Batocera `roms/marquesinas/`, como se indica en el punto `5. Estructura de archivos en la SD o SSD de Batocera`.
     
  Si prefieres usar otros logos como por ejemplo los del tema que tienes instalado. Usaremos el script se encuentra en la carpeta `Arcade/Logos Sistemas/` del proyecto [aquí](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Arcade/Logos%20Sistemas). Consta de dos archivos `Ejecutar Script Logos.bat` y `Script Logos.ps1`.
 
