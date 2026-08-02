@@ -54,22 +54,22 @@ He desarrollado un **Script Instalador Inteligente en PowerShell** que realiza t
    * `Batocera`
    * `Recalbox`
 
-3. Haz **clic** sobre `Ejecutar Script Instalador Arcade.bat`.
+2. Haz **clic** sobre `Ejecutar Script Instalador Arcade.bat`.
 
-4. Sigue las instrucciones en la ventana de la consola:
+3. Sigue las instrucciones en la ventana de la consola:
    * **Paso 1:** Introduce la IP de tu panel LED y pulsa `Enter`.
    * **Paso 2:** Introduce la ruta de tu Batocera. Puede ser una ruta de red (ej: `\\192.168.1.120` o `\\BATOCERA`) o la letra de una unidad física si conectaste el disco/SD al PC (ej: `E:`).
 
-5. El script nos solicitará:
-   1. El sistema que utilizamos, seleccionaremos 1 Batocera.
-   2. Que modo de funcionamiento deseas activar?
-     Opción 1: Menús y Juegos (Muestra sistemas al navegar + juego lanzado)
-     Opción 2: Solo Juegos (Marquesina fija/reloj en menús, cambia solo al jugar)
-6. El script procesará los archivos en un segundo. Al finalizar, verás el mensaje `INSTALACIÓN COMPLETADA!`. Pulsa cualquier tecla para salir.
+4. El script nos solicitará:
+    * 4.1 El sistema que utilizamos, seleccionaremos 1 Batocera.
+    * 4.2 Que modo de funcionamiento deseas activar?
+       * Opción 1: Menús y Juegos (Muestra sistemas al navegar + juego lanzado)
+       * Opción 2: Solo Juegos (Marquesina fija/reloj en menús, cambia solo al jugar)
+5. El script procesará los archivos en un segundo. Al finalizar, verás el mensaje `INSTALACIÓN COMPLETADA!`. Pulsa cualquier tecla para salir.
 
 <img width="1103" height="686" alt="image" src="https://github.com/user-attachments/assets/d94c2a67-c40a-451e-9c61-981a188a294d" />
 
-7. **Reinicia tu sistema Batocera por completo.**
+6. **Reinicia tu sistema Batocera por completo.**
 > [!CAUTION]
 > El reinicio completo del sistema es **obligatorio**. Durante este arranque, el script `custom.sh` configurará los permisos internos. A partir de ese momento, cada vez que navegues por el menú, lances o cierres un juego, el panel reaccionará automáticamente.
 
