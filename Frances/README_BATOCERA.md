@@ -62,8 +62,8 @@ J'ai développé un **Script d'installation intelligent en PowerShell** qui réa
    * **Étape 2 :** Entrez le chemin d'accès à votre Batocera. Il peut s'agir d'un chemin réseau (ex : `\\192.168.1.120` ou `\\BATOCERA`) ou de la lettre d'un lecteur physique si vous avez connecté le disque/carte SD au PC (ex : `E:`).
 
 4. Le script vous demandera :
-   1. Le système utilisé : sélectionnez `1` pour Batocera.
-   2. Quel mode de fonctionnement souhaitez-vous activer ?
+   * Le système utilisé : sélectionnez `1` pour Batocera.
+   * Quel mode de fonctionnement souhaitez-vous activer ?
      * **Option 1 :** Menus et Jeux (Affiche les systèmes lors de la navigation + le jeu lancé)
      * **Option 2 :** Jeux uniquement (Marquee fixe/horloge dans les menus, change uniquement en jeu)
 
