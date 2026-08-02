@@ -61,8 +61,8 @@ He desarrollado un **Script Instalador Inteligente en PowerShell** que realiza t
    * **Paso 2:** Introduce la ruta de tu Batocera. Puede ser una ruta de red (ej: `\\192.168.1.120` o `\\BATOCERA`) o la letra de una unidad física si conectaste el disco/SD al PC (ej: `E:`).
 
 4. El script nos solicitará:
-    * 4.1 El sistema que utilizamos, seleccionaremos 1 Batocera.
-    * 4.2 Que modo de funcionamiento deseas activar?
+    * El sistema que utilizamos, seleccionaremos 1 Batocera.
+    * Que modo de funcionamiento deseas activar?
        * Opción 1: Menús y Juegos (Muestra sistemas al navegar + juego lanzado)
        * Opción 2: Solo Juegos (Marquesina fija/reloj en menús, cambia solo al jugar)
 5. El script procesará los archivos en un segundo. Al finalizar, verás el mensaje `INSTALACIÓN COMPLETADA!`. Pulsa cualquier tecla para salir.
