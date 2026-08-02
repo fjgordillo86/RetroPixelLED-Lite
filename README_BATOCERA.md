@@ -63,8 +63,8 @@ He desarrollado un **Script Instalador Inteligente en PowerShell** que realiza t
 4. El script nos solicitará:
     * El sistema que utilizamos, seleccionaremos 1 Batocera.
     * Que modo de funcionamiento deseas activar?
-       * Opción 1: Menús y Juegos (Muestra sistemas al navegar + juego lanzado)
-       * Opción 2: Solo Juegos (Marquesina fija/reloj en menús, cambia solo al jugar)
+       * **Opción 1:** Menús y Juegos (Muestra sistemas al navegar + juego lanzado)
+       * **Opción 2:** Solo Juegos (Marquesina fija/reloj en menús, cambia solo al jugar)
 5. El script procesará los archivos en un segundo. Al finalizar, verás el mensaje `INSTALACIÓN COMPLETADA!`. Pulsa cualquier tecla para salir.
 
 <img width="1103" height="686" alt="image" src="https://github.com/user-attachments/assets/d94c2a67-c40a-451e-9c61-981a188a294d" />
