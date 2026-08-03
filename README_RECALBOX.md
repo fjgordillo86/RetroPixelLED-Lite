@@ -122,7 +122,7 @@ Usaremos el script se encuentra en la carpeta `Arcade/Marquesinas/` del proyecto
 
 > [!CAUTION]
 > **Acceso por Red (Samba):**
-> Si al ejecutar el script no tiene acceso a la ruta indicada tendrás que acceder mediante el explorador de archivos y logearte con los credenciales de Batocera para que el script tenga acceso a la carpeta.
+> Si al ejecutar el script no tiene acceso a la ruta indicada tendrás que acceder mediante el explorador de archivos y logearte con los credenciales de Recalbox para que el script tenga acceso a la carpeta.
 > Acceder a la ruta `ej-> \\192.168.1.120\share\themes\Animatics-DX-master\art\logos` Windows te solicita credenciales, utiliza las que trae Batocera por defecto:
 > * **Usuario:** `root`
 > * **Contraseña:** `recalboxroot`
