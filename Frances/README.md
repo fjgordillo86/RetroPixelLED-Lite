@@ -526,7 +526,7 @@ Si vous souhaitez activer l'affichage par Retro Pixel LED Lite des marquees du j
 > 
 > **[👉 CLIQUEZ ICI POUR VOIR LES INSTRUCTIONS POUR BATOCERA](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/Frances/README_BATOCERA.md)**
 > 
-> **[👉 CLIQUEZ ICI POUR VOIR LES INSTRUCTIONS POUR RECALBOX](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_RECALBOX.md)**
+> **[👉 CLIQUEZ ICI POUR VOIR LES INSTRUCTIONS POUR RECALBOX](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/Frances/README_RECALBOX.md)**
 > 
 > **[👉 CLIQUEZ ICI POUR VOIR LES INSTRUCTIONS POUR REPLAYOS](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_REPLAYOS.md)**
 ---
