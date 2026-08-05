@@ -32,7 +32,8 @@
     "click_ok": "Clic:+5 Maint:OK"
   },
   "SUBMENU_WIFI": {
-    "titulo": "WIFI"
+    "titulo": "WIFI ",
+	"mostrar_ip": "Afficher l'IP: "
   },
   "SUBMENU_RELOJ": {
     "titulo": "HORLOGE",
