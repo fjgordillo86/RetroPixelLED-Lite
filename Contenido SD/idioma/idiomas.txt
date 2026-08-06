@@ -1,0 +1,3 @@
+es.json
+en.json
+fr.json
