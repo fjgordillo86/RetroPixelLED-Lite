@@ -33,7 +33,8 @@
   },
   "SUBMENU_WIFI": {
     "titulo": "WIFI ",
-	"mostrar_ip": "Mostrar IP: "
+	"mostrar_ip": "Mostrar IP: ",
+	"control_app": "Activar Confi APP: " 
   },
   "SUBMENU_RELOJ": {
     "titulo": "RELOJ ",
@@ -72,7 +73,8 @@
   },
   "SUBMENU_ACTUALIZACION": {
     "titulo": "ACTUALIZACION",
-	"buscar_ota": "Buscar Update"
+	"buscar_ota": "Buscar Update",
+	"buscar_idioma": "Descargar Idiomas"
   },
   "SUBMENU_FTP": {
     "titulo": "ARCHIVOS SD",
