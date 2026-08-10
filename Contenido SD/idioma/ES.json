@@ -34,7 +34,7 @@
   "SUBMENU_WIFI": {
     "titulo": "WIFI ",
 	"mostrar_ip": "Mostrar IP: ",
-	"control_app": "Activar Confi APP: " 
+	"control_app": "Control APP: " 
   },
   "SUBMENU_RELOJ": {
     "titulo": "RELOJ ",
