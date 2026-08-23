@@ -1079,6 +1079,7 @@ const CONFIG_SCHEMA = [
   { group: 'WiFi', fields: [
     { key:'WIFI_ENABLE', label:'Wifi activo', type:'toggle', sensible:true },
     { key:'SSID', label:'Nombre de red (SSID)', type:'text', sensible:true },
+	{ key:'MOSTRAR_IP', label:'Mostrar IP al iniciar Retro Pixel LED', type:'toggle'},
     { key:'PASS', label:'Contraseña', type:'password', sensible:true },
     { key:'TZ', label:'Zona horaria (POSIX)', type:'text', hint:'Ej: CET-1CEST,M3.5.0,M10.5.0/3' },
   ]},
@@ -1324,7 +1325,7 @@ document.getElementById('plClose').addEventListener('click', () => plOverlay.cla
    ACTUALIZACIÓN: OTA + Idiomas
    ========================================================= */
 const updateOverlay = document.getElementById('updateOverlay');
-document.getElementById('updateBtn').addEventListener('click', () => updateOverlay.classList.add('open'));
+document.getElementById('updateBtn').addEventListener('click', () => { updateOverlay.classList.add('open'); mostrarUltimoEstadoIdiomas(); });
 document.getElementById('updateClose').addEventListener('click', () => updateOverlay.classList.remove('open'));
 
 /* ---------- OTA (actualización de firmware) ---------- */
@@ -1350,6 +1351,11 @@ async function lanzarOTA(){
 document.getElementById('otaBtn').addEventListener('click', lanzarOTA);
 
 /* ---------- Idiomas (descarga desde GitHub a /idioma de la SD) ---------- */
+async function consultarEstadoIdiomas(ip){
+  const res = await fetch(`http://${ip}/idiomas/estado`, { method: 'GET', signal: AbortSignal.timeout(3000) });
+  return res.json();
+}
+
 async function descargarIdiomas(){
   const ip = ipEl.value.trim();
   if (!ip){ setStatus('Configura la IP del panel (⚙)', 'err'); connPanel.classList.add('open'); return; }
@@ -1360,22 +1366,38 @@ async function descargarIdiomas(){
   btn.textContent = 'DESCARGANDO...';
   resultado.style.display = 'none';
 
+  // 1. Disparamos la descarga; el panel reinicia y corta esta petición, es normal.
   try {
-    const res = await fetch(`http://${ip}/idiomas/actualizar`, { method: 'POST', signal: AbortSignal.timeout(20000) });
-    const data = await res.json().catch(() => null);
+    await fetch(`http://${ip}/idiomas/actualizar`, { method: 'POST', signal: AbortSignal.timeout(4000) });
+  } catch (e) { /* corte por reinicio del panel */ }
 
-    resultado.style.display = 'block';
-    if (res.ok && data && data.ok){
-      resultado.className = 'otaResult ok';
-      resultado.textContent = data.resumen || 'Idiomas actualizados';
-    } else {
-      resultado.className = 'otaResult err';
-      resultado.textContent = (data && data.resumen) || 'No se pudo completar la descarga';
-    }
-  } catch (e){
+  btn.textContent = 'REINICIANDO EL PANEL...';
+  await new Promise(r => setTimeout(r, 4000));
+
+  // 2. Polling a /idiomas/estado hasta que haya resultado fresco
+  btn.textContent = 'COMPROBANDO RESULTADO...';
+  const maxIntentos = 15;
+  let exito = false;
+
+  for (let intento = 0; intento < maxIntentos; intento++) {
+    try {
+      const data = await consultarEstadoIdiomas(ip);
+      if (data && data.hay) {
+        resultado.style.display = 'block';
+        resultado.className = data.ok ? 'otaResult ok' : 'otaResult err';
+        resultado.textContent = data.resumen || (data.ok ? 'Idiomas actualizados' : 'No se pudo completar la descarga');
+        exito = true;
+        break;
+      }
+    } catch (e) { /* aún no ha vuelto a la red; reintentamos */ }
+
+    await new Promise(r => setTimeout(r, 2000));
+  }
+
+  if (!exito) {
     resultado.style.display = 'block';
     resultado.className = 'otaResult err';
-    resultado.textContent = 'No se pudo conectar con el panel (puede tardar; prueba de nuevo)';
+    resultado.textContent = 'El panel no respondió a tiempo. Prueba a comprobarlo de nuevo.';
   }
 
   btn.disabled = false;
@@ -1384,6 +1406,21 @@ async function descargarIdiomas(){
 
 document.getElementById('idiomasBtn').addEventListener('click', descargarIdiomas);
 
+/* ---------- Mostrar el último resultado al abrir el panel de actualización ---------- */
+async function mostrarUltimoEstadoIdiomas(){
+  const ip = ipEl.value.trim();
+  const resultado = document.getElementById('idiomasResultado');
+  if (!ip) return;
+
+  try {
+    const data = await consultarEstadoIdiomas(ip);
+    if (data && data.hay) {
+      resultado.style.display = 'block';
+      resultado.className = data.ok ? 'otaResult ok' : 'otaResult err';
+      resultado.textContent = data.resumen || (data.ok ? 'Idiomas actualizados' : 'No se pudo completar la descarga');
+    }
+  } catch (e) { /* panel no disponible ahora mismo; no mostramos nada */ }
+}
 
 /* =========================================================
    TEMPORIZADOR (encendido/apagado programado)
