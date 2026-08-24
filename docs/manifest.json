@@ -1,6 +1,6 @@
 {
   "name": "Retro Pixel LED Lite",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "new_install_prompt_erase": true,
   "builds": [
     {
