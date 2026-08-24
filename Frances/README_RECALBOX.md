@@ -70,8 +70,8 @@ J'ai développé un **Script d'Installation Intelligent en PowerShell** qui réa
      * Option 1 : Menus et Jeux (Affiche les systèmes lors de la navigation + le jeu lancé)
      * Option 2 : Seulement Jeux (Marquise fixe/horloge dans les menus, change uniquement en jouant)
 
-   > [!NOTE]
-   > Les marquises **animées** fonctionnent de la même manière dans les deux modes — la différence entre l'Option 1 et l'Option 2 est uniquement si le panneau réagit également lors de la navigation dans les systèmes, cela n'affecte pas s'il y a un GIF ou non lors du lancement d'un jeu.
+> [!NOTE]
+> Les marquises **animées** fonctionnent de la même manière dans les deux modes — la différence entre l'Option 1 et l'Option 2 est uniquement si le panneau réagit également lors de la navigation dans les systèmes, cela n'affecte pas s'il y a un GIF ou non lors du lancement d'un jeu.
 
 5. Le script traitera les fichiers en une seconde. À la fin, vous verrez le message `INSTALACIÓN COMPLETADA!`. Appuyez sur n'importe quelle touche pour quitter.
 
