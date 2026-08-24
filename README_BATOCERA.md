@@ -70,8 +70,8 @@ He desarrollado un **Script Instalador Inteligente en PowerShell** que realiza t
        * **Opción 1:** Menús y Juegos (Muestra sistemas al navegar + juego lanzado)
        * **Opción 2:** Solo Juegos (Marquesina fija/reloj en menús, cambia solo al jugar)
 
-   > [!NOTE]
-   > Las marquesinas **animadas** funcionan igual en los dos modos — la diferencia entre Opción 1 y Opción 2 es únicamente si el panel reacciona también al navegar por los sistemas, no afecta a si hay GIF o no al lanzar un juego.
+> [!NOTE]
+> Las marquesinas **animadas** funcionan igual en los dos modos — la diferencia entre Opción 1 y Opción 2 es únicamente si el panel reacciona también al navegar por los sistemas, no afecta a si hay GIF o no al lanzar un juego.
 
 5. El script procesará los archivos en un segundo. Al finalizar, verás el mensaje `INSTALACIÓN COMPLETADA!`. Pulsa cualquier tecla para salir.
 
