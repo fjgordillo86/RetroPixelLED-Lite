@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v3.1.0
+# ✨ Retro Pixel LED Lite v3.1.1
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/Frances/README.md)**
 
 ### **[✈️ Unirse al Grupo de Telegram: Retro Pixel LED para estár al día de las actualizaciones](https://t.me/RetroPixelLed)**
@@ -18,26 +18,23 @@ Se integra soporte nativo para mandos a distancia, permitiendo navegar por el Me
 - [Video a GIF](https://p4blogc.github.io/dmdos-converter/) creada por **p4bloGC**.
 
 
-## 🆕 Novedades de la Versión v3.1.0 Lite
+## 🆕 Novedades de la Versión v3.1.1 Lite
 
 #### 🚀 Nuevas Características (Features)
-* **Progressive Web App (PWA) Completa:** Interfaz web moderna e instalable que proporciona control total del panel desde cualquier dispositivo móvil o escritorio en la misma red local.
-  * 🌐 **[Probar / Instalar Web App en línea](https://fjgordillo86.github.io/RetroPixelLED-Lite/control/)** *(Acceso directo a la interfaz web)*
-  * **5 Módulos de Control:**
-    - 🔤 **Texto Scroll:** Envía mensajes con color y velocidad personalizados.
-    - 🎞️ **Playlists Dinámicas:** Cambia de colección de GIFs en tiempo real.
-    - 🕐 **Selector de Reloj:** Activa/desactiva el reloj y personaliza estilos y colores.
-    - ⏰ **Temporizador Inteligente:** Programa encendido/apagado automático con override manual.
-    - 🔄 **Actualización:** OTA de firmware + descarga automática de archivos de idioma.
-  * **Ajustes Completos:** Edita `config.ini` directamente desde la app — incluye WiFi, hardware, reproducción, clima e idioma.
+
+* **🎬 Marquesinas Animadas en Modo Arcade (Batocera y Recalbox):** La gran novedad de esta versión. Además de la imagen estática de siempre, el panel ahora puede reproducir un **GIF animado** (o una secuencia completa de varios clips en bucle) al lanzar un juego — con reconexión automática si se corta la red a mitad de partida. Basta con colocar el `.gif` junto a la marquesina `.bmp` de siempre: si existe, se reproduce; si no, todo sigue funcionando exactamente igual que hasta ahora.
+* **📶 IP del Panel en el Menú OSD:** Nuevo apartado en WiFi → que muestra la IP asignada al panel, junto con la opción **"Mostrar IP al iniciar"** para verla también en pantalla nada más arrancar — pensado para configurar la PWA sin tener que buscar la IP por otro lado.
+* **🔄 Activar configuración desde la APP en el menú OSD:** Nuevo apartado en Wifi → **"Control APP"** que permite activar la configuración y el control del panel desde la APP.
+* **🔄 Descarga de Idiomas en el menú OSD:** Nuevo apartado en Actualización → **"Descargar Idiomas"** que permite descargar los archivos de idioma directamente de GitHub.
+* **🔄 Reconexión Automática de WiFi:** El panel detecta si pierde la conexión durante el funcionamiento normal y reintenta reconectar solo, sin necesidad de reiniciarlo a mano.
+
 
 #### 🛡️ Corrección de Errores (Fixes)
-* **Ciclo de Ajuste de Brillo:** Corregido el error de lógica en el bucle de brillo que impedía reiniciar al 5% al alcanzar el 100%, permitiendo de nuevo completar el ciclo correctamente mediante el botón de control.
+* **Conexión de la PWA:** Corregidos varios fallos que impedían que la app conectara con el panel de forma fiable — el servidor dejaba de atender peticiones en determinados modos, y no se recuperaba solo si la red fallaba durante horas de uso continuado.
+
 
 #### 🏗️ Cambios Internos
-* **Refactorización de Rutas Web:** Los endpoints HTTP se han reorganizado en un archivo `WebRoutes.ino` separado para mejorar la legibilidad y mantenibilidad del código.
 * **Soporte Multi-Idioma Remoto:** Descarga de `.json` de idioma desde GitHub directamente al panel, sin necesidad de tarjeta SD extraíble.
-* **Optimización UTF-8:** Decodificador de caracteres polacos y acentos en tiempo real, permitiendo mensajes de texto con caracteres especiales.
 
 ---
 
@@ -47,7 +44,7 @@ Esta versión Lite introduce un soporte avanzado para ecosistemas de retrogaming
 
 A través de una jerarquía de archivos inteligente y optimizada para el hardware del ESP32, el panel gestiona el cambio de estado y muestra:
 
-1. **Marquesina del Juego:** Imagen `.bmp` de 24 bits cargada instantáneamente.
+1. **Marquesina del Juego:** Imagen `.bmp` de 24 bits cargada instantáneamente, o un **GIF animado** (Batocera y Recalbox) si existe uno para ese juego — incluyendo secuencias de varios gifs reproducidos uno tras otro en bucle.
 2. **Logo del Sistema:** Imagen `.bmp` de 24 bits cargada instantáneamente mientras navegamos por los sistemas.
 
 
@@ -109,6 +106,9 @@ El sistema se controla mediante un **único botón**. Utiliza una lógica de pul
 │   └──   Brillo: [5% - 100%]
 ├── 📶 WiFi: [ON / OFF]
 │   ├── 🔄 Activar: [SI / NO]
+│   ├── 🔎 Mostar IP: [SI / NO]
+│   ├── 🏷️ IP: [192.169.1.117]
+│   ├── 📱 Control APP: [SI / NO]
 │   └── 🔙 Volver
 ├── 🕒 Reloj: [ON / OFF]
 │   ├── 🔄 Activar: [SI / NO]
@@ -135,7 +135,8 @@ El sistema se controla mediante un **único botón**. Utiliza una lógica de pul
 │   ├── ⚠️ Reset:
 │   └── 🔙 Volver
 ├── 🚀 Actualización
-│   └── 🔄 Buscar OTA
+│   ├── 🔄 Buscar OTA
+│   ├── 🔤 Descargar Idiomas
 │   └── 🔙 Volver
 ├── 📂 Explorardor SD
 │   └── 🔄 Iniciar FTP
@@ -189,7 +190,7 @@ La interfaz se divide en **5 secciones independientes** accesibles desde la barr
 
 **5️⃣ Ajustes (🛠)**
 - **Edición remota de config.ini** completa, organizada en 7 secciones:
-  - **WiFi:** SSID, contraseña, zona horaria.
+  - **WiFi:** SSID, contraseña, mostrar IP al iniciar, zona horaria.
   - **Hardware:** Nº de paneles, orden de color (RGB/RBG/GBR), brillo, velocidad I2S, refresco mínimo, buffering, anti-ghosting.
   - **Arcade:** Activar Batocera, Recalbox, ReplayOS, o ninguno.
   - **Texto Deslizante:** Activar scroll de texto remoto.
