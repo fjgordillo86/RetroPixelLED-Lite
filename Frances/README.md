@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v3.1.0
+# ✨ Retro Pixel LED Lite v3.1.1
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/Frances/README.md)**
 
 ### **[✈️ Rejoindre le Groupe Telegram : Retro Pixel LED pour rester informé des mises à jour](https://t.me/RetroPixelLed)**
@@ -18,37 +18,34 @@ Vous souhaitez créer vos propres GIFs ? Voici trois magnifiques outils :
 - [Video à GIF](https://p4blogc.github.io/dmdos-converter/) créé par **p4bloGC**.
 
 
-## 🆕 Nouveautés de la Version v3.1.0 Lite
+## 🆕 Nouveautés de la Version v3.1.1 Lite
 
 #### 🚀 Nouvelles Fonctionnalités (Features)
-* **Progressive Web App (PWA) Complète :** Interface web moderne et installable qui offre un contrôle total du panneau depuis n'importe quel appareil mobile ou ordinateur sur le même réseau local.
-  * 🌐 **[Essayer / Installer la Web App en ligne](https://fjgordillo86.github.io/RetroPixelLED-Lite/control/)** *(Accès direct à l'interface web)*
-  * **5 Modules de Contrôle :**
-    - 🔤 **Texte Défilant :** Envoyez des messages avec couleur et vitesse personnalisées.
-    - 🎞️ **Playlists Dynamiques :** Changez de collection de GIFs en temps réel.
-    - 🕐 **Sélecteur d'Horloge :** Activez/désactivez l'horloge et personnalisez les styles et les couleurs.
-    - ⏰ **Minuteur Intelligent :** Programmez la mise sous/hors tension automatique avec dérogation manuelle.
-    - 🔄 **Mise à Jour :** OTA du firmware + téléchargement automatique des fichiers de langue.
-  * **Réglages Complets :** Modifiez `config.ini` directement depuis l'application — inclut le WiFi, le matériel, la lecture, la météo et la langue.
+
+* **🎬 Marquises Animées en Mode Arcade (Batocera et Recalbox) :** La grande nouveauté de cette version. En plus de l'image statique habituelle, le panneau peut désormais lire un **GIF animé** (ou une séquence complète de plusieurs clips en boucle) lors du lancement d'un jeu — avec reconnexion automatique si le réseau est coupé en milieu de partie. Il suffit de placer le fichier `.gif` à côté de la marquise `.bmp` habituelle : s'il existe, il est lu ; sinon, tout continue de fonctionner exactement comme avant.
+* **📶 IP du Panneau dans le Menu OSD :** Nouvelle section dans WiFi → qui affiche l'adresse IP attribuée au panneau, ainsi que l'option **"Afficher l'IP au démarrage"** pour la voir également à l'écran dès l'allumage — conçue pour configurer la PWA sans avoir à chercher l'IP ailleurs.
+* **🔄 Activer la configuration depuis l'APP dans le menu OSD :** Nouvelle section dans Wifi → **"Contrôle APP"** qui permet d'activer la configuration et le contrôle du panneau depuis l'application.
+* **🔄 Téléchargement des langues dans le menu OSD :** Nouvelle section dans Mise à jour → **"Télécharger Langues"** qui permet de télécharger les fichiers de langue directement depuis GitHub.
+* **🔄 Reconexion Automatique du WiFi :** Le panneau détecte s'il perd la connexion pendant le fonctionnement normal et tente de se reconnecter seul, sans qu'il soit nécessaire de le redémarrer manuellement.
+
 
 #### 🛡️ Corrections de Bugs (Fixes)
-* **Cycle d'Ajustement de la Luminosité :** Correction de l'erreur logique dans la boucle de luminosité qui empêchait le redémarrage à 5% une fois les 100% atteints, permettant à nouveau de terminer le cycle correctement via le bouton de contrôle.
+* **Connexion de la PWA :** Correction de plusieurs bugs qui empêchaient l'application de se connecter au panneau de manière fiable — le serveur cessait de répondre aux requêtes dans certains modes et ne récupérait pas la connexion de lui-même si le réseau faiblissait après des heures d'utilisation continue.
 
-#### 🏗️ Changements Interne
-* **Refactorisation des Routes Web :** Les endpoints HTTP ont été réorganisés dans un fichier `WebRoutes.ino` séparé afin d'améliorer la lisibilité et la maintenabilité du code.
-* **Support Multilingue Distant :** Téléchargement des fichiers `.json` de langue depuis GitHub directement sur le panneau, sans nécessiter de carte SD amovible.
-* **Optimisation UTF-8 :** Décodeur en temps réel de caractères polonais et d'accents, permettant des messages texte avec caractères spéciaux.
+
+#### 🏗️ Changements Internes
+* **Support Multi-Langue à Distance :** Téléchargement des fichiers `.json` de langue depuis GitHub directement sur le panneau, sans nécessiter de carte SD amovible.
 
 ---
 
 ## 🕹️ Intégration Spéciale : Mode Arcade (Batocera, Recalbox & RePlayOS)
 
-Cette version Lite introduit un support avancé pour les écosystèmes de retrogaming, permettant deux voies de synchronisation : via des scripts locaux (**Batocera / Recalbox**) ou via une surveillance native par réseau local (**RePlayOS**).
+Cette version Lite introduit un support avancé pour les écosystèmes de retrogaming, permettant deux méthodes de synchronisation : via des scripts locaux (**Batocera / Recalbox**) ou par surveillance native sur réseau local (**RePlayOS**). 
 
-À travers une hiérarchie de fichiers intelligente et optimisée pour le matériel ESP32, le panneau gère le changement d'état et affiche :
+Grâce à une hiérarchie de fichiers intelligente et optimisée pour le matériel de l'ESP32, le panneau gère le changement d'état et affiche :
 
-1. **Marquée du Jeu :** Image `.bmp` 24 bits chargée instantanément.
-2. **Logo du Système :** Image `.bmp` 24 bits chargée instantanément lors de la navigation dans les systèmes.
+1. **Marquise du Jeu :** Image `.bmp` 24 bits chargée instantanément, ou un **GIF animé** (Batocera et Recalbox) s'il en existe un pour ce jeu — incluant des séquences de plusieurs GIFs lus les uns après les autres en boucle.
+2. **Logo du Système :** Image `.bmp` 24 bits chargée instantanément lors de la navigation à travers les systèmes.
 
 
 Pour plus d'informations, rendez-vous au point `9. 🕹️ Intégration avec Batocera, Recalbox ou ReplayOS (Arcade)`
@@ -109,6 +106,9 @@ Le système se contrôle à l'aide d'un **bouton unique**. Il utilise une logiqu
 │   └──   Luminosité : [5% - 100%]
 ├── 📶 WiFi : [ON / OFF]
 │   ├── 🔄 Activer : [OUI / NON]
+│   ├── 🔎 Afficher IP : [OUI / NON]
+│   ├── 🏷️ IP : [192.169.1.117]
+│   ├── 📱 Contrôle APP : [OUI / NON]
 │   └── 🔙 Retour
 ├── 🕒 Horloge : [ON / OFF]
 │   ├── 🔄 Activar : [OUI / NON]
@@ -136,6 +136,7 @@ Le système se contrôle à l'aide d'un **bouton unique**. Il utilise une logiqu
 │   └── 🔙 Retour
 ├── 🚀 Mise à Jour
 │   └── 🔄 Rechercher OTA
+│   ├── 🔤 Télécharger langues
 │   └── 🔙 Retour
 ├── 📂 Explorateur SD
 │   └── 🔄 Démarrer FTP
