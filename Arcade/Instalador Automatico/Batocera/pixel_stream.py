@@ -1,23 +1,19 @@
 #!/usr/bin/env python3
 """
-pixel_stream.py - Reproducción optimizada de marquesinas animadas por TCP.
+pixel_stream.py - Reproducción optimizada de marquesinas animadas por TCP (Versión FFmpeg).
 
-Mejoras de rendimiento:
-- Desactivado el algoritmo de Nagle (TCP_NODELAY) para latencia ultrabaja.
-- Frame Skipping adaptativo: salta fotogramas en GIFs de alta velocidad (>12 FPS)
-  para evitar el efecto cámara lenta y mantener el tiempo real.
-- Escalado por NEAREST: procesado de fotogramas hasta 10x más rápido en CPU.
-- Carga progresiva en caché RAM.
-- Backoff progresivo + reconexión (E): si se corta la conexión, se reintenta con
-  espera creciente (3s->6s->12s->30s tope), interrumpible al instante por la
-  bandera de stop, reenviando el MISMO fotograma en el que se cortó.
+Mejoras respecto a la versión de Pillow:
+- Cero dependencias: Utiliza el FFmpeg nativo de Recalbox (no requiere pip ni Pillow).
+- Rendimiento extremo: FFmpeg realiza el escalado NEAREST y la conversión de color en C.
+- Framerate unificado: FFmpeg estabiliza los GIFs a un máximo de 12 FPS automáticamente.
+- RGB565 nativo: Si se activa, FFmpeg hace la conversión bit a bit directamente.
 """
 import sys
 import os
 import socket
 import glob
 import time
-from PIL import Image
+import subprocess
 
 ESP32_IP = sys.argv[1]
 ESP32_PORT = int(sys.argv[2])
@@ -26,38 +22,50 @@ ROM_NAME = sys.argv[4]
 STOP_FLAG = sys.argv[5]
 
 ANCHO, ALTO = 128, 32
-FPS_MAXIMOS = 12
-RETRASO_MINIMO = 1.0 / FPS_MAXIMOS
+FPS_DESTINO = 12
+INTERVALO_ENVIO = 1.0 / FPS_DESTINO
 
 # False = RGB888 (24 bits - 12.288 bytes/frame)
-# True  = RGB565 (16 bits -  8.192 bytes/frame). NO ACTIVAR sin cambiar antes verificarMarquesinaTCP().
+# True  = RGB565 (16 bits -  8.192 bytes/frame)
 USA_RGB565 = False
 
-
-def rgb888_a_rgb565(frame_pil):
-    raw_bytes = frame_pil.tobytes()
-    out = bytearray(ANCHO * ALTO * 2)
-    idx_out = 0
-    for i in range(0, len(raw_bytes), 3):
-        r = raw_bytes[i]
-        g = raw_bytes[i + 1]
-        b = raw_bytes[i + 2]
-        val = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
-        out[idx_out] = (val >> 8) & 0xFF
-        out[idx_out + 1] = val & 0xFF
-        idx_out += 2
-    return bytes(out)
+if USA_RGB565:
+    BYTES_POR_FRAME = ANCHO * ALTO * 2
+    PIX_FMT = "rgb565le"  # Little-Endian RGB565 directo desde FFmpeg
+else:
+    BYTES_POR_FRAME = ANCHO * ALTO * 3
+    PIX_FMT = "rgb24"     # RGB888 directo desde FFmpeg
 
 
-def procesar_frame(frame_pil):
-    # NEAREST es mucho más rápido que BILINEAR/LANCZOS y perfecto para Pixel Art
-    if frame_pil.size != (ANCHO, ALTO):
-        frame_pil = frame_pil.resize((ANCHO, ALTO), Image.Resampling.NEAREST)
-
-    if USA_RGB565:
-        return rgb888_a_rgb565(frame_pil)
-    else:
-        return frame_pil.tobytes()
+def cargar_gif_ffmpeg(ruta_gif):
+    """
+    Utiliza FFmpeg para extraer todos los fotogramas del GIF de una pasada a la memoria RAM.
+    Aplica el escalado NEAREST y ajusta los FPS al instante.
+    """
+    cmd = [
+        'ffmpeg',
+        '-loglevel', 'error',
+        '-i', ruta_gif,
+        '-vf', f'fps={FPS_DESTINO},scale={ANCHO}:{ALTO}:flags=neighbor',
+        '-pix_fmt', PIX_FMT,
+        '-f', 'rawvideo',
+        'pipe:1'
+    ]
+    
+    try:
+        # Popen ejecuta FFmpeg; capturamos todo el flujo binario (stdout) en memoria.
+        proceso = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        raw_video, _ = proceso.communicate()
+        
+        # Troceamos el binario gigante en fotogramas individuales
+        frames = []
+        for i in range(0, len(raw_video), BYTES_POR_FRAME):
+            frame = raw_video[i:i + BYTES_POR_FRAME]
+            if len(frame) == BYTES_POR_FRAME:
+                frames.append(frame)
+        return frames
+    except Exception:
+        return []
 
 
 def construir_secuencia():
@@ -84,11 +92,8 @@ def limpiar_stop_flag():
 
 
 class ConexionMarquesina:
-    """Encapsula el socket TCP con reconexión automática y backoff progresivo
-    (3s -> 6s -> 12s -> tope 30s) — mismo patrón ya validado en
-    verificarReplayOSLite() del firmware, aplicado aquí al streamer."""
-
-    PASO_ESPERA = 0.15  # segundos por tramo, para poder cortar la espera al instante
+    """Encapsula el socket TCP con reconexión automática y backoff progresivo."""
+    PASO_ESPERA = 0.15
 
     def __init__(self, ip, puerto):
         self.ip = ip
@@ -100,24 +105,16 @@ class ConexionMarquesina:
     def _crear_socket(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(3.0)
-        # Nagle desactivado en TODO socket nuevo, incluidas las reconexiones
         s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         return s
 
     def _esperar_troceado(self, segundos):
-        """Espera 'segundos' en pasos pequeños, comprobando la bandera de stop
-        en cada uno — para no tardar hasta 30s en reaccionar si sales del juego
-        a media espera de backoff."""
         transcurrido = 0.0
         while transcurrido < segundos and not debe_pararse():
             time.sleep(self.PASO_ESPERA)
             transcurrido += self.PASO_ESPERA
 
     def _conectar_con_backoff(self):
-        """Reintenta conectar indefinidamente (mientras no llegue la bandera de
-        stop), con espera progresiva entre intentos. Sin límite de reintentos:
-        la bandera de stop + el pkill de seguridad de pixel_stop.sh ya cortan
-        esto en cuanto termine la partida."""
         while not debe_pararse():
             try:
                 nuevo_sock = self._crear_socket()
@@ -132,9 +129,6 @@ class ConexionMarquesina:
         return False
 
     def enviar(self, frame_bytes):
-        """Envía un fotograma. Si falla, cierra el socket roto y reconecta con
-        backoff antes de reintentar EL MISMO fotograma. Devuelve False solo si
-        hubo que abandonar porque llegó la bandera de stop."""
         while not debe_pararse():
             try:
                 self.sock.sendall(frame_bytes)
@@ -174,66 +168,30 @@ def main():
                 if debe_pararse():
                     break
 
+                # Fase 1: Cargar a memoria usando FFmpeg si no está cacheado
                 if ruta_gif not in cache_frames:
-                    cache_frames[ruta_gif] = []
-                    img = Image.open(ruta_gif)
+                    frames_extraidos = cargar_gif_ffmpeg(ruta_gif)
+                    cache_frames[ruta_gif] = frames_extraidos
+                
+                frames = cache_frames[ruta_gif]
+                if not frames:
+                    continue  # Si hubo error leyendo el GIF, pasamos al siguiente
 
-                    # Analizar velocidad nativa del GIF para Frame Skipping
-                    # duration viene en milisegundos por frame (ej. 40ms = 25 FPS)
-                    duracion_frame_ms = img.info.get('duration', 80)
-                    if duracion_frame_ms <= 0:
-                        duracion_frame_ms = 80
+                # Fase 2: Bucle de envío desde la memoria RAM (Timing preciso)
+                for frame_bytes in frames:
+                    if debe_pararse():
+                        break
 
-                    fps_gif = 1000.0 / duracion_frame_ms
+                    inicio = time.monotonic()
+                    
+                    if not conexion.enviar(frame_bytes):
+                        return
 
-                    # Cuántos frames saltar si el GIF supera los FPS_MAXIMOS
-                    paso_frame = max(1, int(round(fps_gif / FPS_MAXIMOS)))
-                    intervalo_envio = max(RETRASO_MINIMO, duracion_frame_ms / 1000.0 * paso_frame)
-
-                    frame_idx = 0
-                    try:
-                        while True:
-                            if debe_pararse():
-                                break
-
-                            # Solo procesamos y enviamos 1 de cada 'paso_frame' fotogramas
-                            if frame_idx % paso_frame == 0:
-                                inicio = time.monotonic()
-
-                                frame = img.convert("RGB")
-                                frame_bytes = procesar_frame(frame)
-
-                                cache_frames[ruta_gif].append((frame_bytes, intervalo_envio))
-
-                                if not conexion.enviar(frame_bytes):
-                                    return  # se pidió parar mientras se reconectaba
-
-                                transcurrido = time.monotonic() - inicio
-                                restante = intervalo_envio - transcurrido
-                                if restante > 0:
-                                    time.sleep(restante)
-
-                            frame_idx += 1
-                            img.seek(img.tell() + 1)
-                    except EOFError:
-                        pass
-                    finally:
-                        img.close()
-
-                else:
-                    # Pasadas siguientes desde RAM utilizando el timing ya calculado
-                    for frame_bytes, intervalo_envio in cache_frames[ruta_gif]:
-                        if debe_pararse():
-                            break
-
-                        inicio = time.monotonic()
-                        if not conexion.enviar(frame_bytes):
-                            return
-
-                        transcurrido = time.monotonic() - inicio
-                        restante = intervalo_envio - transcurrido
-                        if restante > 0:
-                            time.sleep(restante)
+                    # Controlamos el ritmo exacto según los FPS que le pedimos a FFmpeg
+                    transcurrido = time.monotonic() - inicio
+                    restante = INTERVALO_ENVIO - transcurrido
+                    if restante > 0:
+                        time.sleep(restante)
 
     finally:
         conexion.cerrar()
