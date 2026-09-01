@@ -23,7 +23,7 @@ Se integra soporte nativo para mandos a distancia, permitiendo navegar por el Me
 #### 🚀 Nuevas Características (Features)
 
 * **🔤 Selección de estilo de fuente en la PWA:** Se puede elegir entre los estilos Bold, SemiBold, Regular y Light.
-* **🏠 Integración con Home Assistant**: Se integra con Home Asistant mediante integración REST. Ver punto 10
+* **🏠 Integración con Home Assistant**: Se integra con Home Asistant mediante integración REST. **Más info en 10. 🏠 Integración con Home Assistant**
 ---
 
 ## 🕹️ Integración Especial: Modo Arcade (Batocera, Recalbox & RePlayOS)
