@@ -1,0 +1,44 @@
+type: entities
+title: 🎮 RetroPixel LED
+icon: null
+entities:
+  - entity: switch.panel_led
+    name: Estado del Panel
+    icon: mdi:power
+  - entity: sensor.retropixel_estado
+    name: Modo Actual
+    icon: mdi:information-outline
+  - type: divider
+  - type: section
+    label: Modos y Pantalla
+  - entity: input_select.retropixel_modo
+    name: Selección de Modo
+    icon: mdi:view-dashboard-outline
+  - entity: input_select.retropixel_playlist
+    name: Playlist de GIFs
+    icon: mdi:playlist-play
+  - type: divider
+  - type: section
+    label: Mensaje de Texto (Scroll)
+  - entity: input_text.retropixel_texto
+    name: Mensaje
+  - entity: input_select.retropixel_color_texto
+    name: Color
+  - entity: input_select.retropixel_fuente_texto
+    name: Fuente
+  - entity: input_number.retropixel_velocidad_texto
+    name: Velocidad (ms)
+  - type: buttons
+    entities:
+      - entity: script.retropixel_enviar_texto
+        name: Enviar Texto
+        icon: mdi:send
+        tap_action:
+          action: call-service
+          service: script.retropixel_enviar_texto
+      - entity: script.retropixel_parar_texto
+        name: Detener Texto
+        icon: mdi:stop-circle-outline
+        tap_action:
+          action: call-service
+          service: script.retropixel_parar_texto
