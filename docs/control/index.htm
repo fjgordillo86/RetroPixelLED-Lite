@@ -410,6 +410,16 @@
     <section>
       <div class="label-row"><span class="l">Velocidad</span><span class="v" id="speedVal">50 ms</span></div>
       <input type="range" id="speed" min="5" max="200" step="5" value="50">
+	</section>
+	
+	<section>
+      <div class="label-row"><span class="l">Fuente</span></div>
+      <div class="pillRow" id="fontPills">
+        <button class="pill active" data-font="bold">Bold</button>
+        <button class="pill" data-font="semibold">SemiBold</button>
+        <button class="pill" data-font="regular">Regular</button>
+        <button class="pill" data-font="light">Light</button>
+      </div>
     </section>
 
     <div class="btnrow">
@@ -664,6 +674,7 @@ let lastStep = 0;
 let currentColor = '#FFB000';
 let currentSpeed = 30;
 let currentText = '';
+let currentFont = 'bold';
 
 function drawFrame(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -772,6 +783,18 @@ speedEl.addEventListener('input', () => {
   speedValEl.textContent = currentSpeed + ' ms';
   capSpeedEl.textContent = currentSpeed + ' ms/paso';
 });
+
+/* ---------- Selección de Fuente ---------- */
+const fontPillsEl = document.getElementById('fontPills');
+if (fontPillsEl) {
+  fontPillsEl.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', () => {
+      fontPillsEl.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      currentFont = p.dataset.font; // Guarda "bold", "semibold", "regular" o "light"
+    });
+  });
+}
 
 /* ---------- Conexión (IP guardada localmente) ---------- */
 const ipEl = document.getElementById('ip');
@@ -1040,7 +1063,7 @@ async function enviarTexto(){
     const res = await fetch(`http://${ip}/texto`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: currentText, color: currentColor, speed: currentSpeed }),
+      body: JSON.stringify({ text: currentText, color: currentColor, speed: currentSpeed, font: currentFont }),
       signal: AbortSignal.timeout(4000)
     });
     if (res.ok){ setStatus('Enviado ✓', 'ok'); }
