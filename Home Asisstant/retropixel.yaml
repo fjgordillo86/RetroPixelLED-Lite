@@ -1,0 +1,179 @@
+# ============================================================
+#  RetroPixel LED Lite - Integración con Home Assistant
+# ============================================================
+
+# ---------- ESTADO GENERAL DEL PANEL ----------
+sensor:
+  - platform: rest
+    name: "RetroPixel Estado"
+    resource: http://192.168.31.210/status
+    method: GET
+    value_template: "{{ 'Reloj' if value_json.playMode == 1 else 'GIF' }}"
+    json_attributes:
+      - brightness
+      - playMode
+      - randomMode
+      - clockStyle
+      - clockColorIndex
+      - textEnable
+      - textoActivo
+      - activePlaylist
+      - isSleeping
+    scan_interval: 15
+
+# ---------- ENCENDIDO / APAGADO ----------
+switch:
+  - platform: rest
+    name: "Panel LED"
+    resource: http://192.168.31.210/timer/toggle
+    state_resource: http://192.168.31.210/status
+    method: post
+    body_on: '{"sleep": false}'
+    body_off: '{"sleep": true}'
+    is_on_template: "{{ value_json is defined and value_json.isSleeping == false }}"
+    headers:
+      Content-Type: application/json
+
+# ---------- ACCIONES REST (llamadas directas al panel) ----------
+rest_command:
+  retropixel_modo:
+    url: "http://192.168.31.210/control"
+    method: POST
+    headers:
+      Content-Type: application/json
+    payload: '{"playMode": {{ modo }}}'
+
+  retropixel_playlist:
+    url: "http://192.168.31.210/playlist"
+    method: POST
+    headers:
+      Content-Type: application/json
+    payload: '{"name": "{{ nombre }}"}'
+
+  retropixel_texto_enviar:
+    url: "http://192.168.31.210/texto"
+    method: POST
+    headers:
+      Content-Type: application/json
+    payload: >
+      {"text": "{{ texto }}", "color": "{{ color }}", "speed": {{ velocidad }}, "font": "{{ fuente }}"}
+
+  retropixel_texto_stop:
+    url: "http://192.168.31.210/texto"
+    method: POST
+    headers:
+      Content-Type: application/json
+    payload: '{"cmd": "STOP"}'
+
+# ---------- SELECTORES PARA EL DASHBOARD ----------
+input_select:
+  retropixel_modo:
+    name: "Modo del panel"
+    icon: mdi:led-strip-variant
+    options:
+      - "GIF"
+      - "Reloj"
+
+  retropixel_playlist:
+    name: "Playlist"
+    icon: mdi:playlist-play
+    options:
+      - "Arcade"
+      - "Consolas"
+      - "Dragon Ball"
+      - "MasterSystem"
+      - "Megadrive"
+      - "Metal Slug"
+      - "NES"
+      - "Ordenadores"
+      - "Otros"
+      - "Pelis"
+      - "SuperNintendo"
+      - "The 80s y 90s"
+      - "Todos"
+      - "Top 30"
+      - "Test"
+
+  retropixel_color_texto:
+    name: "Color del texto"
+    icon: mdi:palette
+    options:
+      - "Blanco"
+      - "Rojo"
+      - "Verde"
+      - "Azul"
+      - "Amarillo"
+      - "Cian"
+      - "Magenta"
+      - "Naranja"
+      - "Rosa"
+
+  retropixel_fuente_texto:
+    name: "Fuente del texto"
+    icon: mdi:format-font
+    options:
+      - "Bold"
+      - "SemiBold"
+      - "Regular"
+      - "Light"
+
+input_number:
+  retropixel_velocidad_texto:
+    name: "Velocidad del texto"
+    icon: mdi:speedometer
+    min: 5
+    max: 200
+    step: 5
+    initial: 30
+    unit_of_measurement: "ms"
+
+input_text:
+  retropixel_texto:
+    name: "Mensaje a mostrar"
+    icon: mdi:message-text
+    max: 80
+
+# ---------- AUTOMATIZACIONES ----------
+automation:
+  - alias: "RetroPixel - cambiar modo"
+    trigger:
+      - platform: state
+        entity_id: input_select.retropixel_modo
+    action:
+      - action: rest_command.retropixel_modo
+        data:
+          modo: "{{ 0 if trigger.to_state.state == 'GIF' else 1 }}"
+
+  - alias: "RetroPixel - cambiar playlist"
+    trigger:
+      - platform: state
+        entity_id: input_select.retropixel_playlist
+    action:
+      - action: rest_command.retropixel_playlist
+        data:
+          nombre: "{{ trigger.to_state.state }}"
+
+# ---------- SCRIPTS ----------
+script:
+  retropixel_enviar_texto:
+    alias: "RetroPixel - Enviar texto"
+    icon: mdi:send
+    sequence:
+      - action: rest_command.retropixel_texto_enviar
+        data:
+          texto: "{{ states('input_text.retropixel_texto') }}"
+          color: >
+            {% set colores = {
+              'Blanco': '#FFFFFF', 'Rojo': '#FF0000', 'Verde': '#00FF00',
+              'Azul': '#0000FF', 'Amarillo': '#FFFF00', 'Cian': '#00FFFF',
+              'Magenta': '#FF00FF', 'Naranja': '#FF8000', 'Rosa': '#FFC0CB'
+            } %}
+            {{ colores.get(states('input_select.retropixel_color_texto'), '#FFFFFF') }}
+          velocidad: "{{ states('input_number.retropixel_velocidad_texto') | int }}"
+          fuente: "{{ states('input_select.retropixel_fuente_texto') | lower }}"
+
+  retropixel_parar_texto:
+    alias: "RetroPixel - Parar texto"
+    icon: mdi:stop
+    sequence:
+      - action: rest_command.retropixel_texto_stop
