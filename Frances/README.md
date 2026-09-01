@@ -1,4 +1,4 @@
-# ✨ Retro Pixel LED Lite v3.1.1
+# ✨ Retro Pixel LED Lite v3.1.2
 **[🇪🇸 Español](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README.md) | [🇫🇷 Français](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/Frances/README.md)**
 
 ### **[✈️ Rejoindre le Groupe Telegram : Retro Pixel LED pour rester informé des mises à jour](https://t.me/RetroPixelLed)**
@@ -18,23 +18,12 @@ Vous souhaitez créer vos propres GIFs ? Voici trois magnifiques outils :
 - [Video à GIF](https://p4blogc.github.io/dmdos-converter/) créé par **p4bloGC**.
 
 
-## 🆕 Nouveautés de la Version v3.1.1 Lite
+## 🆕 Nouveautés de la Version v3.1.2 Lite
 
 #### 🚀 Nouvelles Fonctionnalités (Features)
 
-* **🎬 Marquises Animées en Mode Arcade (Batocera et Recalbox) :** La grande nouveauté de cette version. En plus de l'image statique habituelle, le panneau peut désormais lire un **GIF animé** (ou une séquence complète de plusieurs clips en boucle) lors du lancement d'un jeu — avec reconnexion automatique si le réseau est coupé en milieu de partie. Il suffit de placer le fichier `.gif` à côté de la marquise `.bmp` habituelle : s'il existe, il est lu ; sinon, tout continue de fonctionner exactement comme avant.
-* **📶 IP du Panneau dans le Menu OSD :** Nouvelle section dans WiFi → qui affiche l'adresse IP attribuée au panneau, ainsi que l'option **"Afficher l'IP au démarrage"** pour la voir également à l'écran dès l'allumage — conçue pour configurer la PWA sans avoir à chercher l'IP ailleurs.
-* **🔄 Activer la configuration depuis l'APP dans le menu OSD :** Nouvelle section dans Wifi → **"Contrôle APP"** qui permet d'activer la configuration et le contrôle du panneau depuis l'application.
-* **🔄 Téléchargement des langues dans le menu OSD :** Nouvelle section dans Mise à jour → **"Télécharger Langues"** qui permet de télécharger les fichiers de langue directement depuis GitHub.
-* **🔄 Reconexion Automatique du WiFi :** Le panneau détecte s'il perd la connexion pendant le fonctionnement normal et tente de se reconnecter seul, sans qu'il soit nécessaire de le redémarrer manuellement.
-
-
-#### 🛡️ Corrections de Bugs (Fixes)
-* **Connexion de la PWA :** Correction de plusieurs bugs qui empêchaient l'application de se connecter au panneau de manière fiable — le serveur cessait de répondre aux requêtes dans certains modes et ne récupérait pas la connexion de lui-même si le réseau faiblissait après des heures d'utilisation continue.
-
-
-#### 🏗️ Changements Internes
-* **Support Multi-Langue à Distance :** Téléchargement des fichiers `.json` de langue depuis GitHub directement sur le panneau, sans nécessiter de carte SD amovible.
+* **🔤 Sélection del estilo de fuente en la PWA:** Il est posible de choisir entre les styles Bold, SemiBold, Regular et Light.
+* **🏠 Intégration avec Home Assistant :** S'intègre avec Home Assistant via l'intégration REST.
 
 ---
 
@@ -52,10 +41,12 @@ Pour plus d'informations, rendez-vous au point `9. 🕹️ Intégration avec Bat
 
 ---
 
-## 📜 Historique Détaillé des Changements (v3.0.0 -> v3.1.0)
+## 📜 Historique Détaillé des Changements (v3.0.0 -> v3.1.2)
 
 | Fonctionnalité | Détail Technique | Bénéfice |
 | :--- | :--- | :--- |
+| **🏠 Intégration Home Assistant** | Exposition des points d'accès REST API (GET `/status`, POST `/control`, `/playlist`, `/texto`, `/timer/toggle`) et package YAML complet pour une intégration domotique native. | **Automatisation et contrôle domotique.** Contrôlez l'allumage, l'extinction, changez de mode, de playlist et envoyez des notifications textuelles depuis l'interface ou les automatisations de Home Assistant. |
+| **🔤 Sélection de police du texte** | Intégration de 4 typographies sélectionnables par paramètre (`Bold`, `SemiBold`, `Regular`, `Light`) sur les points d'accès HTTP, la PWA et l'intégration REST. | **Personnalisation visuelle.** Permet d'adapter le style visuel des messages défilants selon le type de notification ou les préférences esthétiques. |
 | **🎛️ Panneau de Contrôle PWA** | Interface web progressive (Progressive Web App) avec 5 modules de contrôle indépendants et édition à distance de `config.ini`. | **Contrôle total depuis n'importe quel appareil.** Indépendant de la géolocalisation, fonctionne sur le réseau local sans serveur externe. |
 | **☀️ Contrôle de Luminosité** | Curseur glissant en temps réel (0-100%) avec application instantanée, sans redémarrage. | **Ajustement fluide.** Adapte la luminosité à l'éclairage ambiant en un instant. |
 | **🔤 Texte Défilant avec UTF-8** | Moteur de défilement de texte avec décodeur UTF-8→Latin-1 en temps réel, support des caractères polonais et accentués. | **Internationalisation complète.** Messages avec ñ, á, ł, ą sans limitations. |
@@ -283,7 +274,7 @@ Le fichier nommé `config.ini` que vous trouverez dans le dossier "Contenido SD"
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v3.1.0 - FICHIER DE CONFIGURATION
+# 🕹️ RETRO PIXEL LED LITE v3.1.2 - FICHIER DE CONFIGURATION
 # ============================================================
 # Remarque : Ne laissez pas d'espaces autour du symbole '='.
 # Exemple correct : BRIGHTNESS=40
@@ -531,6 +522,27 @@ Si vous souhaitez activer l'affichage par Retro Pixel LED Lite des marquees du j
 > 
 > **[👉 CLIQUEZ ICI POUR VOIR LES INSTRUCTIONS POUR REPLAYOS](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_REPLAYOS.md)**
 ---
+### 10. 🏠 Intégration avec Home Assistant
+
+Vous pouvez intégrer et contrôler totalement **RetroPixel LED Lite** depuis **Home Assistant** via l'API REST locale, sans dépendre du cloud. 
+
+Cette intégration vous permet de :
+- 🟢 **Allumer / Éteindre** le panneau à l'aide d'un interrupteur (*switch*).
+- 📊 **Consulter l'état actuel** (mode actif, playlist en cours de lecture, etc.).
+- 🔄 **Changer de mode** (Horloge / GIF) et de **Playlist** instantanément.
+- 💬 **Envoyer des messages texte défilants** en choisissant la couleur, la vitesse et la police depuis le Dashboard.
+
+---
+
+### 📦 1. Ajouter la configuration à Home Assistant
+
+Si vous utilisez la structure de dossiers par packages (`packages`), enregistrez le fichier nommé `retropixel.yaml` disponible **[ICI](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Home%20Asisstant)** dans le dossier `/config/packages/`. Si vous n'utilisez pas les packages, collez le contenu dans votre fichier `configuration.yaml`.
+
+> ⚠️ **IMPORTANT :** Remplacez l'adresse IP `192.168.31.210` par l'adresse IP attribuée à votre ESP32 et adaptez le nom des playlists avec les vôtres.
+
+Une carte `entities.yaml` est également disponible pour l'ajouter à votre tableau de bord.
+<img width="822" height="1005" alt="Captura HA" src="https://github.com/user-attachments/assets/9294b479-f428-4c68-9fcc-c871ad2e88e4" />
+
 
 ## 🧠 Fonctionnalités Core LITE
 
