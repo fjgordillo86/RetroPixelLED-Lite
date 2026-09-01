@@ -23,7 +23,7 @@ Se integra soporte nativo para mandos a distancia, permitiendo navegar por el Me
 #### 🚀 Nuevas Características (Features)
 
 * **🔤 Selección de estilo de fuente en la PWA:** Se puede elegir entre los estilos Bold, SemiBold, Regular y Light.
-* **🏠 Integración con Home Assistant**: Se integra con Home Asistant mediante integración REST.
+* **🏠 Integración con Home Assistant**: Se integra con Home Asistant mediante integración REST. Ver punto 10
 ---
 
 ## 🕹️ Integración Especial: Modo Arcade (Batocera, Recalbox & RePlayOS)
@@ -522,7 +522,7 @@ Si queremos activar que Rretro Pixel LED lite muestre las marquesinas del juego 
 > **[👉 HAZ CLIC AQUÍ PARA VER LAS INSTRUCCIONES DE REPLAYOS](https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/README_REPLAYOS.md)**
 ---
 
-## 🏠 Integración con Home Assistant
+### 10. 🏠 Integración con Home Assistant
 
 Puedes integrar y controlar completamente **RetroPixel LED Lite** desde **Home Assistant** a través de la API REST local sin depender de la nube. 
 
