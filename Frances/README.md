@@ -22,7 +22,7 @@ Vous souhaitez créer vos propres GIFs ? Voici trois magnifiques outils :
 
 #### 🚀 Nouvelles Fonctionnalités (Features)
 
-* **🔤 Sélection del estilo de fuente en la PWA:** Il est posible de choisir entre les styles Bold, SemiBold, Regular et Light.
+* **🔤 Sélection du style de police dans la PWA:** Il est posible de choisir entre les styles Bold, SemiBold, Regular et Light.
 * **🏠 Intégration avec Home Assistant :** S'intègre avec Home Assistant via l'intégration REST. **Plus d'infos au point 10. 🏠 Intégration avec Home Assistant**
 
 ---
