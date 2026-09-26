@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    RetroPixelLED - Renombrador de GIFs Arcade v2.0
+    RetroPixelLED - Renombrador de GIFs Arcade v2.1
 .DESCRIPTION
     Sustituye al renombrado "a ciegas" del script anterior (que asumia que limpiar el
     nombre humano del archivo ya daba el romset de MAME, cosa que casi nunca es cierta)
@@ -21,18 +21,9 @@
       2) Copiar GIFs a carpetas de sistema: dada la carpeta ROMS y la carpeta Arcade,
          eliges un sistema (o varios) y el script copia a Arcade/<sistema>/ los GIFs ya
          renombrados cuyo nombre coincide con un romset presente en ese sistema.
-
-    NOTAS DE DISENO (coherentes con el resto del toolkit):
-    - Sin tildes ni enies en ningun texto de consola.
-    - Usa el mismo RetroPixelLED_Config.json (rutas de ROMS/Arcade/cache) que el
-      RetroPixelLED_ReplayOS_Toolkit.ps1, para no tener que repetir rutas.
-    - MAME.dat se descarga una vez a la cache y se reutiliza (se puede forzar
-      actualizacion). Es un DAT en formato ClrMamePro mantenido por el equipo de
-      libretro/RetroArch, no oficial de MAME, pero es la fuente publica mas completa
-      y accesible de "titulo real -> nombre de romset" que existe.
 #>
 
-$Host.UI.RawUI.WindowTitle = "RetroPixelLED - Renombrador de GIFs v2.0"
+$Host.UI.RawUI.WindowTitle = "RetroPixelLED - Renombrador de GIFs v2.1"
 $OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = "Stop"
 
@@ -103,6 +94,51 @@ function Get-SystemFolders([string]$root) {
     return Get-ChildItem -Path $root -Directory | Sort-Object Name | ForEach-Object {
         [PSCustomObject]@{ Nombre = $_.Name; Ruta = $_.FullName }
     }
+}
+
+# Crea una ruta de carpetas anidadas NIVEL A NIVEL en vez de pedirle a New-Item -Force
+# que cree varios niveles nuevos de golpe. Sobre rutas de red (UNC, \\equipo\recurso\...)
+# esa creacion "de golpe" puede fallar con "no se ha encontrado la ruta de acceso de la
+# red" incluso cuando el recurso compartido es accesible, si faltan varios niveles a la
+# vez. Yendo nivel a nivel identificamos exactamente cual falla.
+function New-CarpetaAnidada([string]$rutaCompleta) {
+    if (Test-Path $rutaCompleta) { return $true }
+
+    $partes = $rutaCompleta -split '\\' | Where-Object { $_ -ne '' }
+    if ($partes.Count -eq 0) { return $false }
+
+    if ($rutaCompleta.StartsWith('\\')) {
+        if ($partes.Count -lt 2) {
+            Write-Host "Ruta de red incompleta: $rutaCompleta" -ForegroundColor Red
+            return $false
+        }
+        $actual = '\\' + $partes[0] + '\' + $partes[1]
+        $resto = @()
+        if ($partes.Count -gt 2) { $resto = $partes[2..($partes.Count - 1)] }
+    } else {
+        $actual = $partes[0]
+        $resto = @()
+        if ($partes.Count -gt 1) { $resto = $partes[1..($partes.Count - 1)] }
+    }
+
+    if (-not (Test-Path $actual)) {
+        Write-Host "No se puede acceder a la ruta base: $actual (comprueba que el recurso compartido esta accesible desde este PC)" -ForegroundColor Red
+        return $false
+    }
+
+    foreach ($nivel in $resto) {
+        $actual = Join-Path $actual $nivel
+        if (-not (Test-Path $actual)) {
+            try {
+                New-Item -ItemType Directory -Path $actual -ErrorAction Stop | Out-Null
+            } catch {
+                Write-Host "No se pudo crear la carpeta: $actual" -ForegroundColor Red
+                Write-Host "  Detalle: $_" -ForegroundColor DarkYellow
+                return $false
+            }
+        }
+    }
+    return $true
 }
 
 # Devuelve un nombre de archivo "<baseName>.gif" libre en $carpeta, probando
@@ -642,7 +678,7 @@ function Invoke-CopiarGifsASistemas {
         Write-Host "---------------------------------------------------" -ForegroundColor DarkCyan
 
         $romsets = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
-        Get-ChildItem -Path $sistema.Ruta -File -Filter "*.zip" -ErrorAction SilentlyContinue | ForEach-Object {
+        Get-ChildItem -Path $sistema.Ruta -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -in ".zip", ".7z" } | ForEach-Object {
             [void]$romsets.Add([System.IO.Path]::GetFileNameWithoutExtension($_.Name))
         }
 
@@ -652,7 +688,10 @@ function Invoke-CopiarGifsASistemas {
         }
 
         $destinoDir = Join-Path $arcadeRoot $sistema.Nombre
-        if (-not (Test-Path $destinoDir)) { New-Item -ItemType Directory -Path $destinoDir -Force | Out-Null }
+        if (-not (New-CarpetaAnidada $destinoDir)) {
+            Write-Host "Se omite el sistema [$($sistema.Nombre)] por no poder crear/acceder a su carpeta de destino." -ForegroundColor Red
+            continue
+        }
 
         $copiados = 0
         foreach ($gif in $gifsDisponibles) {
@@ -666,7 +705,7 @@ function Invoke-CopiarGifsASistemas {
 
         Write-Host "GIFs copiados a [$($sistema.Nombre)]: $copiados" -ForegroundColor White
         if ($copiados -gt 0) {
-            Write-Host "Recuerda: ejecuta la Opcion 3 del toolkit principal para actualizar $($sistema.Nombre).txt" -ForegroundColor Yellow
+            Write-Host "Recuerda: ejecuta la Opcion 3 del Script Marquesinas_ReplayOS $($sistema.Nombre).txt" -ForegroundColor Yellow
         }
     }
 }
@@ -677,7 +716,7 @@ function Invoke-CopiarGifsASistemas {
 do {
     Clear-Host
     Write-Host "===================================================" -ForegroundColor Magenta
-    Write-Host "   RETROPIXELLED - RENOMBRADOR DE GIFS v2.0" -ForegroundColor White
+    Write-Host "   Retro Pixel LED lite - RENOMBRADOR DE GIFS v2.1" -ForegroundColor White
     Write-Host "===================================================" -ForegroundColor Magenta
     Write-Host ""
     Write-Host "  1) Renombrar GIFs (MAME.dat + diccionario manual)" -ForegroundColor White
