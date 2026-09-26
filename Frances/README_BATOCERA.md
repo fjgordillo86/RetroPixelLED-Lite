@@ -75,11 +75,15 @@ J'ai développé un **Script d'Installation Intelligent en PowerShell** qui réa
 
 5. Le script traitera les fichiers en une seconde. À la fin, vous verrez le message `INSTALACIÓN COMPLETADA!`. Appuyez sur n'importe quelle touche pour quitter.
 
-<img width="1103" height="686" alt="image" src="https://github.com/user-attachments/assets/d94c2a67-c40a-451e-9c61-981a188a294d" />
+<img width="941" height="834" alt="image" src="https://github.com/user-attachments/assets/cec91be3-82b4-44e4-8873-6ce67383e2e1" />
 
-6. **Redémarrez complètement votre système Batocera.**
+6. **Redémarre complètement ton système Batocera.**
 > [!CAUTION]
-> Le redémarrage complet du système est **obligatoire**. Pendant ce démarrage, le script `custom.sh` configurera les permissions internes. À partir de ce moment, chaque fois que vous naviguerez dans le menu, lancerez ou fermerez un jeu, le panneau réagira automatiquement.
+> Le redémarrage complet du système est **obligatoire** pour que le service de permissions apparaisse dans le menu.
+
+7. **Active-le (uniquement la première fois) :** va dans `Menu Principal > Paramètres Système > Services` et active **`retropixelperms`**.
+> [!NOTE]
+> Ce service remplace l'ancien `custom.sh` et c'est lui qui accorde les permissions d'exécution aux scripts de la marquise à chaque démarrage. Une fois activé ici, il le reste pour toujours — même si tu relances l'installateur plus tard (la réinstallation ne fait que régénérer le fichier du service, elle ne le désactive pas). À partir de là, chaque fois que tu navigues dans le menu, lances ou quittes un jeu, le panneau réagira automatiquement.
 
 ### 3. 🛠️ Marquises.
 Nous utiliserons le script qui se trouve dans le dossier `Arcade/Marquesinas/` du projet [ici](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Arcade/Marquesinas). Il se compose de deux fichiers `Ejecutar Script Marquesinas Batocera.bat` et `Script Marquesinas Batocera.ps1`.
