@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    RetroPixelLED - ReplayOS Toolkit v5.0
+    RetroPixelLED - ReplayOS Toolkit v5.1
 .DESCRIPTION
     Herramienta unificada para preparar marquesinas de arcade para RetroPixelLED-Lite
     cuando el frontend es ReplayOS. Sustituye al script anterior (un solo flujo lineal)
@@ -24,7 +24,7 @@
 
 #>
 
-$Host.UI.RawUI.WindowTitle = "RetroPixelLED - ReplayOS Toolkit v5.0"
+$Host.UI.RawUI.WindowTitle = "RetroPixelLED - ReplayOS Toolkit v5.1"
 $OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = "Stop"
 
@@ -346,9 +346,9 @@ function Invoke-ScrapeUnSistema {
         if (-not (Test-Path $dirPath)) { New-Item -ItemType Directory -Path $dirPath -Force | Out-Null }
     }
 
-    # Romsets = nombres de fichero (sin extension) de los .zip en la carpeta de ROMS de
-    # este sistema. Se excluyen los sets de BIOS compartidos habituales.
-    $files = Get-ChildItem -Path $RomFolder -File -Filter "*.zip" -ErrorAction SilentlyContinue
+    # Romsets = nombres de fichero (sin extension) de los .zip o .7z en la carpeta de ROMS
+    # de este sistema. Se excluyen los sets de BIOS compartidos habituales.
+    $files = Get-ChildItem -Path $RomFolder -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -in ".zip", ".7z" }
     $seenRomsets = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
     $bioNames = @("neogeo", "cps1", "cps2", "cps3", "pgm", "naomi", "naomibios")
     $games = @()
@@ -713,7 +713,7 @@ function Invoke-AuditarListadoUnSistema {
 do {
     Clear-Host
     Write-Host "===================================================" -ForegroundColor Magenta
-    Write-Host "     RETROPIXELLED - REPLAYOS TOOLKIT v5.0" -ForegroundColor White
+    Write-Host "     Retro Pixel LED - ReplayOS TOOLKIT v5.1" -ForegroundColor White
     Write-Host "===================================================" -ForegroundColor Magenta
     Write-Host ""
     Write-Host "  1) Scrapear sistema(s) desde ROMS" -ForegroundColor White
