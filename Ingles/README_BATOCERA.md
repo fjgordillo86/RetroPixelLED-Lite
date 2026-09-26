@@ -76,11 +76,15 @@ I have developed a **Smart PowerShell Installer Script** that performs the entir
 
 5. The script will process the files in seconds. Once finished, you will see the message `INSTALACIÓN COMPLETADA!`. Press any key to exit.
 
-<img width="1103" height="686" alt="image" src="https://github.com/user-attachments/assets/d94c2a67-c40a-451e-9c61-981a188a294d" />
+<img width="941" height="834" alt="image" src="https://github.com/user-attachments/assets/cec91be3-82b4-44e4-8873-6ce67383e2e1" />
 
-6. **Reboot your Batocera system completely.**
+6. **Fully reboot your Batocera system.**
 > [!CAUTION]
-> A full system reboot is **mandatory**. During this boot process, the `custom.sh` script will set up internal execution permissions. From then on, every time you browse the menu, launch, or exit a game, the panel will react automatically.
+> A full system reboot is **required** for the permissions service to become available in the menu.
+
+7. **Enable it (first time only):** go to `Main Menu > System Settings > Services` and enable **`retropixelperms`**.
+> [!NOTE]
+> This service replaces the old `custom.sh` and is what grants execute permissions to the marquee scripts on every boot. Once you enable it here, it stays enabled forever — even if you run the installer again later (reinstalling only regenerates the service file, it doesn't disable it). From then on, every time you browse the menu, launch, or exit a game, the panel will react automatically.
 
 ### 3. 🛠️ Marquees
 We will use the script located in the `Arcade/Marquesinas/` folder of the project [here](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Arcade/Marquesinas). It consists of two files: `Ejecutar Script Marquesinas Batocera.bat` and `Script Marquesinas Batocera.ps1`.
