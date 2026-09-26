@@ -1,7 +1,7 @@
 # ==================================================================
-#   INSTALADOR AUTOMATICO ARCADE - RETRO PIXEL LED (v3.0)
+#   INSTALADOR AUTOMATICO ARCADE - RETRO PIXEL LED (v3.1)
 # ==================================================================
-$Host.UI.RawUI.WindowTitle = "Instalador Retro Pixel Universal v3.0"
+$Host.UI.RawUI.WindowTitle = "Instalador Retro Pixel Universal v3.1"
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
 Write-Host "===================================================" -ForegroundColor Magenta
@@ -152,26 +152,80 @@ switch ($opcion) {
         }
 
         if ($inst_gamestart -or $inst_gameselected -or $inst_systemselected -or $inst_gameend -or $inst_quit -or $inst_shutdown -or $inst_reboot) {
-            Write-Host " Creando custom.sh para auto-permisos en Batocera..." -ForegroundColor Yellow
-            $PathCustom = Join-Path $RUTA_SYSTEM "custom.sh"
-            
-            $LineasCustom = @(
+            Write-Host " Configurando auto-permisos en Batocera (servicio nativo)..." -ForegroundColor Yellow
+
+            # NOTA TECNICA: custom.sh queda IGNORADO a partir de Batocera v44, y su
+            # ejecucion via SMB no siempre es fiable en versiones recientes (v43.x
+            # incluida). El metodo soportado oficialmente desde v38 son los
+            # "user services" en /userdata/system/services/, que se activan una
+            # vez desde el menu de EmulationStation y persisten entre reinicios
+            # y entre reinstalaciones de este script.
+            $RUTA_SERVICES = Join-Path $RUTA_SYSTEM "services"
+            if (!(Test-Path -LiteralPath $RUTA_SERVICES)) {
+                $null = New-Item -ItemType Directory -Force -Path $RUTA_SERVICES
+            }
+
+            $NombreServicio = "retropixelperms"
+            $PathServicio = Join-Path $RUTA_SERVICES $NombreServicio
+
+            $LineasServicio = @(
                 "#!/bin/bash",
-                "# Otorga permisos a los scripts de marquesinas RetroPixel",
-                "chmod -R +x /userdata/system/configs/emulationstation/scripts/game-start/",
-                "chmod -R +x /userdata/system/configs/emulationstation/scripts/game-selected/",
-                "chmod -R +x /userdata/system/configs/emulationstation/scripts/system-selected/",
-                "chmod -R +x /userdata/system/configs/emulationstation/scripts/game-end/",
-                "chmod -R +x /userdata/system/configs/emulationstation/scripts/quit/",
-                "chmod -R +x /userdata/system/configs/emulationstation/scripts/shutdown/",
-                "chmod -R +x /userdata/system/configs/emulationstation/scripts/reboot/",
-                "chmod -R +x /userdata/userscripts"
+                "# Servicio RetroPixel: otorga permisos de ejecucion a los scripts de marquesinas.",
+                "# Gestionado por Script_Instalador_Arcade.ps1 - no editar a mano.",
+                'case "$1" in',
+                "    start)",
+                "        chmod -R +x /userdata/system/configs/emulationstation/scripts/game-start/ 2>/dev/null",
+                "        chmod -R +x /userdata/system/configs/emulationstation/scripts/game-selected/ 2>/dev/null",
+                "        chmod -R +x /userdata/system/configs/emulationstation/scripts/system-selected/ 2>/dev/null",
+                "        chmod -R +x /userdata/system/configs/emulationstation/scripts/game-end/ 2>/dev/null",
+                "        chmod -R +x /userdata/system/configs/emulationstation/scripts/quit/ 2>/dev/null",
+                "        chmod -R +x /userdata/system/configs/emulationstation/scripts/shutdown/ 2>/dev/null",
+                "        chmod -R +x /userdata/system/configs/emulationstation/scripts/reboot/ 2>/dev/null",
+                "        chmod -R +x /userdata/userscripts 2>/dev/null",
+                "        ;;",
+                "    stop)",
+                "        ;;",
+                "    *)",
+                '        echo "Usage: $0 {start|stop}"',
+                "        ;;",
+                "esac",
+                "exit 0"
             )
-            $CustomSH = $LineasCustom -join "`n"
-            
+            $ServicioSH = $LineasServicio -join "`n"
+
             $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-            [System.IO.File]::WriteAllText($PathCustom, $CustomSH, $Utf8NoBom)
-            Write-Host "   [OK] custom.sh de Batocera generado con exito." -ForegroundColor Green
+            [System.IO.File]::WriteAllText($PathServicio, $ServicioSH, $Utf8NoBom)
+            Write-Host "   [OK] Servicio '$NombreServicio' generado con exito." -ForegroundColor Green
+
+            # Limpieza/migracion: si una instalacion anterior dejo un custom.sh
+            # con las lineas de chmod de RetroPixel, las retiramos para no
+            # duplicar el mecanismo. Si el archivo se queda vacio de contenido
+            # util, lo eliminamos; si el usuario tenia otras cosas propias en
+            # custom.sh, se conservan intactas.
+            $PathCustom = Join-Path $RUTA_SYSTEM "custom.sh"
+            if (Test-Path -LiteralPath $PathCustom) {
+                $ContenidoCustom = Get-Content -LiteralPath $PathCustom
+                $LineasFiltradas = $ContenidoCustom | Where-Object {
+                    $_ -notmatch "Otorga permisos a los scripts de marquesinas RetroPixel" -and
+                    $_ -notmatch "scripts/(game-start|game-selected|system-selected|game-end|quit|shutdown|reboot)/" -and
+                    $_ -notmatch "chmod -R \+x /userdata/userscripts"
+                }
+                $RestoUtil = $LineasFiltradas | Where-Object { $_.Trim() -ne "" -and $_.Trim() -ne "#!/bin/bash" }
+                if (-not $RestoUtil) {
+                    Remove-Item -LiteralPath $PathCustom -Force
+                    Write-Host "   [OK] custom.sh antiguo (solo permisos RetroPixel) eliminado; sustituido por el servicio." -ForegroundColor Green
+                } elseif ($LineasFiltradas.Count -ne $ContenidoCustom.Count) {
+                    $NuevoCustom = ($LineasFiltradas -join "`n")
+                    [System.IO.File]::WriteAllText($PathCustom, $NuevoCustom, $Utf8NoBom)
+                    Write-Host "   [OK] custom.sh migrado: se retiraron los permisos RetroPixel (ahora los gestiona el servicio) y se conservo el resto de tu contenido." -ForegroundColor Green
+                }
+            }
+
+            Write-Host ""
+            Write-Host "   [IMPORTANTE] Paso manual (solo la primera vez):" -ForegroundColor Yellow
+            Write-Host "   Tras reiniciar, ve a Batocera: MENU PRINCIPAL > AJUSTES DEL SISTEMA > SERVICIOS" -ForegroundColor Yellow
+            Write-Host "   y activa 'retropixelperms'. Quedara activo para siempre (tambien tras" -ForegroundColor Yellow
+            Write-Host "   reinstalar este script), sin necesidad de tocarlo por SSH otra vez." -ForegroundColor Yellow
         }
     }
     
@@ -225,7 +279,8 @@ Write-Host "=================================================" -ForegroundColor 
 Write-Host "             INSTALACION COMPLETADA!" -ForegroundColor Green
 Write-Host "=================================================" -ForegroundColor Magenta
 if ($opcion -eq "1") {
-    Write-Host "IMPORTANTE: Reinicia Batocera."
+    Write-Host "IMPORTANTE: Reinicia Batocera y, la primera vez, activa 'retropixelperms' en"
+    Write-Host "AJUSTES DEL SISTEMA > SERVICIOS para que los permisos se apliquen solos."
 } else {
     Write-Host "IMPORTANTE: Reinicia Recalbox."
 }
