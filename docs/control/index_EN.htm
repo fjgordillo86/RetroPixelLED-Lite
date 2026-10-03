@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0D12">
+<title>Retro Pixel LED</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0A0D12;
+    --panel:#12161D;
+    --bezel:#05070A;
+    --grid-off:#1B212B;
+    --grid-line:#1E2530;
+    --amber:#FFB000;
+    --amber-dim:#7A5600;
+    --red-alert:#FF3B30;
+    --text-primary:#E8EAED;
+    --text-dim:#6B7280;
+    --font-pixel:'Press Start 2P', monospace;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; background:var(--bg-deep); color:var(--text-primary); font-family:var(--font-mono);}
+  body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:18px 14px 40px;
+    background-image:
+      radial-gradient(circle at 50% 0%, rgba(255,176,0,0.05), transparent 60%);
+  }
+  .app{width:100%; max-width:420px;}
+
+  /* ---------- HEADER ---------- */
+  header{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .brand{display:flex; align-items:center; gap:8px;}
+  .brand .dot{width:8px; height:8px; border-radius:50%; background:var(--amber); box-shadow:0 0 8px var(--amber);}
+  .brand h1{font-family:var(--font-pixel); font-size:11px; letter-spacing:1px; margin:0; line-height:1.4;}
+  .brand h1 span{color:var(--amber);}
+  .gear{
+    background:none; border:1px solid var(--grid-line); color:var(--text-dim);
+    width:30px; height:30px; border-radius:6px; font-size:14px; cursor:pointer;
+  }
+  .gear:active{background:var(--panel);}
+
+  /* ---------- CONNECTION ---------- */
+  .conn{
+    display:none;
+    background:var(--panel); border:1px solid var(--grid-line); border-radius:10px;
+    padding:12px; margin-bottom:14px;
+  }
+  .conn.open{display:block;}
+  .conn label{font-size:10px; color:var(--text-dim); letter-spacing:.5px; text-transform:uppercase;}
+  .conn input{
+    width:100%; margin-top:6px; padding:9px 10px; background:var(--bg-deep);
+    border:1px solid var(--grid-line); border-radius:6px; color:var(--text-primary);
+    font-family:var(--font-mono); font-size:13px;
+  }
+  .conn .hint{font-size:10px; color:var(--text-dim); margin-top:8px; line-height:1.5;}
+
+  /* ---------- PANEL / PREVIEW (signature element) ---------- */
+  .panel-frame{
+    background:var(--bezel);
+    border-radius:14px;
+    padding:14px;
+    box-shadow: inset 0 0 0 1px #1c2029, 0 8px 24px rgba(0,0,0,0.5);
+    margin-bottom:16px;
+  }
+  .panel-frame .rivet-row{display:flex; justify-content:space-between; padding:0 2px 8px;}
+  .panel-frame .rivet{width:4px; height:4px; border-radius:50%; background:#2a2f3a;}
+  .screen{
+    background:#04060a;
+    border-radius:4px;
+    padding:10px;
+    display:flex;
+    justify-content:center;
+    box-shadow: inset 0 0 14px rgba(0,0,0,0.8);
+  }
+  #matrix{display:block; image-rendering:pixelated;}
+  .panel-caption{
+    display:flex; justify-content:space-between; margin-top:10px; padding:0 2px;
+    font-size:9px; color:var(--text-dim); letter-spacing:.5px; text-transform:uppercase;
+  }
+
+  /* ---------- CONTROLS ---------- */
+  section{margin-bottom:18px;}
+  .label-row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+  .label-row .l{font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text-dim);}
+  .label-row .v{font-size:11px; color:var(--amber);}
+
+  textarea#msg{
+    width:100%; resize:none; height:52px; padding:10px 12px;
+    background:var(--panel); border:1px solid var(--grid-line); border-radius:8px;
+    color:var(--text-primary); font-family:var(--font-mono); font-size:14px; line-height:1.4;
+  }
+  textarea#msg:focus{outline:none; border-color:var(--amber-dim);}
+
+  .swatches{display:flex; flex-wrap:wrap; gap:8px;}
+  .swatch{
+    width:30px; height:30px; border-radius:6px; cursor:pointer;
+    border:2px solid transparent; position:relative;
+  }
+  .swatch.active{border-color:var(--text-primary); box-shadow:0 0 0 2px var(--bg-deep), 0 0 8px currentColor;}
+
+  .hexrow{display:flex; align-items:center; gap:8px; margin-top:10px;}
+  .hexrow input[type=color]{
+    width:34px; height:34px; border:none; border-radius:6px; background:none; padding:0; cursor:pointer;
+  }
+  .hexrow input[type=text]{
+    flex:1; padding:8px 10px; background:var(--panel); border:1px solid var(--grid-line);
+    border-radius:6px; color:var(--text-primary); font-family:var(--font-mono); font-size:13px;
+  }
+
+  input[type=range]{
+    width:100%; -webkit-appearance:none; height:4px; background:var(--grid-line); border-radius:2px;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:16px; height:16px; border-radius:50%;
+    background:var(--amber); box-shadow:0 0 6px var(--amber); cursor:pointer;
+  }
+
+  .btnrow{display:flex; gap:10px; margin-top:8px;}
+  button.big{
+    flex:1; padding:14px 10px; border-radius:8px; border:none; cursor:pointer;
+    font-family:var(--font-pixel); font-size:11px; letter-spacing:1px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  #send{background:var(--amber); color:#1a1200; box-shadow:0 3px 0 var(--amber-dim);}
+  #send:active{transform:translateY(2px); box-shadow:none;}
+  #stop{background:transparent; border:2px solid var(--red-alert); color:var(--red-alert);}
+  #stop:active{background:rgba(255,59,48,0.12);}
+
+  .status{
+    margin-top:12px; font-size:11px; color:var(--text-dim); min-height:14px; text-align:center;
+    letter-spacing:.3px;
+  }
+  .status.ok{color:#5FDB7E;}
+  .status.err{color:var(--red-alert);}
+
+  .headerBtns{display:flex; gap:8px;}
+
+  /* ---------- SETTINGS MODAL ---------- */
+  .modalOverlay{
+    display:none; position:fixed; inset:0; background:rgba(4,5,8,0.88);
+    z-index:50; padding:16px; overflow-y:auto;
+  }
+  .modalOverlay.open{display:block;}
+  .modalBox{
+    max-width:420px; margin:0 auto; background:var(--panel);
+    border:1px solid var(--grid-line); border-radius:12px; padding:16px 16px 20px;
+  }
+  .modalHead{display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;}
+  .modalHead h2{font-family:var(--font-pixel); font-size:11px; margin:0; letter-spacing:1px;}
+  .modalClose{background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer; padding:4px 8px;}
+  .modalSub{font-size:10px; color:var(--text-dim); margin:4px 0 16px; line-height:1.5;}
+
+  .cfgGroup{margin-bottom:18px;}
+  .cfgGroup h3{
+    font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--amber);
+    margin:0 0 10px; border-bottom:1px solid var(--grid-line); padding-bottom:6px;
+  }
+  .cfgField{margin-bottom:12px;}
+  .cfgField label{display:block; font-size:11px; color:var(--text-primary); margin-bottom:5px;}
+  .cfgField .cfgHint{font-size:9px; color:var(--text-dim); margin-top:4px;}
+  .cfgField input[type=text], .cfgField input[type=password], .cfgField input[type=number], .cfgField select{
+    width:100%; padding:9px 10px; background:var(--bg-deep); border:1px solid var(--grid-line);
+    border-radius:6px; color:var(--text-primary); font-family:var(--font-mono); font-size:13px;
+  }
+  .cfgField input[type=range]{width:100%;}
+  .cfgRangeVal{font-size:10px; color:var(--amber); float:right;}
+
+  .cfgToggleRow{display:flex; align-items:center; justify-content:space-between;}
+  .cfgSwitch{position:relative; width:42px; height:24px; flex:none;}
+  .cfgSwitch input{opacity:0; width:0; height:0;}
+  .cfgSwitch .slider{
+    position:absolute; inset:0; background:var(--grid-line); border-radius:24px; cursor:pointer; transition:.15s;
+  }
+  .cfgSwitch .slider::before{
+    content:""; position:absolute; width:18px; height:18px; left:3px; top:3px;
+    background:var(--text-dim); border-radius:50%; transition:.15s;
+  }
+  .cfgSwitch input:checked + .slider{background:var(--amber-dim);}
+  .cfgSwitch input:checked + .slider::before{transform:translateX(18px); background:var(--amber);}
+
+  .cfgWarning{
+    background:rgba(255,59,48,0.08); border:1px solid rgba(255,59,48,0.35); border-radius:8px;
+    padding:10px; font-size:10px; color:#ffb3ae; line-height:1.5; margin-top:8px;
+  }
+
+  .modalBtnRow{display:flex; gap:10px; margin-top:8px;}
+  .modalBtnRow button{
+    flex:1; padding:13px 8px; border-radius:8px; border:none; cursor:pointer;
+    font-family:var(--font-pixel); font-size:10px; letter-spacing:1px;
+  }
+  #cfgSave{background:var(--amber); color:#1a1200;}
+  #cfgCancel{background:transparent; border:2px solid var(--grid-line); color:var(--text-dim);}
+
+  .cfgLoading{text-align:center; padding:30px 0; color:var(--text-dim); font-size:11px;}
+  .otaResult{margin-top:10px; font-size:11px; text-align:center; color:var(--text-dim);}
+  .otaResult.ok{color:#5FDB7E;}
+  .otaResult.err{color:var(--red-alert);}
+
+  /* ---------- PLAYLIST LIST ---------- */
+  .plList{display:flex; flex-direction:column; gap:8px;}
+  .plItem{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 14px; background:var(--bg-deep); border:1px solid var(--grid-line);
+    border-radius:8px; cursor:pointer; font-size:13px;
+  }
+  .plItem.active{border-color:var(--amber); color:var(--amber);}
+  .plItem .plCheck{opacity:0; font-size:14px;}
+  .plItem.active .plCheck{opacity:1;}
+
+  /* ---------- OTA SECTION (inside Settings) ---------- */
+  .otaBox{
+    background:var(--bg-deep); border:1px solid var(--grid-line); border-radius:10px;
+    padding:12px; margin-bottom:18px;
+  }
+  .otaBox h3{
+    font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--amber);
+    margin:0 0 8px;
+  }
+  .otaBox p{font-size:10px; color:var(--text-dim); line-height:1.5; margin:0 0 10px;}
+  #otaBtn{
+    width:100%; padding:11px; border-radius:8px; border:2px solid var(--amber);
+    background:transparent; color:var(--amber); font-family:var(--font-pixel);
+    font-size:10px; letter-spacing:1px; cursor:pointer;
+  }
+
+  /* ---------- POWER ON/OFF (home) ---------- */
+  .powerSection{margin-bottom:16px;}
+  .powerBtn{
+    width:100%; padding:14px; border-radius:10px; cursor:pointer;
+    font-family:var(--font-pixel); font-size:11px; letter-spacing:1px;
+    border:2px solid var(--red-alert); background:transparent; color:var(--red-alert);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .powerBtn.sleeping{border-color:var(--amber); color:var(--amber); background:rgba(255,176,0,0.08);}
+
+  /* ---------- BRILLO ---------- */
+  .brightSection{margin-bottom:16px;}
+
+  /* ---------- MODE TABS ---------- */
+  .modeTabs{display:flex; gap:6px; margin-bottom:16px;}
+  .modeTab{
+    flex:1; padding:10px 4px; border-radius:8px; border:1px solid var(--grid-line);
+    background:var(--panel); color:var(--text-dim); font-family:var(--font-mono);
+    font-size:11px; font-weight:700; cursor:pointer; letter-spacing:.3px;
+  }
+  .modeTab.active{border-color:var(--amber); color:var(--amber); background:rgba(255,176,0,0.08);}
+  .modePanel{display:none;}
+  .modePanel.active{display:block;}
+
+  /* ---------- ACTIVE PLAYLIST (summary row in GIF mode) ---------- */
+  .plCurrentRow{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 14px; background:var(--panel); border:1px solid var(--grid-line);
+    border-radius:8px; cursor:pointer; font-size:13px;
+  }
+  .plChevron{color:var(--text-dim);}
+
+  /* ---------- CLOCK STYLE SELECTOR ---------- */
+  .pillRow{display:flex; flex-wrap:wrap; gap:8px;}
+  .pill{
+    padding:9px 14px; border-radius:20px; border:1px solid var(--grid-line);
+    background:var(--panel); color:var(--text-dim); font-size:11px; cursor:pointer;
+  }
+  .pill.active{border-color:var(--amber); color:var(--amber); background:rgba(255,176,0,0.08);}
+
+  .applyModeRow{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:var(--panel); border:1px solid var(--grid-line); border-radius:8px;
+    padding:12px 14px; margin-bottom:16px; font-size:12px; color:var(--text-dim);
+  }
+  .applyModeRow .pill{white-space:nowrap;}
+  .applyModeRow .pill:disabled{opacity:.5; cursor:default;}
+
+  /* ---------- TIMER ---------- */
+  .timerStatus{
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--bg-deep); border:1px solid var(--grid-line); border-radius:8px;
+    padding:12px 14px; margin-bottom:18px; font-size:12px;
+  }
+  .timerStatus .tsDot{width:8px; height:8px; border-radius:50%; margin-right:8px; display:inline-block;}
+  .timerRow{display:flex; align-items:center; gap:12px; margin-bottom:14px;}
+  .timerRow label{flex:1; font-size:12px;}
+  .timerRow input[type=time]{
+    background:var(--bg-deep); border:1px solid var(--grid-line); border-radius:6px;
+    color:var(--text-primary); font-family:var(--font-mono); font-size:14px; padding:8px 10px;
+  }
+  #timerToggleBtn{
+    width:100%; padding:12px; border-radius:8px; border:2px solid var(--grid-line);
+    background:transparent; color:var(--text-primary); font-family:var(--font-pixel);
+    font-size:10px; letter-spacing:1px; cursor:pointer; margin-top:6px;
+  }
+
+  /* ---------- IR REMOTE (inside Settings) ---------- */
+  .irRow{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 0; border-bottom:1px solid var(--grid-line);
+  }
+  .irRow:last-of-type{border-bottom:none;}
+  .irInfo{display:flex; flex-direction:column; gap:2px;}
+  .irInfo .irLabel{font-size:12px; color:var(--text-primary);}
+  .irInfo .irCode{font-size:9px; color:var(--text-dim); font-family:var(--font-mono);}
+  .irBtn{
+    padding:8px 12px; border-radius:6px; border:1px solid var(--amber); background:transparent;
+    color:var(--amber); font-family:var(--font-mono); font-size:10px; letter-spacing:.5px;
+    cursor:pointer; white-space:nowrap;
+  }
+  .irBtn.waiting{border-color:var(--text-dim); color:var(--text-dim); cursor:default;}
+  .irBtn:disabled{opacity:.5; cursor:default;}
+  .irMsg{font-size:10px; text-align:center; min-height:14px; margin-top:10px;}
+  .irMsg.ok{color:#5FDB7E;}
+  .irMsg.err{color:var(--red-alert);}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="brand">
+      <div class="dot" id="connDot"></div>
+      <h1>Retro<span style="color:var(--amber)">Pixel</span> <span style="color:#FF3B30">L</span><span style="color:#00E676">E</span><span style="color:#0099FF">D</span> <span style="color:var(--text-primary);"></span></h1>
+    </div>
+    <div class="headerBtns">
+      <button class="gear" id="timerBtn" aria-label="Timer">⏰</button>
+      <button class="gear" id="updateBtn" aria-label="Update">🔄</button>
+      <button class="gear" id="settingsBtn" aria-label="Panel Settings">🛠</button>
+      <button class="gear" id="gearBtn" aria-label="Connection">⚙</button>
+    </div>
+  </header>
+
+  <div class="conn" id="connPanel">
+    <label for="ip">Panel IP on local network</label>
+    <input type="text" id="ip" placeholder="192.168.1.50" inputmode="decimal">
+    <div class="hint">The app sends requests to <code>http://IP/</code>. It must be on the same WiFi network as the panel.</div>
+  </div>
+
+  <section class="powerSection">
+    <button class="powerBtn" id="powerBtn">⏻ TURN OFF PANEL</button>
+  </section>
+
+  <section class="brightSection">
+    <div class="label-row"><span class="l">☀ Brightness</span><span class="v" id="brightVal">40%</span></div>
+    <input type="range" id="brightness" min="0" max="100" step="1" value="40">
+  </section>
+
+  <div class="modeTabs">
+    <button class="modeTab active" id="tabGif" data-mode="gif">🎞 GIF</button>
+    <button class="modeTab" id="tabReloj" data-mode="reloj">🕐 CLOCK</button>
+    <button class="modeTab" id="tabTexto" data-mode="texto">🔤 TEXT</button>
+  </div>
+
+  <!-- ---------- PANEL: GIF MODE ---------- -->
+  <div class="modePanel" id="modeGif">
+    <section>
+      <div class="label-row"><span class="l">Active playlist</span></div>
+      <div class="plCurrentRow" id="plCurrentBtn">
+        <span id="plCurrentName">—</span>
+        <span class="plChevron">▸</span>
+      </div>
+    </section>
+    <section>
+      <div class="cfgToggleRow">
+        <label for="randomToggle">Random playback</label>
+        <label class="cfgSwitch">
+          <input type="checkbox" id="randomToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </section>
+  </div>
+
+  <!-- ---------- PANEL: CLOCK MODE ---------- -->
+  <div class="modePanel" id="modeReloj">
+    <div class="applyModeRow">
+      <span id="clockModeStatus">Current mode: GIF</span>
+      <button class="pill" id="applyClockModeBtn">Switch to Clock</button>
+    </div>
+    <section>
+      <div class="label-row"><span class="l">Style</span></div>
+      <div class="pillRow" id="clockStyleRow"></div>
+    </section>
+    <section>
+      <div class="label-row"><span class="l">Color</span></div>
+      <div class="swatches" id="clockSwatches"></div>
+    </section>
+  </div>
+
+  <!-- ---------- PANEL: TEXT MODE ---------- -->
+  <div class="modePanel" id="modeTexto">
+    <div class="cfgWarning" id="textoDisabledWarning" style="display:none;">
+      Text mode is disabled on the panel. Enable it in Settings (🛠 → Playback → "Scrolling Text") and restart the panel to use it.
+    </div>
+
+    <div class="panel-frame">
+      <div class="rivet-row">
+        <div class="rivet"></div><div class="rivet"></div><div class="rivet"></div><div class="rivet"></div>
+      </div>
+      <div class="screen">
+        <canvas id="matrix"></canvas>
+      </div>
+      <div class="panel-caption">
+        <span>PREVIEW</span>
+        <span id="capSpeed">50 ms/paso</span>
+      </div>
+    </div>
+
+    <section>
+      <div class="label-row"><span class="l">Message</span><span class="v" id="msgLen">0</span></div>
+      <textarea id="msg" maxlength="80" placeholder="Enter the text to display..."></textarea>
+    </section>
+
+    <section>
+      <div class="label-row"><span class="l">Color</span></div>
+      <div class="swatches" id="swatches"></div>
+      <div class="hexrow">
+        <input type="color" id="colorPicker" value="#FFB000">
+        <input type="text" id="colorHex" value="#FFB000" maxlength="7">
+      </div>
+    </section>
+
+    <section>
+      <div class="label-row"><span class="l">Speed</span><span class="v" id="speedVal">50 ms</span></div>
+      <input type="range" id="speed" min="5" max="200" step="5" value="50">
+	</section>
+	
+	<section>
+      <div class="label-row"><span class="l">Font</span></div>
+      <div class="pillRow" id="fontPills">
+        <button class="pill active" data-font="bold">Bold</button>
+        <button class="pill" data-font="semibold">SemiBold</button>
+        <button class="pill" data-font="regular">Regular</button>
+        <button class="pill" data-font="light">Light</button>
+      </div>
+    </section>
+
+    <div class="btnrow">
+      <button class="big" id="send">▶ SEND</button>
+      <button class="big" id="stop">■ STOP</button>
+    </div>
+  </div>
+
+  <div class="status" id="statusMsg"></div>
+
+</div>
+
+<div class="modalOverlay" id="cfgOverlay">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>PANEL SETTINGS</h2>
+      <button class="modalClose" id="cfgClose">✕</button>
+    </div>
+    <div class="modalSub">
+      Read from and written directly to <code>config.ini</code>. The panel will restart after saving to apply the changes.
+    </div>
+    <div id="cfgBody"><div class="cfgLoading">Loading panel settings...</div></div>
+
+    <div class="cfgGroup">
+      <h3>IR Remote</h3>
+      <div class="modalSub" style="margin:0 0 10px;">
+        Press "MAP" and, within the next few seconds, press the button on the physical remote you want to assign to this function.
+      </div>
+      <div id="irRows"></div>
+      <div class="irMsg" id="irMsg"></div>
+    </div>
+
+    <div class="modalBtnRow">
+      <button id="cfgCancel">CANCEL</button>
+      <button id="cfgSave">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<div class="modalOverlay" id="plOverlay">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>PLAYLISTS</h2>
+      <button class="modalClose" id="plClose">✕</button>
+    </div>
+    <div class="modalSub">Tap a playlist to activate it on the panel immediately.</div>
+    <div id="plBody"><div class="cfgLoading">Loading playlists...</div></div>
+  </div>
+</div>
+
+<div class="modalOverlay" id="timerOverlay">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>TIMER</h2>
+      <button class="modalClose" id="timerClose">✕</button>
+    </div>
+    <div class="modalSub">Automatically turn the panel on and off at the times you specify. Changes are applied and saved immediately.</div>
+
+    <div class="timerStatus">
+      <span><span class="tsDot" id="timerStatusDot"></span><span id="timerStatusText">—</span></span>
+      <span id="timerNowClock" style="color:var(--text-dim);"></span>
+    </div>
+
+    <div class="cfgToggleRow" style="margin-bottom:16px;">
+      <label for="timerEnableToggle">Timer enabled</label>
+      <label class="cfgSwitch">
+        <input type="checkbox" id="timerEnableToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="timerRow">
+      <label>Power On</label>
+      <input type="time" id="timerOn" step="300">
+    </div>
+    <div class="timerRow">
+      <label>Power Off</label>
+      <input type="time" id="timerOff" step="300">
+    </div>
+
+    <button id="timerToggleBtn">TURN OFF NOW</button>
+  </div>
+</div>
+
+<div class="modalOverlay" id="updateOverlay">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>UPDATE</h2>
+      <button class="modalClose" id="updateClose">✕</button>
+    </div>
+
+    <div class="otaBox">
+      <h3>Firmware (OTA)</h3>
+      <p>Checks for a new published version and downloads and installs it if available. The panel will restart automatically during the process.</p>
+      <button id="otaBtn">⬆ BUSCAR UPDATE</button>
+    </div>
+
+    <div class="otaBox">
+      <h3>Language files</h3>
+      <p>Download all <code>.json</code> files from the language folder on GitHub and save them to <code>/idioma</code> on the SD card, replacing existing files. <span style="color: white;"></span></p>
+      <button id="idiomasBtn">📥 DOWNLOAD LANGUAGES</button>
+      <div class="otaResult" id="idiomasResultado" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   5x7 DOT FONT (same logic as the physical panel)
+   ========================================================= */
+const GLYPHS = {
+  'A':['.###.','#...#','#...#','#####','#...#','#...#','#...#'],
+  'B':['####.','#...#','#...#','####.','#...#','#...#','####.'],
+  'C':['.####','#....','#....','#....','#....','#....','.####'],
+  'D':['####.','#...#','#...#','#...#','#...#','#...#','####.'],
+  'E':['#####','#....','#....','####.','#....','#....','#####'],
+  'F':['#####','#....','#....','####.','#....','#....','#....'],
+  'G':['.####','#....','#....','#.###','#...#','#...#','.####'],
+  'H':['#...#','#...#','#...#','#####','#...#','#...#','#...#'],
+  'I':['###','.#.','.#.','.#.','.#.','.#.','###'],
+  'J':['..##','...#','...#','...#','...#','#..#','.##.'],
+  'K':['#...#','#..#.','#.#..','##...','#.#..','#..#.','#...#'],
+  'L':['#....','#....','#....','#....','#....','#....','#####'],
+  'M':['#...#','##.##','#.#.#','#...#','#...#','#...#','#...#'],
+  'N':['#...#','##..#','#.#.#','#..##','#...#','#...#','#...#'],
+  'O':['.###.','#...#','#...#','#...#','#...#','#...#','.###.'],
+  'P':['####.','#...#','#...#','####.','#....','#....','#....'],
+  'Q':['.###.','#...#','#...#','#...#','#.#.#','#..#.','.##.#'],
+  'R':['####.','#...#','#...#','####.','#.#..','#..#.','#...#'],
+  'S':['.####','#....','#....','.###.','....#','....#','####.'],
+  'T':['#####','..#..','..#..','..#..','..#..','..#..','..#..'],
+  'U':['#...#','#...#','#...#','#...#','#...#','#...#','.###.'],
+  'V':['#...#','#...#','#...#','#...#','#...#','.#.#.','..#..'],
+  'W':['#...#','#...#','#...#','#.#.#','#.#.#','##.##','#...#'],
+  'X':['#...#','.#.#.','..#..','..#..','..#..','.#.#.','#...#'],
+  'Y':['#...#','.#.#.','..#..','..#..','..#..','..#..','..#..'],
+  'Z':['#####','....#','...#.','..#..','.#...','#....','#####'],
+  
+  // SPANISH
+  'Ñ':['.#.#.','#...#','##..#','#.#.#','#..##','#...#','#...#'],
+  'Á':['..#..','.###.','#...#','#####','#...#','#...#','#...#'],
+  'É':['..#..','#####','#....','####.','#....','#....','#####'],
+  'Í':['.#.','###','.#.','.#.','.#.','.#.','###'],
+  'Ó':['..#..','.###.','#...#','#...#','#...#','#...#','.###.'],
+  'Ú':['..#..','#...#','#...#','#...#','#...#','#...#','.###.'],
+  'Ü':['.#.#.','#...#','#...#','#...#','#...#','#...#','.###.'],
+
+  // POLISH (New)
+  'Ą':['.###.','#...#','#...#','#####','#...#','#...#','#..#.'],
+  'Ć':['..#..','.####','#....','#....','#....','#....','.####'],
+  'Ę':['#####','#....','#....','####.','#....','#####','...#.'],
+  'Ł':['#....','#....','#.##.','##...','#....','#....','#####'],
+  'Ń':['..#..','#...#','##..#','#.#.#','#..##','#...#','#...#'],
+  'Ś':['..#..','.####','#....','.###.','....#','....#','####.'],
+  'Ź':['...#.','#####','...#.','..#..','.#...','#....','#####'],
+  'Ż':['..#..','#####','...#.','..#..','.#...','#....','#####'],
+
+  // NUMBERS AND SYMBOLS
+  '0':['.###.','#...#','#..##','#.#.#','##..#','#...#','.###.'],
+  '1':['.#.','##.','.#.','.#.','.#.','.#.','###'],
+  '2':['.###.','#...#','....#','...#.','..#..','.#...','#####'],
+  '3':['.###.','#...#','....#','..##.','....#','#...#','.###.'],
+  '4':['...#.','..##.','.#.#.','#..#.','#####','...#.','...#.'],
+  '5':['#####','#....','####.','....#','....#','#...#','.###.'],
+  '6':['..##.','.#...','#....','####.','#...#','#...#','.###.'],
+  '7':['#####','....#','...#.','..#..','.#...','.#...','.#...'],
+  '8':['.###.','#...#','#...#','.###.','#...#','#...#','.###.'],
+  '9':['.###.','#...#','#...#','.####','....#','...#.','.##..'],
+  ' ':['...','...','...','...','...','...','...'],
+  '.':['..','..','..','..','..','..','#.'],
+  ',':['..','..','..','..','..','.#','#.'],
+  '¡':['#.','..','#.','#.','#.','#.','#.'],
+  '!':['#.','#.','#.','#.','#.','..','#.'],
+  '¿':['.#..','....','.#..','.#..','..#.','#..#','.##.'],
+  '?':['.##.','#..#','..#.','.#..','.#..','....','.#..'],
+  ':':['..','#.','..','..','..','#.','..'],
+  '-':['....','....','....','####','....','....','....'],
+  "'":['#.','#.','..','..','..','..','..'],
+};
+
+// Aliases to automatically map memory positions 0x80-0x8F to the web Canvas
+const MAPA_ALIAS_POLACO = {
+  '\x80': GLYPHS['Ą'], '\x81': GLYPHS['Ą'],
+  '\x82': GLYPHS['Ć'], '\x83': GLYPHS['Ć'],
+  '\x84': GLYPHS['Ę'], '\x85': GLYPHS['Ę'],
+  '\x86': GLYPHS['Ł'], '\x87': GLYPHS['Ł'],
+  '\x88': GLYPHS['Ń'], '\x89': GLYPHS['Ń'],
+  '\x8A': GLYPHS['Ś'], '\x8B': GLYPHS['Ś'],
+  '\x8C': GLYPHS['Ź'], '\x8D': GLYPHS['Ź'],
+  '\x8E': GLYPHS['Ż'], '\x8F': GLYPHS['Ż']
+};
+Object.assign(GLYPHS, MAPA_ALIAS_POLACO);
+
+function glyphColumns(ch){
+  const rows = GLYPHS[ch] || GLYPHS['?'];
+  const width = rows[0].length;
+  const cols = [];
+  for (let c = 0; c < width; c++){
+    let bits = 0;
+    for (let r = 0; r < 7; r++){
+      if (rows[r][c] === '#') bits |= (1 << r);
+    }
+    cols.push(bits);
+  }
+  return cols;
+}
+
+/* =========================================================
+   Function to map Polish characters to 0x80-0x8F codes
+   ========================================================= */
+function utf8ToExtended(str) {
+    const map = {
+        'Ą': 0x80, 'ą': 0x81, 'Ć': 0x82, 'ć': 0x83,
+        'Ę': 0x84, 'ę': 0x85, 'Ł': 0x86, 'ł': 0x87,
+        'Ń': 0x88, 'ń': 0x89, 'Ś': 0x8A, 'ś': 0x8B,
+        'Ź': 0x8C, 'ź': 0x8D, 'Ż': 0x8E, 'ż': 0x8F
+    };
+    
+    let codes = [];
+    for (let char of str) {
+        if (map[char]) {
+            codes.push(map[char]);
+        } else {
+            let code = char.charCodeAt(0);
+            codes.push(code <= 0xFF ? code : 63); // 63 is '?'
+        }
+    }
+    return codes;
+}
+
+function buildColumns(text){
+  const cols = [];
+  const clean = text.toUpperCase();
+  // Apply the conversion to obtain the character/code array
+  const mappedCodes = utf8ToExtended(clean);
+  
+  for (const code of mappedCodes){
+    // If this is a remapped special code (>127), look for its key in GLYPHS if you decide to 
+    // add the manual drawing, or pass it directly as a standard character.
+    const ch = typeof code === 'number' && code > 127 ? String.fromCharCode(code) : String.fromCharCode(code);
+    cols.push(...glyphColumns(ch));
+    cols.push(0); // character separator
+  }
+  return cols;
+}
+
+/* =========================================================
+   PREVIEW: animated dot matrix (like the physical panel)
+   ========================================================= */
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+const ROWS = 7;
+const VISIBLE_COLS = 26;
+const DOT = 11, GAP = 3;
+const CELL = DOT + GAP;
+
+canvas.width = VISIBLE_COLS * CELL;
+canvas.height = ROWS * CELL;
+
+let scrollIndex = 0;
+let lastStep = 0;
+let currentColor = '#FFB000';
+let currentSpeed = 30;
+let currentText = '';
+let currentFont = 'bold';
+
+function drawFrame(){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const msgCols = buildColumns(currentText || '');
+  const gapCols = new Array(VISIBLE_COLS).fill(0);
+  const loop = msgCols.length ? [...msgCols, ...gapCols] : gapCols;
+  const total = loop.length;
+
+  for (let c = 0; c < VISIBLE_COLS; c++){
+    const bits = total ? loop[(scrollIndex + c) % total] : 0;
+    for (let r = 0; r < ROWS; r++){
+      const on = (bits >> r) & 1;
+      const x = c * CELL + GAP / 2;
+      const y = r * CELL + GAP / 2;
+      ctx.beginPath();
+      ctx.arc(x + DOT/2, y + DOT/2, DOT/2, 0, Math.PI * 2);
+      if (on){
+        ctx.fillStyle = currentColor;
+        ctx.shadowColor = currentColor;
+        ctx.shadowBlur = 6;
+      } else {
+        ctx.fillStyle = '#1B212B';
+        ctx.shadowBlur = 0;
+      }
+      ctx.fill();
+    }
+  }
+}
+
+function tick(ts){
+  if (!lastStep) lastStep = ts;
+  if (ts - lastStep >= currentSpeed){
+    lastStep = ts;
+    const msgCols = buildColumns(currentText || '');
+    const total = (msgCols.length ? msgCols.length + VISIBLE_COLS : VISIBLE_COLS);
+    scrollIndex = (scrollIndex + 1) % Math.max(total, 1);
+    drawFrame();
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* =========================================================
+   UI STATE AND CONTROLS
+   ========================================================= */
+const PALETTE = [
+  {n:'BLANCO',   c:'#FFFFFF'},
+  {n:'ROJO',     c:'#FF0000'},
+  {n:'VERDE',    c:'#00FF00'},
+  {n:'AZUL',     c:'#0000FF'},
+  {n:'AMARILLO', c:'#FFFF00'},
+  {n:'CIAN',     c:'#00FFFF'},
+  {n:'MAGENTA',  c:'#FF00FF'},
+  {n:'NARANJA',  c:'#FF8000'},
+  {n:'ROSA',     c:'#FFC0CB'},
+];
+
+const swatchesEl = document.getElementById('swatches');
+PALETTE.forEach(p => {
+  const div = document.createElement('div');
+  div.className = 'swatch';
+  div.style.background = p.c;
+  div.title = p.n;
+  div.dataset.color = p.c;
+  div.addEventListener('click', () => setColor(p.c));
+  swatchesEl.appendChild(div);
+});
+
+function refreshSwatchSelection(hex){
+  document.querySelectorAll('.swatch').forEach(s => {
+    s.classList.toggle('active', s.dataset.color.toLowerCase() === hex.toLowerCase());
+    if (s.classList.contains('active')) s.style.color = hex;
+  });
+}
+
+function setColor(hex){
+  currentColor = hex;
+  document.getElementById('colorPicker').value = hex;
+  document.getElementById('colorHex').value = hex.toUpperCase();
+  refreshSwatchSelection(hex);
+  drawFrame();
+}
+
+document.getElementById('colorPicker').addEventListener('input', (e) => setColor(e.target.value));
+document.getElementById('colorHex').addEventListener('change', (e) => {
+  let v = e.target.value.trim();
+  if (!v.startsWith('#')) v = '#' + v;
+  if (/^#[0-9A-Fa-f]{6}$/.test(v)) setColor(v);
+});
+
+const msgEl = document.getElementById('msg');
+const msgLenEl = document.getElementById('msgLen');
+msgEl.addEventListener('input', () => {
+  currentText = msgEl.value;
+  msgLenEl.textContent = currentText.length;
+  scrollIndex = 0;
+  drawFrame();
+});
+
+const speedEl = document.getElementById('speed');
+const speedValEl = document.getElementById('speedVal');
+const capSpeedEl = document.getElementById('capSpeed');
+speedEl.addEventListener('input', () => {
+  currentSpeed = parseInt(speedEl.value, 10);
+  speedValEl.textContent = currentSpeed + ' ms';
+  capSpeedEl.textContent = currentSpeed + ' ms/paso';
+});
+
+/* ---------- Font Selection ---------- */
+const fontPillsEl = document.getElementById('fontPills');
+if (fontPillsEl) {
+  fontPillsEl.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', () => {
+      fontPillsEl.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      currentFont = p.dataset.font; // Stores "bold", "semibold", "regular", or "light"
+    });
+  });
+}
+
+/* ---------- Connection (locally saved IP) ---------- */
+const ipEl = document.getElementById('ip');
+const gearBtn = document.getElementById('gearBtn');
+const connPanel = document.getElementById('connPanel');
+const connDot = document.getElementById('connDot');
+
+function loadIp(){
+  try { return localStorage.getItem('rpl_ip') || ''; } catch(e){ return ''; }
+}
+function saveIp(ip){
+  try { localStorage.setItem('rpl_ip', ip); } catch(e){}
+}
+
+ipEl.value = loadIp();
+if (!ipEl.value) connPanel.classList.add('open');
+
+gearBtn.addEventListener('click', () => connPanel.classList.toggle('open'));
+ipEl.addEventListener('change', () => {
+  saveIp(ipEl.value.trim());
+  pingPanel();
+  cargarEstadoPanel();
+});
+
+/* ---------- Sending data to the panel ---------- */
+const statusEl = document.getElementById('statusMsg');
+
+function setStatus(text, kind){
+  statusEl.textContent = text;
+  statusEl.className = 'status' + (kind ? ' ' + kind : '');
+}
+
+async function pingPanel(){
+  const ip = ipEl.value.trim();
+  if (!ip) { connDot.style.background = '#6B7280'; connDot.style.boxShadow = 'none'; return; }
+  try {
+    await fetch(`http://${ip}/`, { method: 'GET', mode: 'no-cors', signal: AbortSignal.timeout(2500) });
+    connDot.style.background = '#5FDB7E';
+    connDot.style.boxShadow = '0 0 8px #5FDB7E';
+  } catch (e) {
+    connDot.style.background = 'var(--red-alert)';
+    connDot.style.boxShadow = '0 0 8px var(--red-alert)';
+  }
+}
+pingPanel();
+
+/* =========================================================
+   GENERAL PANEL STATE (brightness, mode, playlist, clock...)
+   ========================================================= */
+const CLOCK_STYLES = ['Solid', 'Aurora', 'Rainbow', 'Gradient', 'Fuego', 'Glitch'];
+let panelStatus = null; // last snapshot from /status
+let currentTab = 'gif';
+
+async function enviarControl(cambios){
+  const ip = ipEl.value.trim();
+  if (!ip) return false;
+  try {
+    const res = await fetch(`http://${ip}/control`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cambios),
+      signal: AbortSignal.timeout(4000)
+    });
+    return res.ok;
+  } catch (e){
+    setStatus('Could not connect to the panel', 'err');
+    return false;
+  }
+}
+
+async function cargarEstadoPanel(){
+  const ip = ipEl.value.trim();
+  if (!ip) return;
+  try {
+    const res = await fetch(`http://${ip}/status`, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return;
+    panelStatus = await res.json();
+    aplicarEstadoPanelAUI(panelStatus);
+  } catch (e) { /* offline: keep the default values */ }
+}
+
+function aplicarEstadoPanelAUI(st){
+  // Brightness
+  const b = Math.round((st.brightness / 255) * 100);
+  document.getElementById('brightness').value = b;
+  document.getElementById('brightVal').textContent = b + '%';
+
+  // Active playlist
+  document.getElementById('plCurrentName').textContent = st.activePlaylist || '(ninguna)';
+
+  // Aleatorio
+  document.getElementById('randomToggle').checked = !!st.randomMode;
+
+  // Clock: style
+  renderClockStylePills(st.clockStyle);
+  // Clock: color
+  refreshClockSwatchSelection(st.clockColorIndex);
+
+  // Text mode enabled in firmware
+  document.getElementById('textoDisabledWarning').style.display = st.textEnable ? 'none' : 'block';
+  document.getElementById('send').disabled = !st.textEnable;
+
+  // Power On/off
+  actualizarEstadoEnergia(st.isSleeping);
+
+  // Actual panel mode (independent of the currently viewed tab)
+  panelPlayModeActual = st.playMode;
+  actualizarClockModeUI(panelPlayModeActual);
+
+  // Initial tab: if text is currently playing, open it there
+  if (st.textoActive) selectMode('texto', false);
+  else selectMode(st.playMode == 1 ? 'reloj' : 'gif', false);
+}
+/* ---------- Power On and Power Off (Main Home button) ---------- */
+const powerBtn = document.getElementById('powerBtn');
+
+function actualizarEstadoEnergia(isSleeping) {
+  // 1. Update the style and text of the main Home button
+  if (isSleeping) {
+    powerBtn.classList.add('sleeping');
+    powerBtn.innerHTML = '⏻ TURN ON PANEL';
+  } else {
+    powerBtn.classList.remove('sleeping');
+    powerBtn.innerHTML = '⏻ TURN OFF PANEL';
+  }
+  
+  // 2. Also synchronize the text and green status dot in the Timer menu
+  pintarEstadoTimer(isSleeping);
+}
+
+powerBtn.addEventListener('click', async () => {
+  const ip = ipEl.value.trim();
+  if (!ip) {
+    setStatus('Configure the panel IP (⚙)', 'err');
+    connPanel.classList.add('open');
+    return;
+  }
+  
+  powerBtn.disabled = true;
+  try {
+    const res = await fetch(`http://${ip}/timer/toggle`, { 
+      method: 'POST', 
+      signal: AbortSignal.timeout(4000) 
+    });
+    
+    if (res.ok) {
+      const data = await res.json();
+      actualizarEstadoEnergia(!!data.isSleeping);
+    } else {
+      setStatus('The panel returned an error (' + res.status + ')', 'err');
+    }
+  } catch (e) {
+    setStatus('Could not connect to the panel', 'err');
+  }
+  powerBtn.disabled = false;
+});
+
+/* ---------- Brightness ---------- */
+const brightEl = document.getElementById('brightness');
+const brightValEl = document.getElementById('brightVal');
+brightEl.addEventListener('input', () => { brightValEl.textContent = brightEl.value + '%'; });
+brightEl.addEventListener('change', async () => {
+  const brightness255 = Math.round((parseInt(brightEl.value, 10) / 100) * 255);
+  await enviarControl({ brightness: brightness255 });
+});
+
+/* ---------- Mode Tabs ---------- */
+let panelPlayModeActual = 0; // 0 = GIF, 1 = Clock (actual state confirmed by the panel)
+
+function selectMode(mode, avisarPanel = true){
+  currentTab = mode;
+  document.querySelectorAll('.modeTab').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  document.getElementById('modeGif').classList.toggle('active', mode === 'gif');
+  document.getElementById('modeReloj').classList.toggle('active', mode === 'reloj');
+  document.getElementById('modeTexto').classList.toggle('active', mode === 'texto');
+
+  if (mode === 'reloj') actualizarClockModeUI(panelPlayModeActual);
+
+  if (!avisarPanel) return;
+
+  if (mode === 'gif'){
+    enviarControl({ playMode: 0 });
+    panelPlayModeActual = 0;
+    actualizarClockModeUI(0);
+  }
+  // 'reloj' no longer changes the panel just by opening the tab: you must press "Switch to Clock".
+  // 'texto' does not force anything either: it is only activated when pressing SEND.
+}
+
+document.querySelectorAll('.modeTab').forEach(btn => {
+  btn.addEventListener('click', () => selectMode(btn.dataset.mode));
+});
+
+/* ---------- Explicitly Apply Clock Mode ---------- */
+function actualizarClockModeUI(playModeActual){
+  const status = document.getElementById('clockModeStatus');
+  const btn = document.getElementById('applyClockModeBtn');
+  if (playModeActual === 1){
+    status.textContent = 'Current mode: Clock ✓';
+    btn.textContent = 'Active';
+    btn.disabled = true;
+  } else {
+    status.textContent = 'Current mode: GIF';
+    btn.textContent = 'Switch to Clock';
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('applyClockModeBtn').addEventListener('click', async () => {
+  const ok = await enviarControl({ playMode: 1 });
+  if (ok !== false){
+    panelPlayModeActual = 1;
+    actualizarClockModeUI(1);
+  }
+});
+
+/* ---------- GIF Mode: active playlist + random ---------- */
+document.getElementById('plCurrentBtn').addEventListener('click', abrirPlaylists);
+
+document.getElementById('randomToggle').addEventListener('change', async (e) => {
+  await enviarControl({ randomMode: e.target.checked ? 1 : 0 });
+});
+
+/* ---------- CLOCK Mode: style + color ---------- */
+function renderClockStylePills(activeIndex){
+  const row = document.getElementById('clockStyleRow');
+  row.innerHTML = CLOCK_STYLES.map((name, i) => `
+    <button class="pill ${i === activeIndex ? 'active' : ''}" data-style="${i}">${name}</button>
+  `).join('');
+  row.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', async () => {
+      row.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      await enviarControl({ clockStyle: parseInt(p.dataset.style, 10) });
+    });
+  });
+}
+
+const clockSwatchesEl = document.getElementById('clockSwatches');
+PALETTE.forEach((p, i) => {
+  const div = document.createElement('div');
+  div.className = 'swatch';
+  div.style.background = p.c;
+  div.title = p.n;
+  div.dataset.index = i;
+  div.addEventListener('click', async () => {
+    refreshClockSwatchSelection(i);
+    await enviarControl({ clockColorIndex: i });
+  });
+  clockSwatchesEl.appendChild(div);
+});
+
+function refreshClockSwatchSelection(index){
+  clockSwatchesEl.querySelectorAll('.swatch').forEach(s => {
+    const isActive = parseInt(s.dataset.index, 10) === index;
+    s.classList.toggle('active', isActive);
+    if (isActive) s.style.color = PALETTE[index].c;
+  });
+}
+
+cargarEstadoPanel();
+
+async function enviarTexto(){
+  const ip = ipEl.value.trim();
+  try {
+    const res = await fetch(`http://${ip}/texto`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: currentText, color: currentColor, speed: currentSpeed, font: currentFont }),
+      signal: AbortSignal.timeout(4000)
+    });
+    if (res.ok){ setStatus('Sent ✓', 'ok'); }
+    else { setStatus('The panel returned an error (' + res.status + ')', 'err'); }
+  } catch (e){
+    setStatus('Could not connect to the panel', 'err');
+  }
+}
+
+async function detenerTexto(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configure the panel IP (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  setStatus('Stopping...');
+  try {
+    const res = await fetch(`http://${ip}/texto`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cmd: 'STOP' }),
+      signal: AbortSignal.timeout(4000)
+    });
+    if (res.ok){ setStatus('Stopped ✓', 'ok'); }
+    else { setStatus('The panel returned an error (' + res.status + ')', 'err'); }
+  } catch (e){
+    setStatus('Could not connect to the panel', 'err');
+  }
+}
+
+document.getElementById('send').addEventListener('click', enviarTexto);
+document.getElementById('stop').addEventListener('click', detenerTexto);
+
+/* =========================================================
+   PANEL SETTINGS (config.ini remoto, excepto IR_REMOTE)
+   ========================================================= */
+const CONFIG_SCHEMA = [
+  { group: 'WiFi', fields: [
+    { key:'WIFI_ENABLE', label:'WiFi enabled', type:'toggle', sensible:true },
+    { key:'SSID', label:'Network name (SSID)', type:'text', sensible:true },
+	{ key:'MOSTRAR_IP', label:'Show IP on startup', type:'toggle'},
+    { key:'PASS', label:'Password', type:'password', sensible:true },
+    { key:'TZ', label:'Time zone (POSIX)', type:'text', hint:'Example: CET-1CEST,M3.5.0,M10.5.0/3' },
+  ]},
+  { group: 'Hardware', fields: [
+    { key:'PANEL_CHAIN', label:'Number of LED panels', type:'number', min:1, max:8 },
+    { key:'COLOR_ORDER', label:'Color order', type:'select', options:['RGB','RBG','GBR'] },
+    { key:'I2S_SPEED', label:'I2S speed', type:'select', options:[
+        {v:0,l:'8 MHz'},{v:1,l:'10 MHz'},{v:2,l:'16 MHz'},{v:3,l:'20 MHz (Turbo)'}] },
+    { key:'REFRESH_MIN', label:'Minimum refresh rate (Hz)', type:'number', min:30, max:120 },
+    { key:'DOUBLE_BUFF', label:'Double buffer', type:'toggle' },
+    { key:'LATCH_BLANK', label:'Anti-ghosting (1-4)', type:'number', min:1, max:4 },
+  ]},
+  { group: 'Arcade', fields: [
+    { key:'ARCADE_ENABLE', label:'Arcade system', type:'select', options:[
+        {v:0,l:'OFF'},{v:1,l:'Batocera'},{v:2,l:'Recalbox'},{v:3,l:'ReplayOS'}] },
+  ]},
+  { group: 'Scrolling Text', fields: [
+    { key:'TEXT_ENABLE', label:'Enable Scrolling Text', type:'toggle' },
+  ]},
+  { group: 'Clock', fields: [
+    { key:'CLOCK_ENABLE', label:'Clock enabled', type:'toggle' },
+    { key:'TRANSITION_ENABLE', label:'Particle transition', type:'toggle' },
+    { key:'AUTO_CLOCK_INT', label:'Clock interval (number of GIFs)', type:'number', min:0, max:99 },
+    { key:'CLOCK_DURATION', label:'Clock duration (seconds)', type:'number', min:1, max:120 },
+  ]},
+  { group: 'Weather', fields: [
+    { key:'WEATHER_ENABLE', label:'Weather enabled', type:'toggle' },
+    { key:'CITY', label:'City', type:'text', hint:'Madrid,ES' },
+    { key:'API_KEY', label:'OpenWeatherMap API key', type:'text' },
+    { key:'WEATHER_INT', label:'Update interval (min)', type:'number', min:1, max:180 },
+    { key:'WEATHER_MSG', label:'Text above clock', type:'text' },
+  ]},
+  { group: 'Language', fields: [
+    { key:'LANGUAGE', label:'Language (code)', type:'text', hint:'ES, EN, FR...' },
+  ]},
+  { group: 'ReplayOS', fields: [
+    { key:'IP', label:'ReplayOS IP', type:'text' },
+    { key:'TOKEN', label:'ReplayOS token', type:'text' },
+  ]},
+];
+
+const cfgOverlay = document.getElementById('cfgOverlay');
+const cfgBody = document.getElementById('cfgBody');
+let cfgOriginal = null; // values as received from the panel, to detect sensitive changes
+
+function cfgFieldHtml(f, value){
+  const id = 'cfg_' + f.key;
+  if (f.type === 'toggle'){
+    const checked = (String(value) === '1' || value === true) ? 'checked' : '';
+    return `
+      <div class="cfgField cfgToggleRow">
+        <label for="${id}">${f.label}</label>
+        <label class="cfgSwitch">
+          <input type="checkbox" id="${id}" data-key="${f.key}" ${checked}>
+          <span class="slider"></span>
+        </label>
+      </div>`;
+  }
+  if (f.type === 'select'){
+    const opts = f.options.map(o => {
+      const v = (typeof o === 'object') ? o.v : o;
+      const l = (typeof o === 'object') ? o.l : o;
+      const sel = (String(v) === String(value)) ? 'selected' : '';
+      return `<option value="${v}" ${sel}>${l}</option>`;
+    }).join('');
+    return `
+      <div class="cfgField">
+        <label for="${id}">${f.label}</label>
+        <select id="${id}" data-key="${f.key}">${opts}</select>
+      </div>`;
+  }
+  if (f.type === 'range'){
+    return `
+      <div class="cfgField">
+        <label for="${id}">${f.label} <span class="cfgRangeVal" id="${id}_val">${value}</span></label>
+        <input type="range" id="${id}" data-key="${f.key}" min="${f.min}" max="${f.max}" value="${value}"
+          oninput="document.getElementById('${id}_val').textContent=this.value">
+      </div>`;
+  }
+  const inputType = f.type === 'password' ? 'password' : (f.type === 'number' ? 'number' : 'text');
+  const minmax = f.type === 'number' ? `min="${f.min}" max="${f.max}"` : '';
+  return `
+    <div class="cfgField">
+      <label for="${id}">${f.label}</label>
+      <input type="${inputType}" id="${id}" data-key="${f.key}" value="${value ?? ''}" ${minmax}>
+      ${f.hint ? `<div class="cfgHint">${f.hint}</div>` : ''}
+    </div>`;
+}
+
+function renderConfigForm(data){
+  cfgOriginal = data;
+  let html = '';
+  for (const grupo of CONFIG_SCHEMA){
+    html += `<div class="cfgGroup"><h3>${grupo.group}</h3>`;
+    for (const f of grupo.fields){
+      html += cfgFieldHtml(f, data[f.key]);
+    }
+    if (grupo.group === 'WiFi'){
+      html += `<div class="cfgWarning">⚠ If the SSID or password is incorrect, the panel will not reconnect and you will only be able to recover it by editing the SD card manually.</div>`;
+    }
+    html += `</div>`;
+  }
+  cfgBody.innerHTML = html;
+}
+
+function collectConfigValues(){
+  const out = {};
+  cfgBody.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    if (el.type === 'checkbox') out[key] = el.checked ? 1 : 0;
+    else out[key] = el.value;
+  });
+  return out;
+}
+
+async function abrirAjustes(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configure the panel IP (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  cfgOverlay.classList.add('open');
+  cfgBody.innerHTML = '<div class="cfgLoading">Loading panel settings...</div>';
+  cargarEstadoIR(); // in parallel; does not block loading the remaining settings
+
+  try {
+    const res = await fetch(`http://${ip}/config`, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    renderConfigForm(data);
+  } catch (e){
+    cfgBody.innerHTML = '<div class="cfgLoading">Could not load the panel configuration.</div>';
+  }
+}
+
+async function cerrarAjustesSinGuardar(){
+  const ip = ipEl.value.trim();
+  cfgOverlay.classList.remove('open');
+  if (!ip) return;
+  try {
+    await fetch(`http://${ip}/config/exit`, { method: 'POST', signal: AbortSignal.timeout(3000) });
+  } catch (e) { /* if there is no response, nothing happens: the panel will continue showing "APP CONFIG" until the next manual restart */ }
+}
+
+async function guardarAjustes(){
+  const ip = ipEl.value.trim();
+  if (!ip || !cfgOriginal) return;
+
+  const nuevo = collectConfigValues();
+  const cambioSensible = ['WIFI_ENABLE','SSID','PASS'].some(k => String(nuevo[k]) !== String(cfgOriginal[k]));
+  if (cambioSensible){
+    const ok = confirm('You are about to change the WiFi settings. If they are incorrect, you will lose connection to the panel. Continue?');
+    if (!ok) return;
+  }
+
+  cfgBody.innerHTML = '<div class="cfgLoading">Saving and restarting the panel...</div>';
+  try {
+    const res = await fetch(`http://${ip}/config`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevo),
+      signal: AbortSignal.timeout(5000)
+    });
+    if (res.ok){
+      cfgBody.innerHTML = '<div class="cfgLoading">Saved ✓ The panel is restarting...</div>';
+      setTimeout(() => { cfgOverlay.classList.remove('open'); }, 2500);
+    } else {
+      cfgBody.innerHTML = '<div class="cfgLoading">The panel returned an error (' + res.status + ')</div>';
+    }
+  } catch (e){
+    // The ESP32 restarts immediately after responding: it is normal for the connection to be interrupted here.
+    cfgBody.innerHTML = '<div class="cfgLoading">Saved ✓ The panel is restarting...</div>';
+    setTimeout(() => { cfgOverlay.classList.remove('open'); }, 2500);
+  }
+}
+
+document.getElementById('settingsBtn').addEventListener('click', abrirAjustes);
+document.getElementById('cfgClose').addEventListener('click', cerrarAjustesSinGuardar);
+document.getElementById('cfgCancel').addEventListener('click', cerrarAjustesSinGuardar);
+document.getElementById('cfgSave').addEventListener('click', guardarAjustes);
+
+/* =========================================================
+   IR REMOTE (button mapping from Settings)
+   ========================================================= */
+// idx must match the switch(pasoMapeo) in gestionarMapeoIR() in the firmware.
+// NOTE: in the firmware "ir_btn_up/down" are Brightness and "ir_btn_subir/bajar" are Navigation.
+const IR_BOTONES = [
+  { idx:0, key:'on',    label:'⏻ Power On' },
+  { idx:1, key:'off',   label:'⏻ Power Off' },
+  { idx:2, key:'up',    label:'☀ Increase Brightness' },
+  { idx:3, key:'down',  label:'☀ Decrease Brightness' },
+  { idx:4, key:'menu',  label:'☰ Menu' },
+  { idx:5, key:'ok',    label:'✓ Confirm' },
+  { idx:6, key:'subir', label:'▲ Up (navigate)' },
+  { idx:7, key:'bajar', label:'▼ Down (navigate)' },
+];
+
+const irRows = document.getElementById('irRows');
+const irMsg = document.getElementById('irMsg');
+let irCapturando = false;
+
+irRows.innerHTML = IR_BOTONES.map(b => `
+  <div class="irRow">
+    <div class="irInfo">
+      <span class="irLabel">${b.label}</span>
+      <span class="irCode" id="irCode_${b.idx}">—</span>
+    </div>
+    <button class="irBtn" id="irBtn_${b.idx}" data-idx="${b.idx}">MAP</button>
+  </div>`).join('');
+
+function setIrMsg(txt, tipo){
+  irMsg.textContent = txt || '';
+  irMsg.className = 'irMsg' + (tipo ? ' ' + tipo : '');
+}
+
+function irSetBotonesEnabled(enabled){
+  document.querySelectorAll('.irBtn').forEach(b => b.disabled = !enabled);
+}
+
+async function cargarEstadoIR(){
+  const ip = ipEl.value.trim();
+  if (!ip) return;
+  try {
+    const res = await fetch(`http://${ip}/ir/estado`, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return;
+    const data = await res.json();
+    IR_BOTONES.forEach(b => {
+      const el = document.getElementById('irCode_' + b.idx);
+      if (el) el.textContent = data[b.key] || '—';
+    });
+  } catch (e) { /* on failure, leave the dashes */ }
+}
+
+async function irMapearBoton(idx){
+  const ip = ipEl.value.trim();
+  if (!ip || irCapturando) return;
+
+  const b = IR_BOTONES.find(x => x.idx === idx);
+  const btn = document.getElementById('irBtn_' + idx);
+  const codeEl = document.getElementById('irCode_' + idx);
+  const valorPrevio = codeEl ? codeEl.textContent : '—';
+
+  irCapturando = true;
+  irSetBotonesEnabled(false);
+  btn.classList.add('waiting');
+  btn.textContent = 'WAITING...';
+  setIrMsg('Press the button on the physical remote now...', '');
+
+  try {
+    await fetch(`http://${ip}/ir/learn`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idx }),
+      signal: AbortSignal.timeout(4000)
+    });
+  } catch (e) {
+    setIrMsg('Could not contact the panel.', 'err');
+    btn.classList.remove('waiting');
+    btn.textContent = 'MAP';
+    irCapturando = false;
+    irSetBotonesEnabled(true);
+    return;
+  }
+
+  // Poll /ir/estado until the panel exits capture mode (code received or timeout)
+  let intentos = 0;
+  const maxIntentos = 40; // ~20s margin, above the panel capture timeout
+
+  const intervalo = setInterval(async () => {
+    intentos++;
+    try {
+      const res = await fetch(`http://${ip}/ir/estado`, { signal: AbortSignal.timeout(3000) });
+      const data = await res.json();
+
+      if (data.pasoMapeo !== idx || intentos >= maxIntentos) {
+        clearInterval(intervalo);
+        const nuevoValor = data[b.key] || '—';
+        if (codeEl) codeEl.textContent = nuevoValor;
+
+        if (nuevoValor !== valorPrevio) {
+          setIrMsg(`✓ "${b.label}" mapped successfully.`, 'ok');
+        } else {
+          setIrMsg('✗ Timeout: no button was detected.', 'err');
+        }
+
+        btn.classList.remove('waiting');
+        btn.textContent = 'MAP';
+        irCapturando = false;
+        irSetBotonesEnabled(true);
+      }
+    } catch (e) {
+      if (intentos >= maxIntentos) {
+        clearInterval(intervalo);
+        setIrMsg('Connection to the panel was lost during mapping.', 'err');
+        btn.classList.remove('waiting');
+        btn.textContent = 'MAP';
+        irCapturando = false;
+        irSetBotonesEnabled(true);
+      }
+    }
+  }, 500);
+}
+
+irRows.addEventListener('click', (e) => {
+  const btn = e.target.closest('.irBtn');
+  if (!btn) return;
+  irMapearBoton(parseInt(btn.dataset.idx, 10));
+});
+
+/* =========================================================
+   PLAYLISTS
+   ========================================================= */
+const plOverlay = document.getElementById('plOverlay');
+const plBody = document.getElementById('plBody');
+
+async function abrirPlaylists(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configure the panel IP (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  plOverlay.classList.add('open');
+  plBody.innerHTML = '<div class="cfgLoading">Loading playlists...</div>';
+
+  try {
+    const res = await fetch(`http://${ip}/playlists`, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    renderPlaylists(data.items || [], data.active || '');
+  } catch (e){
+    plBody.innerHTML = '<div class="cfgLoading">Could not load the playlist list.</div>';
+  }
+}
+
+function renderPlaylists(items, active){
+  if (!items.length){
+    plBody.innerHTML = '<div class="cfgLoading">No playlists found in the SD card /playlists folder.</div>';
+    return;
+  }
+  plBody.innerHTML = `<div class="plList">${items.map(name => `
+    <div class="plItem ${name === active ? 'active' : ''}" data-name="${name}">
+      <span>${name}</span>
+      <span class="plCheck">●</span>
+    </div>`).join('')}</div>`;
+
+  plBody.querySelectorAll('.plItem').forEach(el => {
+    el.addEventListener('click', () => seleccionarPlaylist(el.dataset.name));
+  });
+}
+
+async function seleccionarPlaylist(name){
+  const ip = ipEl.value.trim();
+  plBody.innerHTML = '<div class="cfgLoading">Activating playlist...</div>';
+  try {
+    const res = await fetch(`http://${ip}/playlist`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+      signal: AbortSignal.timeout(4000)
+    });
+    if (res.ok){
+      document.getElementById('plCurrentName').textContent = name;
+      selectMode('gif', false); // selecting a playlist already starts GIF playback
+      setTimeout(() => { plOverlay.classList.remove('open'); }, 600);
+    } else {
+      plBody.innerHTML = '<div class="cfgLoading">The panel returned an error (' + res.status + ')</div>';
+    }
+  } catch (e){
+    plBody.innerHTML = '<div class="cfgLoading">Could not connect to the panel</div>';
+  }
+}
+
+document.getElementById('plClose').addEventListener('click', () => plOverlay.classList.remove('open'));
+
+/* =========================================================
+   UPDATE: OTA + Idiomas
+   ========================================================= */
+const updateOverlay = document.getElementById('updateOverlay');
+document.getElementById('updateBtn').addEventListener('click', () => { updateOverlay.classList.add('open'); mostrarUltimoEstadoIdiomas(); });
+document.getElementById('updateClose').addEventListener('click', () => updateOverlay.classList.remove('open'));
+
+/* ---------- OTA (firmware update) ---------- */
+async function lanzarOTA(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configure the panel IP (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  const ok = confirm('The panel will check for a new firmware version and install it if available. It will restart once or twice during the process. Continue?');
+  if (!ok) return;
+
+  const btn = document.getElementById('otaBtn');
+  btn.disabled = true;
+  btn.textContent = 'CHECKING...';
+
+  try {
+    await fetch(`http://${ip}/ota`, { method: 'POST', signal: AbortSignal.timeout(4000) });
+  } catch (e) { /* the panel may cut the connection when restarting; this is normal */ }
+
+  btn.textContent = 'RESTARTING PANEL...';
+  setTimeout(() => { updateOverlay.classList.remove('open'); btn.disabled = false; btn.textContent = '⬆ CHECK FOR UPDATE'; }, 3000);
+}
+
+document.getElementById('otaBtn').addEventListener('click', lanzarOTA);
+
+/* ---------- Languages (download from GitHub to /idioma on the SD card) ---------- */
+async function consultarEstadoIdiomas(ip){
+  const res = await fetch(`http://${ip}/idiomas/estado`, { method: 'GET', signal: AbortSignal.timeout(3000) });
+  return res.json();
+}
+
+async function descargarIdiomas(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configure the panel IP (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  const btn = document.getElementById('idiomasBtn');
+  const resultado = document.getElementById('idiomasResultado');
+  btn.disabled = true;
+  btn.textContent = 'DOWNLOADING...';
+  resultado.style.display = 'none';
+
+  // 1. Start the download; the panel restarts and interrupts this request, which is normal.
+  try {
+    await fetch(`http://${ip}/idiomas/actualizar`, { method: 'POST', signal: AbortSignal.timeout(4000) });
+  } catch (e) { /* interruption caused by panel restart */ }
+
+  btn.textContent = 'RESTARTING PANEL...';
+  await new Promise(r => setTimeout(r, 4000));
+
+  // 2. Poll /idiomas/estado until a fresh result is available
+  btn.textContent = 'CHECKING RESULT...';
+  const maxIntentos = 15;
+  let exito = false;
+
+  for (let intento = 0; intento < maxIntentos; intento++) {
+    try {
+      const data = await consultarEstadoIdiomas(ip);
+      if (data && data.hay) {
+        resultado.style.display = 'block';
+        resultado.className = data.ok ? 'otaResult ok' : 'otaResult err';
+        resultado.textContent = data.resumen || (data.ok ? 'Languages updated' : 'The download could not be completed');
+        exito = true;
+        break;
+      }
+    } catch (e) { /* the panel has not returned to the network yet; retry */ }
+
+    await new Promise(r => setTimeout(r, 2000));
+  }
+
+  if (!exito) {
+    resultado.style.display = 'block';
+    resultado.className = 'otaResult err';
+    resultado.textContent = 'The panel did not respond in time. Try checking again.';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '📥 DOWNLOAD LANGUAGES';
+}
+
+document.getElementById('idiomasBtn').addEventListener('click', descargarIdiomas);
+
+/* ---------- Show the latest result when opening the update panel ---------- */
+async function mostrarUltimoEstadoIdiomas(){
+  const ip = ipEl.value.trim();
+  const resultado = document.getElementById('idiomasResultado');
+  if (!ip) return;
+
+  try {
+    const data = await consultarEstadoIdiomas(ip);
+    if (data && data.hay) {
+      resultado.style.display = 'block';
+      resultado.className = data.ok ? 'otaResult ok' : 'otaResult err';
+      resultado.textContent = data.resumen || (data.ok ? 'Languages updated' : 'The download could not be completed');
+    }
+  } catch (e) { /* panel unavailable right now; show nothing */ }
+}
+
+/* =========================================================
+   TIMER (scheduled on/off)
+   ========================================================= */
+const timerOverlay = document.getElementById('timerOverlay');
+const timerStatusDot = document.getElementById('timerStatusDot');
+const timerStatusText = document.getElementById('timerStatusText');
+const timerToggleBtn = document.getElementById('timerToggleBtn');
+
+function pad2(n){ return String(n).padStart(2, '0'); }
+
+function pintarEstadoTimer(isSleeping){
+  timerStatusDot.style.background = isSleeping ? 'var(--text-dim)' : '#5FDB7E';
+  timerStatusDot.style.boxShadow = isSleeping ? 'none' : '0 0 8px #5FDB7E';
+  timerStatusText.textContent = isSleeping ? 'Panel sleeping' : 'Panel on';
+  timerToggleBtn.textContent = isSleeping ? 'TURN ON NOW' : 'TURN OFF NOW';
+}
+
+async function abrirTimer(){
+  const ip = ipEl.value.trim();
+  if (!ip){ setStatus('Configure the panel IP (⚙)', 'err'); connPanel.classList.add('open'); return; }
+
+  timerOverlay.classList.add('open');
+  try {
+    const res = await fetch(`http://${ip}/timer`, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    document.getElementById('timerEnableToggle').checked = !!data.enable;
+    document.getElementById('timerOn').value = `${pad2(data.hOn)}:${pad2(data.mOn)}`;
+    document.getElementById('timerOff').value = `${pad2(data.hOff)}:${pad2(data.mOff)}`;
+    pintarEstadoTimer(!!data.isSleeping);
+  } catch (e){
+    timerStatusText.textContent = 'Could not load the timer';
+  }
+}
+
+async function enviarAjusteTimer(cambios){
+  const ip = ipEl.value.trim();
+  if (!ip) return;
+  try {
+    await fetch(`http://${ip}/timer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cambios),
+      signal: AbortSignal.timeout(4000)
+    });
+  } catch (e){ /* it is still applied on the panel if the response is lost */ }
+}
+
+document.getElementById('timerBtn').addEventListener('click', abrirTimer);
+document.getElementById('timerClose').addEventListener('click', () => timerOverlay.classList.remove('open'));
+
+document.getElementById('timerEnableToggle').addEventListener('change', (e) => {
+  enviarAjusteTimer({ enable: e.target.checked ? 1 : 0 });
+});
+
+document.getElementById('timerOn').addEventListener('change', (e) => {
+  const [h, m] = e.target.value.split(':').map(Number);
+  enviarAjusteTimer({ hOn: h, mOn: m });
+});
+
+document.getElementById('timerOff').addEventListener('change', (e) => {
+  const [h, m] = e.target.value.split(':').map(Number);
+  enviarAjusteTimer({ hOff: h, mOff: m });
+});
+
+timerToggleBtn.addEventListener('click', async () => {
+  const ip = ipEl.value.trim();
+  if (!ip) return;
+  timerToggleBtn.disabled = true;
+  try {
+    const res = await fetch(`http://${ip}/timer/toggle`, { method: 'POST', signal: AbortSignal.timeout(4000) });
+    if (res.ok){
+      const data = await res.json();
+      actualizarEstadoEnergia(!!data.isSleeping);
+    }
+  } catch (e){ /* no response: the panel may have changed anyway */ }
+  timerToggleBtn.disabled = false;
+});
+
+/* Initial State */
+setColor('#FFB000');
+drawFrame();
+
+/* ---------- Service Worker ---------- */
+if ('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {
+      /* On insecure HTTP origins the SW may not register; this does not affect text sending */
+    });
+  });
+}
+</script>
+</body>
+</html>

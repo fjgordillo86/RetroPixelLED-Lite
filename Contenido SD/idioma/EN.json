@@ -33,7 +33,8 @@
   },
   "SUBMENU_WIFI": {
     "titulo": "WIFI ",
-	"mostrar_ip": "Show IP: "
+	"mostrar_ip": "Show IP: ",
+	"control_app": "App Control: "
   },
   "SUBMENU_RELOJ": {
     "titulo": "CLOCK ",
@@ -72,6 +73,7 @@
   },
   "SUBMENU_ACTUALIZACION": {
     "titulo": "UPDATE",
+    "buscar_idioma": "Update language files",
     "buscar_ota": "Check for OTA"
   },
   "SUBMENU_FTP": {

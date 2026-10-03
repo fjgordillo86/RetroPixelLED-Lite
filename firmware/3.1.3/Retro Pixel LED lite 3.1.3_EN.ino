@@ -21,8 +21,8 @@
 // ====================================================================
 //                     CONSTANTES & FIRMWARE LITE
 // ====================================================================
-#define FIRMWARE_VERSION "3.1.3" // Nuevos estilos de Reloj y funcion de mapeado mando IR desde la PWA. Implementación de reproducción de GIF en ReplayOS.
-#define CURRENT_VERSION_NUM 313 // Versión numérica para comparar (2.1.0 -> 210)
+#define FIRMWARE_VERSION "3.1.3" // New Clock styles and IR remote mapping from the PWA. GIF playback implementation in ReplayOS.
+#define CURRENT_VERSION_NUM 313 // Numeric version for comparison (2.1.0 -> 210)
 #define GITHUB_VERSION_URL "https://github.com/fjgordillo86/RetroPixelLED-Lite/raw/refs/heads/main/docs/version.json"
 #define GITHUB_RAW_BASE_URL "https://raw.githubusercontent.com/fjgordillo86/RetroPixelLED-Lite/main/Contenido%20SD/idioma/"
 #define CONFIG_FILE "/config.ini"
@@ -49,15 +49,15 @@
 #define VSPI_MOSI     23
 #define VSPI_SCLK     18
 
-// --- CONFIGURACIÓN DE LAS DIMENSIONES DEL PANEL ---
-const int PANEL_RES_X = 64; // Ancho de un solo panel
-const int PANEL_RES_Y = 32; // Alto de un solo panel
+// --- PANEL DIMENSIONS CONFIGURATION ---
+const int PANEL_RES_X = 64; // Width of a single panel
+const int PANEL_RES_Y = 32; // Height of a single panel
 #define MATRIX_HEIGHT PANEL_RES_Y 
 
-// --- CONFIGURACIÓN DEL BOTÓN DE MENÚ ---
+// --- MENU BUTTON CONFIGURATION ---
 #define PIN_BOTON_MENU 21
 
-// --- CONFIGURACIÓN DEL IR ---
+// --- IR CONFIGURATION ---
 #define IR_RECEIVE_PIN 34
 
 
@@ -68,7 +68,7 @@ AnimatedGIF gif;
 MatrixPanel_I2S_DMA *display = nullptr; 
 File FSGifFile;
 
-// Variables de Configuración (Valores por defecto seguros)
+// Configuration variables (safe defaults)
 bool wifiEnable = false;
 bool wifiDebeEstarActivo = false;
 bool mostrarIP = false;
@@ -76,7 +76,7 @@ char wifi_ssid[64] = "";
 char wifi_pass[64] = "";
 char time_zone[64] = "CET-1CEST,M3.5.0,M10.5.0/3";
 
-int modoVisual = 0; // 0 = GIFs, 1 = Solo Reloj
+int modoVisual = 0; // 0 = GIFs, 1 = Clock only
 int panelChain = 2;
 char colorOrder[4] = "RGB";
 int offset = 128;
@@ -114,10 +114,10 @@ unsigned long textoScrollUltimoPaso = 0;
 const GFXfont* textoScrollFuente = &fuente8pt7b_Bold;
 
 bool timerEnable = false;
-int hOn = 9, mOn = 0;    // Hora de encendido (por defecto 09:00)
-int hOff = 23, mOff = 0; // Hora de apagado (por defecto 23:00)
+int hOn = 9, mOn = 0;    // Power-on time (default 09:00)
+int hOff = 23, mOff = 0; // Power-off time (default 23:00)
 bool isSleeping = false;
-bool manualOverride = false; // Controla si se despertó con el botón
+bool manualOverride = false; // Tracks whether the panel was woken by the button
 
 unsigned long gifCachePosition = 0;
 int gifsPlayed = 0;
@@ -127,7 +127,7 @@ const char* ntpServer = "pool.ntp.org";
 WebServer server(80);
 WiFiServer tcpServer(8888);
 
-// Variables de estado y Navegación OSD
+// OSD state and navigation variables
 bool confiAppEnable = true;
 enum EstadoSistema {
     ESTADO_GIFS,
@@ -153,12 +153,12 @@ enum EstadoSistema {
 EstadoSistema estadoActual = ESTADO_GIFS;
 
 
-// Variables de Navegación
-int cursorPrincipal = 0; // Posición de la flecha en el menú principal
-int cursorSubmenu = 0;   // Posición de la flecha dentro de los submenús
-bool requiereReinicio = false; // Se activará si tocamos ajustes Avanzados
-bool confirmadoLargo = false;      // Disparo a 1s
-bool confirmadoExtraLargo = false; // Disparo a 4s
+// Navigation variables
+int cursorPrincipal = 0; // Arrow position in the main menu
+int cursorSubmenu = 0;   // Arrow position within the submenus
+bool requiereReinicio = false; // Set when Advanced settings are changed
+bool confirmadoLargo = false;      // Trigger at 1s
+bool confirmadoExtraLargo = false; // Trigger at 4s
 bool botonPresionado = false;
 bool bloqueoPostSalida = false;
 unsigned long tiempoPresionado = 0;
@@ -166,37 +166,35 @@ unsigned long ultimoIncremento = 0;
 bool saliendoAGifs = false;
 bool menuNeedsRedraw = false;
 
-// Variables del sistema de guardado en memoria
+// Memory storage system variables
 char playlistActiva[128] = "";
 bool interrumpirReproduccion = false;
 bool modoMantenimiento = false;
 
-// Variables de idioma
+// Language variables
 JsonDocument idiomaDoc; 
 bool idiomaCargado = false;
 
-// Variables FTP
+// FTP variables
 FtpServer ftpSrv;
-char ftp_user[32] = "admin";
-char ftp_pass[32] = "admin";
 
-// Variables de lectura dinámica
+// Dynamic reading variables
 std::vector<String> listaPlaylists;
 std::vector<String> listaIdiomas;
 
-// Variables de Clima
+// Weather variables
 int weatherEnable = 0;
 char weatherCustomMsg[32] = "";
 char weatherCity[64] = "";
 char weatherKey[48] = "";
-int weatherInterval = 60; // En minutos
+int weatherInterval = 60; // In minutes
 float currentTemp = 0.0;
 int weatherConditionCode = 0;
 bool isNight = false;
 unsigned long lastWeatherUpdate = 0;
 bool weatherDataReady = false;
 
-// Iconos 8x8 píxeles
+// 8x8 pixel icons
 const uint8_t icon_sun[] PROGMEM = {0x00, 0x3c, 0x7e, 0x7e, 0x7e, 0x7e, 0x3c, 0x00};
 const uint8_t icon_cloud[] PROGMEM = {0x00, 0x00, 0x1c, 0x3f, 0x7f, 0x7f, 0x00, 0x00};
 const uint8_t icon_rain[] PROGMEM = {0x1c, 0x3f, 0x7f, 0x7f, 0x22, 0x44, 0x22, 0x00};
@@ -205,7 +203,7 @@ const uint8_t icon_storm[] PROGMEM = {0x1c, 0x3f, 0x7f, 0x1c, 0x1c, 0x08, 0x10, 
 const uint8_t icon_fog[] PROGMEM = {0x00, 0x3e, 0x00, 0x7f, 0x00, 0x1c, 0x3e, 0x00};
 const uint8_t icon_moon[] PROGMEM = {0x1c, 0x38, 0x70, 0x70, 0x70, 0x38, 0x1c, 0x00};
 
-// --- CONFIGURACIÓN RELOJ ---
+// --- CLOCK CONFIGURATION ---
 const uint8_t font5x8[11][5] PROGMEM = {
   {0x3E, 0x51, 0x49, 0x45, 0x3E}, // 0
   {0x00, 0x42, 0x7F, 0x40, 0x00}, // 1
@@ -220,7 +218,7 @@ const uint8_t font5x8[11][5] PROGMEM = {
   {0x00, 0x36, 0x36, 0x00, 0x00}  // :
 };
 
-// Variables de control de color para el Reloj
+// Clock color control variables
 uint32_t parseHexColor(String hex) {
   if (hex.startsWith("#")) hex.remove(0, 1);
   if (hex.length() != 6) return 0xFF0055;
@@ -247,7 +245,7 @@ const int TOTAL_COLORES = sizeof(listaColores) / sizeof(listaColores[0]);
 
 int clockColorIndex = 0;
 
-// --- VARIABLES DINÁMICAS DEL CONTROL REMOTO IR ---
+// --- IR REMOTE CONTROL DYNAMIC VARIABLES ---
 uint32_t ir_btn_on     = 0xF20DFF00;
 uint32_t ir_btn_off    = 0xE01FFF00;
 uint32_t ir_btn_up     = 0xF609FF00;
@@ -257,49 +255,49 @@ uint32_t ir_btn_ok     = 0xED12FF00;
 uint32_t ir_btn_subir  = 0xE41BFF00;
 uint32_t ir_btn_bajar  = 0xB34CFF00;
 
-// Variable para el estado de mapeo
-int pasoMapeo = -1; // -1 significa que estamos navegando, >= 0 significa que estamos capturando
+// Mapping state variable
+int pasoMapeo = -1; // -1 means we are navigating, >= 0 means we are capturing
 unsigned long tiempoInicioMapeo = 0;
-const unsigned long TIMEOUT_MAPEO = 10000; // 10 segundos
+const unsigned long TIMEOUT_MAPEO = 10000; // 10 seconds
 
 // ====================================================================
-//                     GESTOR DE CONFIG.INI
+//                     CONFIG.INI MANAGER
 // ====================================================================
 void leerConfigIni() {
     File configFile = SD.open(CONFIG_FILE, FILE_READ);
     if (!configFile) {
-        Serial.println(F("[INI] Error: No se encuentra config.ini. Usando valores por defecto."));
+        Serial.println(F("[INI] Error: config.ini not found. Using default values."));
         return;
     }
 
-    Serial.println(F("[INI] Cargando configuración..."));
+    Serial.println(F("[INI] Loading configuration..."));
 
     while (configFile.available()) {
         String linea = configFile.readStringUntil('\n');
         linea.trim();
         
-        // Ignorar comentarios, cabeceras de sección o líneas vacías
+        // Ignore comments, section headers, or empty lines
         if (linea.startsWith("#") || linea.startsWith("[") || linea.length() == 0) continue;
 
-        // Buscar el separador '='
+        // Find the '=' separator
         int separatorIndex = linea.indexOf('=');
         if (separatorIndex == -1) continue;
 
         String clave = linea.substring(0, separatorIndex);
         String valor = linea.substring(separatorIndex + 1);
         
-        // Limpiar espacios extra
+        // Remove extra spaces
         clave.trim();
         valor.trim();
 
-        // Eliminar comentarios inline si los hay (ej: BRIGHTNESS=40 # Brillo)
+        // Remove inline comments if present (e.g. BRIGHTNESS=40 # Brightness)
         int commentIdx = valor.indexOf('#');
         if (commentIdx != -1) {
             valor = valor.substring(0, commentIdx);
             valor.trim();
         }
 
-        // --- MAPEO DIRECTO A VARIABLES GLOBALES ---
+        // --- DIRECT MAPPING TO GLOBAL VARIABLES ---
         // [WIFI_NTP]
         if (clave == "WIFI_ENABLE") wifiEnable = valor.toInt();
         else if (clave == "SSID") strlcpy(wifi_ssid,  valor.c_str(), sizeof(wifi_ssid));
@@ -358,112 +356,108 @@ void leerConfigIni() {
         else if (clave == "IP") strlcpy(replayOS_IP,  valor.c_str(), sizeof(replayOS_IP));
         else if (clave == "TOKEN") strlcpy(replayOS_Token,  valor.c_str(), sizeof(replayOS_Token));
 
-        // [FTP]
-        else if (clave == "FTP_USER") strlcpy(ftp_user, valor.c_str(), sizeof(ftp_user));
-        else if (clave == "FTP_PASS") strlcpy(ftp_pass, valor.c_str(), sizeof(ftp_pass));
-
     }
 
     configFile.close();
 
 
-    // VALIDACIÓN DE SEGURIDAD POST-LECTURA
+    // POST-READ SAFETY VALIDATION
     if (colorOrder[0] == '\0') strlcpy(colorOrder, "RGB", sizeof(colorOrder));
     if (weatherCustomMsg[0]== '\0') strlcpy(weatherCustomMsg,"Game Room", sizeof(weatherCustomMsg));
     if (idiomaActivo[0] == '\0') strlcpy(idiomaActivo, "ES", sizeof(idiomaActivo));
 
     if (doubleBuff && i2sSpeed == 3) {
-        i2sSpeed = 2; // Forzamos 16MHz si el Double Buffer está activo
-        Serial.println(F("[SEGURIDAD] Configuración incompatible detectada en SD: Bajando I2S a 16MHz."));
+        i2sSpeed = 2; // Force 16MHz if Double Buffer is enabled
+        Serial.println(F("[SAFETY] Incompatible configuration detected on SD: Lowering I2S to 16MHz."));
     }
     
-    Serial.println(F("[INI] Carga completada."));
+    Serial.println(F("[INI] Loading complete."));
 }
 
 void guardarConfigIni() {
     File configFile = SD.open(CONFIG_FILE, FILE_WRITE);
     if (!configFile) {
-        Serial.println(F("[ERROR] No se pudo abrir config.ini para escribir"));
+        Serial.println(F("[ERROR] Could not open config.ini for writing"));
         return;
     }
 
-    Serial.println(F("[INI] Guardando nuevos ajustes en SD..."));
+    Serial.println(F("[INI] Saving new settings to SD..."));
 
-    // Cabecera Principal
+    // Main header
     configFile.println(F("# ============================================================"));
-    configFile.printf(F("# 🕹️ RETRO PIXEL LED LITE - CONFIGURACION v%s\n"), FIRMWARE_VERSION);
+    configFile.printf(F("# 🕹️ RETRO PIXEL LED LITE - CONFIGURATION v%s\n"), FIRMWARE_VERSION);
     configFile.println(F("# ============================================================"));
-    configFile.println(F("# Nota: No dejes espacios alrededor del símbolo '='."));
-    configFile.println(F("# Ejemplo correcto: BRIGHTNESS=40\n"));
+    configFile.println(F("# Note: Do not leave spaces around the '=' symbol."));
+    configFile.println(F("# Correct example: BRIGHTNESS=40\n"));
 
     configFile.println(F("[WIFI_NTP]"));
-    configFile.println(F("# Configura tu red WiFi"));
+    configFile.println(F("# Configure your WiFi network"));
     configFile.printf("WIFI_ENABLE=%d\n", wifiEnable);
     configFile.printf("SSID=%s\n", wifi_ssid);
     configFile.printf("PASS=%s\n", wifi_pass);
-    configFile.println(F("# Mostrar IP al iniciar"));
+    configFile.println(F("# Show IP on startup"));
     configFile.printf("MOSTRAR_IP=%d\n", mostrarIP ? 1 : 0);
-    configFile.println(F("# Configura tu zona horaria"));
+    configFile.println(F("# Configure your time zone"));
     configFile.printf("TZ=%s\n\n", time_zone);
 
     configFile.println(F("[HARDWARE]"));
-    configFile.println(F("# Numero de paneles"));
+    configFile.println(F("# Number of LED panels"));
     configFile.printf("PANEL_CHAIN=%d\n", panelChain);
-    configFile.println(F("# Orden de colores del Panel: RGB, RBG o GBR"));
+    configFile.println(F("# Panel color order: RGB, RBG or GBR"));
     configFile.printf("COLOR_ORDER=%s\n", colorOrder);
-    configFile.println(F("# Brillo (0 a 255)"));
+    configFile.println(F("# Brightness (0 to 255)"));
     configFile.printf("BRIGHTNESS=%d\n", brightness);
-    configFile.println(F("# Velocidad I2S: 0=8MHz, 1=10MHz, 2=16MHz, 3=20MHz (Turbo)"));
+    configFile.println(F("# I2S speed: 0=8MHz, 1=10MHz, 2=16MHz, 3=20MHz (Turbo)"));
     configFile.printf("I2S_SPEED=%d\n", i2sSpeed);
-    configFile.println(F("# Refresco Minimo (Hz): 30 a 120"));
+    configFile.println(F("# Minimum refresh rate (Hz): 30 to 120"));
     configFile.printf("REFRESH_MIN=%d\n", refreshMin);
-    configFile.println(F("# Doble Buffer: 0=OFF, 1=ON (Elimina parpadeos)"));
+    configFile.println(F("# Double Buffer: 0=OFF, 1=ON (Eliminates flicker)"));
     configFile.printf("DOUBLE_BUFF=%d\n", doubleBuff);
-    configFile.println(F("# Anti-Ghosting: 1 a 4 (Sube si ves brillo fantasma)"));
+    configFile.println(F("# Anti-Ghosting: 1 to 4 (Increase if you see ghosting)"));
     configFile.printf("LATCH_BLANK=%d\n\n", latchBlank);
 
     configFile.println(F("[LOGIC]"));
-    configFile.println(F("# Modo de visualizacion: 0=GIFs, 1=Solo Reloj"));
+    configFile.println(F("# Display mode: 0=GIFs, 1=Clock only"));
     configFile.printf("PLAY_MODE=%d\n", modoVisual);
-    configFile.println(F("# Activa o desactiva la configuracion mediante la APP: 0=OFF, 1=ON (Requiere WiFi)"));
+    configFile.println(F("# Enable or disable configuration via the APP: 0=OFF, 1=ON (Requires WiFi)"));
     configFile.printf("CONFI_APP_ENABLE=%d\n", confiAppEnable ? 1 : 0);
-    configFile.println(F("# Selecciona tu sistema Arcade: 0=OFF, 1=Batocera, 2=Recalbox, 3=ReplayOS"));
+    configFile.println(F("# Select your Arcade system: 0=OFF, 1=Batocera, 2=Recalbox, 3=ReplayOS"));
     configFile.printf("ARCADE_ENABLE=%d\n", arcadeEnable);
-    configFile.println(F("# Activa o desactiva el texto en scroll: 0=OFF, 1=ON (Requiere WiFi)"));
+    configFile.println(F("# Enable or disable scrolling text: 0=OFF, 1=ON (Requires WiFi)"));
     configFile.printf("TEXT_ENABLE=%d\n", textEnable ? 1 : 0);
-    configFile.println(F("# Activa o desactiva el reloj: 0=OFF, 1=ON (Requiere WiFi)"));
+    configFile.println(F("# Enable or disable the clock: 0=OFF, 1=ON (Requires WiFi)"));
     configFile.printf("CLOCK_ENABLE=%d\n", clockEnable);
-    configFile.println(F("# Modo de reproduccion: 0=Secuencial, 1=Aleatorio"));
+    configFile.println(F("# Playback mode: 0=Sequential, 1=Random"));
     configFile.printf("RANDOM_MODE=%d\n", randomMode);
-    configFile.println(F("# Intervalo: Cada cuantos GIFs aparece el reloj"));
+    configFile.println(F("# Interval: How many GIFs before the clock appears"));
     configFile.printf("AUTO_CLOCK_INT=%d\n", autoClockInt);
-    configFile.println(F("# Duracion: Cuantos segundos se muestra el reloj"));
+    configFile.println(F("# Duration: How many seconds the clock is displayed"));
     configFile.printf("CLOCK_DURATION=%d\n", clockDuration);
-    configFile.println(F("# Estilos: 0=Solid, 1=Aurora, 2=Rainbow, 3=Gradient, 4= Fuego, 5=Glitch"));
+    configFile.println(F("# Styles: 0=Solid, 1=Aurora, 2=Rainbow, 3=Gradient, 4=Fire, 5=Glitch"));
     configFile.printf("CLOCK_STYLE=%d\n", clockStyle);
-    configFile.println(F("# Activa la transicion del reloj a GIFs con una explosion de particulas : 0=OFF, 1=ON"));
+    configFile.println(F("# Enable the clock-to-GIF transition with a particle explosion: 0=OFF, 1=ON"));
     configFile.printf("TRANSITION_ENABLE=%d\n", transitionEnable);
-    configFile.println(F("# Color del reloj (0= Blanco, 1=Rojo, 2=Verde, 3=Azul, 4=Amarillo, 5=Cian, 6=Magenta, 7=Naranja, 8=Rosa)"));
+    configFile.println(F("# Clock color (0=White, 1=Red, 2=Green, 3=Blue, 4=Yellow, 5=Cyan, 6=Magenta, 7=Orange, 8=Pink)"));
     configFile.printf("CLOCK_COLOR=%d\n\n", clockColorIndex); ; 
 
     configFile.println(F("[WEATHER]"));
-    configFile.println(F("# Activa el clima: 0=OFF, 1=ON (Requiere WiFi)"));
+    configFile.println(F("# Enable weather: 0=OFF, 1=ON (Requires WiFi)"));
     configFile.printf("WEATHER_ENABLE=%d\n", weatherEnable);
-    configFile.println(F("# Tu ciudad (Sin espacios, usa '+' si es necesario: Madrid,ES o Buenos+Aires,AR)"));
+    configFile.println(F("# Your city (No spaces, use '+' if needed: Madrid,ES or Buenos+Aires,AR)"));
     configFile.printf("CITY=%s\n", weatherCity);
-    configFile.println(F("# Tu API Key gratuita de OpenWeatherMap"));
+    configFile.println(F("# Your free OpenWeatherMap API key"));
     configFile.printf("API_KEY=%s\n", weatherKey);
-    configFile.println(F("# Intervalo de actualizacion del clima en MINUTOS"));
+    configFile.println(F("# Weather update interval in MINUTES"));
     configFile.printf("WEATHER_INT=%d\n", weatherInterval);
-    configFile.println(F("# Texto que se muestra encima del reloj"));
+    configFile.println(F("# Text displayed above the clock"));
     configFile.printf("WEATHER_MSG=%s\n\n", weatherCustomMsg);
 
     configFile.println(F("[LANGUAGE]"));
-    configFile.println(F("# Indica el Idioma (Nombre del archivo sin .json: ES, EN, FR...)"));
+    configFile.println(F("# Specify the language (File name without .json: ES, EN, FR...)"));
     configFile.printf("LANGUAGE=%s\n\n", idiomaActivo);
 
     configFile.println(F("[IR_REMOTE]"));
-    configFile.println(F("# Códigos HEX del mando IR (NO hay que indicar nada los guardará automaticamente Retro Pixel LED)"));
+    configFile.println(F("# IR remote HEX codes (DO NOT enter anything; Retro Pixel LED will save them automatically)"));
     configFile.printf("BTN_ON=%08X\n", ir_btn_on);
     configFile.printf("BTN_OFF=%08X\n", ir_btn_off);
     configFile.printf("BTN_BRILLO_UP=%08X\n", ir_btn_up);
@@ -474,40 +468,34 @@ void guardarConfigIni() {
     configFile.printf("BTN_BAJAR=%08X\n\n", ir_btn_bajar);
 
     configFile.println(F("[REPLAY_OS]"));
-    configFile.println(F("# IP que tiene asignada ReplayOS"));
+    configFile.println(F("# IP address assigned to ReplayOS"));
     configFile.printf("IP=%s\n", replayOS_IP);
-    configFile.println(F("# Token ReplayOS: SYSTEM > INFORMATION > NET CONTROL CODE"));
+    configFile.println(F("# ReplayOS token: SYSTEM > INFORMATION > NET CONTROL CODE"));
     configFile.printf("TOKEN=%s\n\n", replayOS_Token);
-
-    configFile.println(F("[FTP]"));
-    configFile.println(F("# Usuario FTP"));
-    configFile.printf("FTP_USER=%s\n", ftp_user);
-    configFile.println(F("# Contraseña FTP"));
-    configFile.printf("FTP_PASS=%s\n\n", ftp_pass);
 
     configFile.println(F("[END]"));
     configFile.close();
     
-    Serial.println(F("[INI] Guardado exitoso."));
+    Serial.println(F("[INI] Saved successfully."));
 }
 
 void mostrarPantallaConfigApp() {
     display->fillScreen(0);
     display->setTextSize(1);
-    printMenuCentrado("CONFIGURACION APP", 12, display->color565(0, 255, 255), offset);
+    printMenuCentrado("APP CONFIG", 12, display->color565(0, 255, 255), offset);
     display->flipDMABuffer();
 }
 
 // ====================================================================
-//                        GESTIÓN DE IDIOMAS
+//                        LANGUAGE MANAGEMENT
 // ====================================================================
 
-// Función para centrar texto automáticamente en paneles de 64px
+// Function to automatically center text on 64px panels
 void printMenuCentrado(const char* texto, int y, uint16_t color, int xOffset) {
     int numLetras = strlen(texto);
-    // Cada letra mide 6px de ancho
+    // Each character is 6px wide
     int xCalculada = (PANEL_RES_X - (numLetras * 6/2));
-    if (xCalculada < 0) xCalculada = 0; // Evitar salirse por la izquierda
+    if (xCalculada < 0) xCalculada = 0; // Prevent going off the left edge
     display->setCursor(xOffset + xCalculada, y);
     display->setTextColor(color);
     display->print(texto);
@@ -522,7 +510,7 @@ const char* msg(const char* seccion, const char* clave) {
         return valor;
     }
     
-    Serial.printf("[IDIOMA] No encontrada: %s -> %s\n", seccion, clave);
+    Serial.printf("[LANGUAGE] Not found: %s -> %s\n", seccion, clave);
     return "ErrorText"; 
 }
 
@@ -533,7 +521,7 @@ void cargarIdiomaMenu() {
         File file = SD.open(ruta);
         
         if (!file) {
-            Serial.print(F("[IDIOMA] Error: No existe ")); 
+            Serial.print(F("[LANGUAGE] Error: Does not exist ")); 
             Serial.println(ruta);
             return;
         }
@@ -542,35 +530,35 @@ void cargarIdiomaMenu() {
         file.close();
 
         if (error) {
-            Serial.print(F("[IDIOMA] Error deserializando: "));
+            Serial.print(F("[LANGUAGE] Deserialization error: "));
             Serial.println(error.c_str());
             
         } else {
-            idiomaDoc.shrinkToFit(); // Libera lo que no se usa del buffer reservado
+            idiomaDoc.shrinkToFit(); // Free unused space from the reserved buffer
             idiomaCargado = true;
-            Serial.println(F("[IDIOMA] Cargado exitosamente"));
+            Serial.println(F("[LANGUAGE] Loaded successfully"));
         }
     }
 }
 
 void liberarIdiomaMenu() {
     if (idiomaCargado) {
-        idiomaDoc.clear(); // Libera la memoria interna
+        idiomaDoc.clear(); // Free the internal memory
         idiomaCargado = false;
-        Serial.println(F("[IDIOMA] RAM liberada."));
+        Serial.println(F("[LANGUAGE] RAM freed."));
     }
 }
 
 // ====================================================================
-//                      FUNCIONES PARA MANDO IR
+//                      IR REMOTE FUNCTIONS
 // ====================================================================
 
 void chequearTimeoutMapeo() {
-    // Si estamos esperando un código IR (pasoMapeo != -1)
+    // If we are waiting for an IR code (pasoMapeo != -1)
     if (pasoMapeo != -1) {
         if (millis() - tiempoInicioMapeo >= TIMEOUT_MAPEO) {
-            // El dibujo en el panel (OSD) solo aplica si el mapeo se inició desde el menú físico.
-            // Si se inició desde la PWA, estadoActual no cambia y no tocamos la pantalla.
+            // Panel drawing (OSD) only applies if mapping was started from the physical menu.
+            // If it was started from the PWA, estadoActual does not change and we do not touch the display.
             if (estadoActual == ESTADO_SUBMENU_MAPEADO_IR) {
                 display->fillScreen(0);
                 printMenuCentrado("FAIL", 12, display->color565(255, 0, 0), offset);
@@ -578,8 +566,8 @@ void chequearTimeoutMapeo() {
                 delay(1000);
             }
 
-            Serial.println(F("[IR] Timeout: Cancelando mapeo por inactividad."));
-            pasoMapeo = -1;   // Cancelamos el modo mapeo
+            Serial.println(F("[IR] Timeout: Cancelling mapping due to inactivity."));
+            pasoMapeo = -1;   // Cancel mapping mode
 
             if (estadoActual == ESTADO_SUBMENU_MAPEADO_IR) {
                 dibujarMenuOSD();
@@ -590,10 +578,10 @@ void chequearTimeoutMapeo() {
 } 
 
 void gestionarMapeoIR(uint32_t codigoHex) {
-    // Si no hay ningún botón seleccionado para mapear, ignoramos
+    // If no button is selected for mapping, ignore it
     if (pasoMapeo < 0 || pasoMapeo > 7) return;
 
-    // Asignamos el código recibido a la variable global correspondiente
+    // Assign the received code to the corresponding global variable
     switch (pasoMapeo) {
         case 0: ir_btn_on    = codigoHex; break;
         case 1: ir_btn_off   = codigoHex; break;
@@ -605,15 +593,15 @@ void gestionarMapeoIR(uint32_t codigoHex) {
         case 7: ir_btn_bajar = codigoHex; break;
     }
 
-    // Feedback visual: mostramos un mensaje de confirmación
+    // Visual feedback: show a confirmation message
     display->fillScreen(0);
     printMenuCentrado("OK", 12, display->color565(0, 255, 0), offset);
     display->flipDMABuffer();
     
-    Serial.printf("[IR] Mapeado botón %d con código: %08X\n", pasoMapeo, codigoHex);
+    Serial.printf("[IR] Mapped button %d with code: %08X\n", pasoMapeo, codigoHex);
     
-    delay(1000); // Pausa para que el usuario vea la confirmación
-    pasoMapeo = -1; // Volvemos al modo navegación
+    delay(1000); // Pause so the user can see the confirmation
+    pasoMapeo = -1; // Return to navigation mode
     
     if (estadoActual == ESTADO_CONFIG_APP) {
         mostrarPantallaConfigApp();
@@ -623,8 +611,8 @@ void gestionarMapeoIR(uint32_t codigoHex) {
 }
 
 void procesarComandoIR(uint32_t codigoHex) {
-    // Capturamos siempre que haya un botón seleccionado para mapear (pasoMapeo != -1),
-    // venga del submenú OSD o de una petición /ir/learn desde la PWA.
+    // Always capture when a button is selected for mapping (pasoMapeo != -1),
+    // whether it comes from the OSD submenu or an /ir/learn request from the PWA.
     if (pasoMapeo != -1) {
         gestionarMapeoIR(codigoHex);
         return;
@@ -665,47 +653,47 @@ void leerControlRemoto() {
     if (IrReceiver.decode()) {
         uint32_t codigoRecibido = IrReceiver.decodedIRData.decodedRawData;
         
-        // Evitar procesar códigos vacíos o errores de lectura (0x0)
+        // Avoid processing empty codes or read errors (0x0)
         if (codigoRecibido != 0) {
             procesarComandoIR(codigoRecibido);
         }
         
-        IrReceiver.resume(); // Preparar el receptor para el siguiente código
+        IrReceiver.resume(); // Prepare the receiver for the next code
     }
 }
 
 void ajustarBrillo(int direccion) {
-    // 1. Convertimos el valor actual (0-255) a porcentaje (0-100)
+    // 1. Convert the current value (0-255) to a percentage (0-100)
     int br = (brightness * 100) / 255;
     
-    // 2. Aplicamos el paso de 5 en 5
+    // 2. Apply a step of 5
     br += (direccion * 5); 
     
-    // 3. Comportamiento cíclico, da la vuelta completa
-    if (br > 100) br = 5; // Si pasa de 100, salta al mínimo (5%)
-    if (br < 5) br = 100; // Si baja de 5, salta al máximo (100%)
+    // 3. Cyclic behavior, wrap around
+    if (br > 100) br = 5; // If it exceeds 100, wrap to the minimum (5%)
+    if (br < 5) br = 100; // If it goes below 5, wrap to the maximum (100%)
     
-    // 4. Convertimos de vuelta a escala 0-255
+    // 4. Convert back to the 0-255 scale
     brightness = (br * 255) / 100;
     
-    // 5. Aplicamos al panel
+    // 5. Apply to the panel
     display->setBrightness8(brightness);
 
-    // 6. Recargamos el menú
+    // 6. Redraw the menu
     menuNeedsRedraw = true;
     
-    Serial.printf("[BRILLO] Ajustado a: %d%% (%d/255)\n", br, brightness);
+    Serial.printf("[BRIGHTNESS] Set to: %d%% (%d/255)\n", br, brightness);
 }
 
 // ====================================================================
-//              FUNCIONES PARA EL MENÚ CONFIGURACIÓN
+//              CONFIGURATION MENU FUNCTIONS
 // ====================================================================
 void cargarNombresIdiomas() {
     listaIdiomas.clear();
     
     File root = SD.open("/idioma");
     if (!root || !root.isDirectory()) {
-        SD.mkdir("/idioma"); // Si no existe, la creamos
+        SD.mkdir("/idioma"); // If it does not exist, create it
         return;
     }
 
@@ -731,7 +719,7 @@ void cargarNombresPlaylists() {
     
     File root = SD.open("/playlists");
     if (!root || !root.isDirectory()) {
-        SD.mkdir("/playlists"); // Si no existe, la creamos
+        SD.mkdir("/playlists"); // If it does not exist, create it
         return;
     }
 
@@ -756,28 +744,28 @@ void gestionarBotonMenu() {
     bool lectura = (digitalRead(PIN_BOTON_MENU) == LOW);
     unsigned long ahora = millis();
 
-    // 1. SI EL BOTÓN SE SUELTA
+    // 1. WHEN THE BUTTON IS RELEASED
     if (!lectura) {
         if (botonPresionado) {
             unsigned long duracionFinal = ahora - tiempoPresionado;
             
-            // Si NO hemos llegado a activar el modo sueño (confirmadoExtraLargo)
+            // If sleep mode has NOT been activated (confirmadoExtraLargo)
             if (!confirmadoExtraLargo && !bloqueoPostSalida) {
 
-                // PULSACIÓN CORTA (< 1 segundo)
+                // SHORT PRESS (< 1 second)
                 if (duracionFinal > 50 && duracionFinal < 1000) {
                     
-                     // A. Si estamos en sueño despertamos
+                     // A. If sleeping, wake up
                     if (isSleeping) {
-                        toggleEnergia(false); // Despertar
+                        toggleEnergia(false); // Wake up
                         manualOverride = true;
                     }
-                    // B. Si estamos en GIF o Arcade -> Entrar al Menú Principal
+                    // B. If in GIF or Arcade mode -> Enter the Main Menu
                     else if (estadoActual == ESTADO_GIFS || estadoActual == ESTADO_ARCADE) {
                         ejecutarAccionConfirmar(); 
                     } 
                     else {
-                        // C. Si estamos DENTRO de un menú -> Navegar por las opciones
+                        // C. If INSIDE a menu -> Navigate through the options
                         ejecutarAccionNavegar(1);
                     }
                 }
@@ -788,7 +776,7 @@ void gestionarBotonMenu() {
         return;
     }
 
-    // 2. INICIO DE PULSACIÓN
+    // 2. BUTTON PRESS START
     if (bloqueoPostSalida) return; 
 
     if (!botonPresionado) {
@@ -799,11 +787,11 @@ void gestionarBotonMenu() {
         return;
     }
 
-    // 3. MIENTRAS ESTÁ PULSADO (ACCIONES POR TIEMPO)
+    // 3. WHILE HELD (TIME-BASED ACTIONS)
     unsigned long duracionActual = ahora - tiempoPresionado;
 
-    // --- MODO SUEÑO (2 SEGUNDOS) ---
-    // Solo desde la pantalla de GIFs/Arcade
+    // --- SLEEP MODE (2 SECONDS) ---
+    // Only from the GIF/Arcade screen
     if ((estadoActual == ESTADO_GIFS || estadoActual == ESTADO_ARCADE) && duracionActual >= 2000 && !confirmadoExtraLargo) {
         confirmadoExtraLargo = true;
         confirmadoLargo = true; 
@@ -812,13 +800,13 @@ void gestionarBotonMenu() {
         return;
     }
 
-    // --- CONFIRMAR DENTRO DE MENÚS (1 SEGUNDO) ---
-    // Mantenemos pulsado 1 segundo para entrar a submenús, guardar o salir.
+    // --- CONFIRM WITHIN MENUS (1 SECOND) ---
+    // Hold for 1 second to enter submenus, save, or exit.
     if (estadoActual != ESTADO_GIFS && estadoActual != ESTADO_ARCADE && duracionActual >= 1000 && !confirmadoLargo) {
         bool esCampoHora = (estadoActual == ESTADO_SUBMENU_TEMPORIZADOR && (cursorSubmenu == 1 || cursorSubmenu == 2));
         
         if (esCampoHora) {
-            ejecutarAccionConfirmar(); // Resta 5 min
+            ejecutarAccionConfirmar(); // Subtracts 5 min
             confirmadoLargo = true;
         } else {
             confirmadoLargo = true;
@@ -827,16 +815,16 @@ void gestionarBotonMenu() {
         }
     }
 
-    // --- AUTO-INCREMENTO (SUMAR 5 MINUTOS) ---
-    // Se activa después de 2 segundos para no chocar con la confirmación de restar
+    // --- AUTO-INCREMENT (ADD 5 MINUTES) ---
+    // Activates after 2 seconds to avoid conflicting with the subtract confirmation
     if (estadoActual == ESTADO_SUBMENU_TEMPORIZADOR && (cursorSubmenu == 1 || cursorSubmenu == 2) && duracionActual > 2000) {
         if (ahora - ultimoIncremento > 200) { 
-            if (cursorSubmenu == 1) { // Incrementar ON
+            if (cursorSubmenu == 1) { // Increment ON
                 mOn += 5;
                 if (mOn >= 60) { mOn = 0; hOn++; }
                 if (hOn >= 24) hOn = 0;
             } 
-            else if (cursorSubmenu == 2) { // Incrementar OFF
+            else if (cursorSubmenu == 2) { // Increment OFF
                 mOff += 5;
                 if (mOff >= 60) { mOff = 0; hOff++; }
                 if (hOff >= 24) hOff = 0;
@@ -861,7 +849,7 @@ void ejecutarAccionConfirmar() {
             break;
 
         case ESTADO_MENU_PRINCIPAL:
-            // Según donde esté el cursor, entramos a un submenú o salimos
+            // Depending on the cursor position, enter a submenu or exit
             if (cursorPrincipal == 0) { estadoActual = ESTADO_SUBMENU_PLAYLIST; cursorSubmenu = 0; }
             else if (cursorPrincipal == 1) { estadoActual = ESTADO_SUBMENU_REPRODUCCION; cursorSubmenu = 0; }
             else if (cursorPrincipal == 2) { estadoActual = ESTADO_SUBMENU_BRILLO; }
@@ -873,8 +861,8 @@ void ejecutarAccionConfirmar() {
             else if (cursorPrincipal == 8) { estadoActual = ESTADO_SUBMENU_ACTUALIZACION; cursorSubmenu = 0;}
             else if (cursorPrincipal == 9) { estadoActual = ESTADO_SUBMENU_FTP; cursorSubmenu = 0;}
             else if (cursorPrincipal == 10) { estadoActual = ESTADO_SUBMENU_IDIOMA; cursorSubmenu = 0;}
-            else if (cursorPrincipal == 11) { // GUARDAR Y SALIR
-                Serial.println(F("[MENU] Guardando ajustes..."));
+            else if (cursorPrincipal == 11) { // SAVE AND EXIT
+                Serial.println(F("[MENU] Saving settings..."));
                 guardarConfigIni(); 
                 guardarAjustesTimer();
         
@@ -885,7 +873,7 @@ void ejecutarAccionConfirmar() {
                     delay(1000);
                     ESP.restart();
                 } else {
-                    // Feedback visual: Parpadeo de confirmación
+                    // Visual feedback: Confirmation blink
                     for(int i = 0; i < 3; i++) { 
                         display->fillScreen(0); 
                         display->flipDMABuffer(); 
@@ -900,8 +888,8 @@ void ejecutarAccionConfirmar() {
                     saliendoAGifs = true;
                 }
 
-            }else if (cursorPrincipal ==12) { // SALIR SIN GUARDAR
-                // Feedback visual: Parpadeo de confirmación
+            }else if (cursorPrincipal ==12) { // EXIT WITHOUT SAVING
+                // Visual feedback: Confirmation blink
                 for(int i = 0; i < 3; i++) { 
                     display->fillScreen(0); 
                     display->flipDMABuffer(); 
@@ -910,10 +898,10 @@ void ejecutarAccionConfirmar() {
                     delay(80); 
                 }
 
-                Serial.println(F("[MENU] Saliendo sin guardar..."));
+                Serial.println(F("[MENU] Exiting without saving..."));
 
                 while(digitalRead(PIN_BOTON_MENU) == LOW) { delay(10); }
-                // Recargamos el archivo original de la SD para descartar cambios en memoria
+                // Reload the original file from the SD card to discard changes in memory
                 leerConfigIni();
                 liberarIdiomaMenu();
                 estadoActual = ESTADO_GIFS; 
@@ -923,19 +911,19 @@ void ejecutarAccionConfirmar() {
         break;
 
         case ESTADO_SUBMENU_PLAYLIST:
-            // Comprobamos si el cursor está sobre una Playlist real
+            // Check whether the cursor is on an actual playlist
             if (cursorSubmenu < listaPlaylists.size()) {       
-                // 1. Construir la ruta
+                // 1. Build the path
                 snprintf(playlistActiva, sizeof(playlistActiva),
                         "/playlists/%s.txt", listaPlaylists[cursorSubmenu].c_str());
         
-                // 2. Guardar en memoria permanente (Preferences)
+                // 2. Save to persistent storage (Preferences)
                 Preferences prefs;
                 prefs.begin("retro-lite", false);
                 prefs.putString("lastList", playlistActiva);
                 prefs.end();
         
-                // 3. Feedback visual: Parpadeo de confirmación
+                // 3. Visual feedback: Confirmation blink
                 for(int i = 0; i < 3; i++) { 
                     display->fillScreen(0); 
                     display->flipDMABuffer(); 
@@ -944,25 +932,25 @@ void ejecutarAccionConfirmar() {
                     delay(80); 
                 }
         
-                // 4. Resetear índices y salir a reproducir
+                // 4. Reset indices and exit to playback
                 while(digitalRead(PIN_BOTON_MENU) == LOW) { delay(10); }
                 liberarIdiomaMenu();
                 estadoActual = ESTADO_GIFS;
                 saliendoAGifs = true;
-                Serial.print(F("[PLAYLIST] Seleccionada: ")); 
+                Serial.print(F("[PLAYLIST] Selected: ")); 
                 Serial.println(playlistActiva);
             }else {
                 
                 estadoActual = ESTADO_MENU_PRINCIPAL;
-                Serial.println(F("[PLAYLIST] Volviendo al menú principal sin cambios."));
+                Serial.println(F("[PLAYLIST] Returning to main menu without changes."));
             }
         break;
 
         case ESTADO_SUBMENU_REPRODUCCION:
             if (cursorSubmenu == 0) {
-                modoVisual = !modoVisual; // Cambia entre 0 (GIFs) y 1 (Reloj)
+                modoVisual = !modoVisual; // Switches between 0 (GIFs) and 1 (Clock)
             } else if (cursorSubmenu == 1) {
-                randomMode = !randomMode; // Cambia entre 0 y 1
+                randomMode = !randomMode; // Switches between 0 and 1
             } else if (cursorSubmenu == 2) {
                 arcadeEnable++;
                 if (arcadeEnable > 3) arcadeEnable = 0; // 0=OFF, 1=Batocera, 2=Recalbox, 3=ReplayOS
@@ -977,7 +965,7 @@ void ejecutarAccionConfirmar() {
 
         case ESTADO_SUBMENU_WIFI:
             if (cursorSubmenu == 0) {
-                // Si estaba en 0 y lo pasamos a 1, activamos el reinicio
+                // If it was 0 and we change it to 1, enable the restart
                 if (!wifiEnable) { 
                     requiereReinicio = true; 
                 }
@@ -1005,7 +993,7 @@ void ejecutarAccionConfirmar() {
                 if (autoClockInt > 10) autoClockInt = 2;
             } else if (cursorSubmenu == 2) {
                 clockDuration += 5;
-                if (clockDuration > 30) clockDuration = 5; // Salto de 5s a 30s
+                if (clockDuration > 30) clockDuration = 5; // Wrap from 5s to 30s
             } else if (cursorSubmenu == 3) {
                 clockStyle++;
                 if (clockStyle > 5) clockStyle = 0;
@@ -1022,7 +1010,7 @@ void ejecutarAccionConfirmar() {
 
         case ESTADO_SUBMENU_TIEMPO:
             if (cursorSubmenu == 0) {
-                // Si estaba en 0 y lo pasamos a 1, activamos el reinicio
+                // If it was 0 and we change it to 1, enable the restart
                 if (!weatherEnable) { 
                     requiereReinicio = true; 
                 }
@@ -1035,17 +1023,17 @@ void ejecutarAccionConfirmar() {
         case ESTADO_SUBMENU_TEMPORIZADOR:
             if (cursorSubmenu == 0) {
                 timerEnable = !timerEnable;
-            }else if (cursorSubmenu == 1) { // --- RESTAR 5 min a ON ---
+            }else if (cursorSubmenu == 1) { // --- SUBTRACT 5 min FROM ON ---
                 if (mOn == 0) {
-                    mOn = 55; // Salta al último tramo de la hora anterior
+                    mOn = 55; // Wrap to the last part of the previous hour
                     if (hOn == 0) hOn = 23;
                     else hOn--;
                 } else {
                     mOn -= 5;
                 }
-            }else if (cursorSubmenu == 2) { // --- RESTAR 5 min a OFF ---
+            }else if (cursorSubmenu == 2) { // --- SUBTRACT 5 min FROM OFF ---
                 if (mOff == 0) {
-                    mOff = 55; // Salta al último tramo de la hora anterior
+                    mOff = 55; // Wrap to the last part of the previous hour
                     if (hOff == 0) hOff = 23;
                     else hOff--;
                 } else {
@@ -1059,10 +1047,10 @@ void ejecutarAccionConfirmar() {
         case ESTADO_SUBMENU_AVANZADO:
             if (cursorSubmenu == 0) {
                 i2sSpeed++; 
-                // Si llegamos a 20MHz (3) con Double Buffer, saltamos directamente a 8MHz (0)
+                // If we reach 20MHz (3) with Double Buffer enabled, jump directly to 8MHz (0)
                 if (i2sSpeed > 3 || (i2sSpeed == 3 && doubleBuff == true)) {
                 i2sSpeed = 0; 
-                if (doubleBuff) Serial.println(F("[SEGURIDAD] Saltando 20MHz por Double Buffer activo."));
+                if (doubleBuff) Serial.println(F("[SAFETY] Skipping 20MHz because Double Buffer is enabled."));
             }
             requiereReinicio = true;
             }else if (cursorSubmenu == 1) {
@@ -1070,10 +1058,10 @@ void ejecutarAccionConfirmar() {
                 requiereReinicio = true;
             }else if (cursorSubmenu == 2) {
                 doubleBuff = !doubleBuff;
-                // REGLA DE SEGURIDAD: Si activamos Double Buffer pero la velocidad es 20MHz (3)
+                // SAFETY RULE: If we enable Double Buffer while the speed is 20MHz (3)
                 if (doubleBuff == true && i2sSpeed == 3) {
-                    i2sSpeed = 2; // Bajamos automáticamente a 16MHz
-                    Serial.println(F("[SEGURIDAD] Doble Buffer activado. Bajando I2S a 16MHz para evitar reinicios."));
+                    i2sSpeed = 2; // Automatically lower to 16MHz
+                    Serial.println(F("[SAFETY] Double Buffer enabled. Lowering I2S to 16MHz to prevent reboots."));
                 }
                 requiereReinicio = true;
             }else if (cursorSubmenu == 3) {
@@ -1087,7 +1075,7 @@ void ejecutarAccionConfirmar() {
                 prefs.begin("retro-lite", false);
                 prefs.remove("lastList"); 
                 prefs.end();
-                ESP.restart(); // Reinicio inmediato para limpiar
+                ESP.restart(); // Immediate restart to clear
             }else if (cursorSubmenu == 6) {
                 estadoActual = ESTADO_MENU_PRINCIPAL;
             }             
@@ -1149,7 +1137,7 @@ void ejecutarAccionConfirmar() {
                 delay(3000);
                 Preferences prefs;
                 prefs.begin("sistema", false);
-                prefs.remove("idiomas_res"); // limpiamos resultado anterior
+                prefs.remove("idiomas_res"); // Clear previous result
                 prefs.remove("idiomas_ok");
                 prefs.putBool("idiomas_pending", true);
                 prefs.end();
@@ -1168,7 +1156,7 @@ void ejecutarAccionConfirmar() {
                 printMenuCentrado(msg("FTP", "iniciar"), 18, display->color565(255, 255, 255), offset);
                 display->flipDMABuffer();
 
-                Serial.println(F("[MENU] Activando Modo FTP y reiniciando..."));
+                Serial.println(F("[MENU] Enabling FTP Mode and restarting..."));
 
                 Preferences prefs;
                 prefs.begin("sistema", false);
@@ -1186,17 +1174,17 @@ void ejecutarAccionConfirmar() {
             if (cursorSubmenu < listaIdiomas.size()) {
                 strlcpy(idiomaActivo, listaIdiomas[cursorSubmenu].c_str(), sizeof(idiomaActivo));
         
-                // Liberamos el JSON actual y cargamos el nuevo para que el menú cambie al instante
+                // Free the current JSON and load the new one so the menu changes immediately
                 liberarIdiomaMenu();
                 cargarIdiomaMenu();
         
-                // Guardar en Preferences para que persista al reiniciar
+                // Save to Preferences so it persists after reboot
                 Preferences prefs;
                 prefs.begin("retro-lite", false);
                 prefs.putString("lang", idiomaActivo);
                 prefs.end();
         
-                // Feedback visual
+                // Visual feedback
                 for(int i = 0; i < 3; i++) { 
                     display->fillScreen(0); display->flipDMABuffer(); delay(80); 
                     dibujarMenuOSD(); delay(80); 
@@ -1208,7 +1196,7 @@ void ejecutarAccionConfirmar() {
             }
             break;
         default:
-            // En los demás submenús, una pulsación larga vuelve al menú principal
+            // In the other submenus, a long press returns to the main menu
             estadoActual = ESTADO_MENU_PRINCIPAL;
             break;
     }
@@ -1223,7 +1211,7 @@ void  ejecutarAccionNavegar(int paso) {
 
     switch (estadoActual) {
         case ESTADO_GIFS:
-            // Un toque corto mientras hay GIFs también abre el menú
+            // A short press while GIFs are playing also opens the menu
             interrumpirReproduccion = true;
             cargarNombresPlaylists();
             cargarNombresIdiomas();
@@ -1253,11 +1241,11 @@ void  ejecutarAccionNavegar(int paso) {
         case ESTADO_SUBMENU_BRILLO:
         {
             int br = (brightness * 100) / 255;
-            // Aquí el brillo sube o baja de 5 en 5 según el botón pulsado
+            // Brightness increases or decreases in steps of 5 depending on the button pressed
             br += (paso * 5); 
-            // Comportamiento ciclico, da la vuelta completa
-            if (br > 100) br = 5; // Si pasa de 100, vuelve al mínimo
-            if (br < 5) br = 100; // Si baja de 5, salta al máximo
+            // Cyclic behavior, wrap around
+            if (br > 100) br = 5; // If it exceeds 100, wrap to the minimum
+            if (br < 5) br = 100; // If it goes below 5, wrap to the maximum
             brightness = (br * 255) / 100;
             display->setBrightness8(brightness);
         }    
@@ -1282,20 +1270,20 @@ void  ejecutarAccionNavegar(int paso) {
             break;
 
         case ESTADO_SUBMENU_TEMPORIZADOR:
-            // Si intentamos "Subir" (paso -1) estando en las filas de tiempo (1 o 2)
+            // If we try "Up" (step -1) while on the time rows (1 or 2)
             if (paso == -1 && (cursorSubmenu == 1 || cursorSubmenu == 2)) {
-                if (cursorSubmenu == 1) { // Fila ON
+                if (cursorSubmenu == 1) { // ON row
                     mOn += 5;
                     if (mOn >= 60) { mOn = 0; hOn++; }
                     if (hOn >= 24) hOn = 0;
-                } else { // Fila OFF
+                } else { // OFF row
                     mOff += 5;
                     if (mOff >= 60) { mOff = 0; hOff++; }
                     if (hOff >= 24) hOff = 0;
                 }
-                // No movemos el cursor, solo actualizamos el valor
+                // Do not move the cursor, only update the value
             } else {
-                // En cualquier otro caso
+                // In any other case
                 cursorSubmenu += paso;
             if (cursorSubmenu > 3) cursorSubmenu = 0;
             if (cursorSubmenu < 0) cursorSubmenu = 3;
@@ -1338,11 +1326,11 @@ void  ejecutarAccionNavegar(int paso) {
 }
 
 // ====================================================================
-//                       MOTOR DE DIBUJO OSD 
+//                       OSD DRAWING ENGINE 
 // ====================================================================
 void dibujarMenuOSD() {
 
-    // Si estamos esperando una pulsación del mando, mostramos pantalla de espera
+    // If we are waiting for an IR remote button press, show the waiting screen
     if (pasoMapeo != -1) {
         display->fillScreen(0);
         printMenuCentrado(msg("SUBMENU_MAPEADO_IR", "pulsar"), 12, display->color565(255, 255, 0), offset);
@@ -1350,51 +1338,51 @@ void dibujarMenuOSD() {
         return; 
     }
 
-    display->fillScreen(0); // Fondo negro limpio
-    display->setTextSize(1); // forzamos tamaño del texto a 1 por si venimos del modo Texto
+    display->fillScreen(0); // Clean black background
+    display->setTextSize(1); // Force text size to 1 in case we are coming from Text mode
 
-    // Buffer para construir títulos dinámicos con paginación
+    // Buffer for building dynamic titles with pagination
     char titleBuf[32]; 
 
     // ----------------------------------------------------------------
-    // 1. DIBUJO DEL MENÚ PRINCIPAL
+    // 1. DRAW MAIN MENU
     // ----------------------------------------------------------------
     if (estadoActual == ESTADO_MENU_PRINCIPAL) {
         
-        // Lógica de Paginación (3 ítems por página)
+        // Pagination logic (3 items per page)
         int pagina = cursorPrincipal / 3; 
         int primerItem = pagina * 3;
 
-        // Título con centrado automático. Usa el espacio del JSON (ej: "MENU PRINCIPAL ") y añade la página
+        // Title with automatic centering. Uses the JSON text (e.g. "MENU PRINCIPAL ") and adds the page number
         snprintf(titleBuf, sizeof(titleBuf), "%s%d/5", msg("MENU", "titulo"), pagina + 1);
         printMenuCentrado(titleBuf, 0, display->color565(0, 255, 255), offset);
-        display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100)); // Separador
+        display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100)); // Separator
 
-        // Dibujar los 3 ítems de la página actual
+        // Draw the 3 items on the current page
         for (int i = 0; i < 3; i++) {
             int itemIndex = primerItem + i;
-            if (itemIndex > 12) break; // Tenemos 13 opciones (0 a 12)
+            if (itemIndex > 12) break; // There are 13 options (0 to 12)
 
             int yPos = 9 + (i * 8);
 
-            // Dibujar el Cursor '>'
+            // Draw the '>' cursor
             if (cursorPrincipal == itemIndex) {
-                display->setTextColor(display->color565(255, 255, 0)); // Amarillo para la selección
+                display->setTextColor(display->color565(255, 255, 0)); // Yellow for the selection
                 display->setCursor(offset + 2, yPos);
                 display->print(">");
-                display->setTextColor(display->color565(255, 255, 255)); // Blanco para el texto seleccionado
+                display->setTextColor(display->color565(255, 255, 255)); // White for the selected text
             } else {
-                display->setTextColor(display->color565(150, 150, 150)); // Gris para los no seleccionados
+                display->setTextColor(display->color565(150, 150, 150)); // Gray for unselected items
             }
 
             display->setCursor(offset + 10, yPos);
 
-            // Nombres e Indicadores Rápidos
+            // Names and Quick Indicators
             switch (itemIndex) {
                 case 0: display->print(msg("MENU", "playlists")); break;
                 case 1: display->print(msg("MENU", "reproduccion")); break;
                 case 2: 
-                    // El JSON ya incluye "Brillo: "
+                    // The JSON already includes "Brightness: "
                     display->printf("%s%d%%", msg("MENU", "brillo"), (brightness * 100) / 255); 
                     break;
                 case 3: display->printf("%s[%s]", msg("MENU", "wifi"), wifiEnable ? msg("ESTADOS", "on") : msg("ESTADOS", "off")); break;
@@ -1411,10 +1399,10 @@ void dibujarMenuOSD() {
         }
     }
     // ----------------------------------------------------------------
-    // 2. DIBUJO SUBMENÚ: PLAYLISTS 
+    // 2. DRAW SUBMENU: PLAYLISTS 
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_PLAYLIST) {
-        // Título con centrado automático
+        // Title with automatic centering
         printMenuCentrado(msg("SUBMENU_PLAYLIST", "titulo"), 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
 
@@ -1445,12 +1433,12 @@ void dibujarMenuOSD() {
         }
     }
     // ----------------------------------------------------------------
-    // 3. DIBUJO SUBMENÚ: REPRODUCCIÓN
+    // 3. DRAW SUBMENU: PLAYBACK
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_REPRODUCCION) {
          int pagReproduccion = cursorSubmenu / 3; 
 
-         // Título con centrado automático y paginado
+         // Title with automatic centering y paginado
         snprintf(titleBuf, sizeof(titleBuf), "%s%d/3", msg("SUBMENU_REPRODUCCION", "titulo"), pagReproduccion + 1);
         printMenuCentrado(titleBuf, 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
@@ -1463,11 +1451,11 @@ void dibujarMenuOSD() {
             int yPos = 9 + (i * 8);
 
             if (cursorSubmenu == itemIndex) {
-                display->setTextColor(display->color565(255, 255, 0)); // Cursor Amarillo
+                display->setTextColor(display->color565(255, 255, 0)); // Yellow cursor
                 display->setCursor(offset + 2, yPos); display->print(">");
-                display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+                display->setTextColor(display->color565(255, 255, 255)); // White text
             } else {
-                display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+                display->setTextColor(display->color565(150, 150, 150)); // Gray text
                 display->setCursor(offset + 2, yPos); display->print(" ");
             }
 
@@ -1478,7 +1466,7 @@ void dibujarMenuOSD() {
                 case 2: 
                     {
                         const char* nombresArcade[] = {"OFF", "Batocera", "Recalbox", "ReplayOS"};
-                        // Aseguramos que el índice no se salga del array por seguridad
+                        // Ensure the index stays within the array bounds for safety
                         int indexArcade = (arcadeEnable >= 0 && arcadeEnable <= 3) ? arcadeEnable : 0;
                         display->printf("%s%s", msg("SUBMENU_REPRODUCCION", "arcade"), nombresArcade[indexArcade]);
                     }
@@ -1490,10 +1478,10 @@ void dibujarMenuOSD() {
         
     }
     // ----------------------------------------------------------------
-    // 4. DIBUJO SUBMENÚ: BRILLO
+    // 4. DRAW SUBMENU: BRIGHTNESS
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_BRILLO) {
-        // Título con centrado automático
+        // Title with automatic centering
         printMenuCentrado(msg("SUBMENU_BRILLO", "titulo"), 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
 
@@ -1502,31 +1490,31 @@ void dibujarMenuOSD() {
         display->setCursor(offset + 55, 10);
         display->printf("%d%%", porcentaje);
 
-        // Dibujo de la Barra de Progreso
-        int anchoBarra = 108; // Ancho total de la barra en píxeles
+        // Draw the progress bar
+        int anchoBarra = 108; // Total bar width in pixels
         int xBarra = offset + 10;
         int yBarra = 18;
-        int hBarra = 4; // Alto de la barra
+        int hBarra = 4; // Bar height
 
-        // Borde de la barra (Gris oscuro)
+        // Bar border (Dark gray)
         display->drawRect(xBarra, yBarra, anchoBarra, hBarra, display->color565(50, 50, 50));
 
-        // Relleno de la barra según porcentaje
+        // Fill the bar according to the percentage
         int relleno = (porcentaje * (anchoBarra - 2)) / 100;
-        display->fillRect(xBarra + 1, yBarra + 1, relleno, hBarra - 2, display->color565(0, 255, 0)); // Verde
+        display->fillRect(xBarra + 1, yBarra + 1, relleno, hBarra - 2, display->color565(0, 255, 0)); // Green
         
-        // Info en la parte inferior
+        // Information at the bottom
         display->setCursor(offset + 10, 25); 
         display->setTextColor(display->color565(150, 150, 150));
         display->print(msg("SUBMENU_BRILLO", "click_ok"));
     }
     // ----------------------------------------------------------------
-    // 5. DIBUJO SUBMENÚ: WIFI
+    // 5. DRAW SUBMENU: WIFI
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_WIFI) {
         int pagWifi = cursorSubmenu / 3;
 
-        // Título con centrado automático
+        // Title with automatic centering
         snprintf(titleBuf, sizeof(titleBuf), "%s%d/2", msg("SUBMENU_WIFI", "titulo"), pagWifi + 1);
         printMenuCentrado(titleBuf, 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
@@ -1538,11 +1526,11 @@ void dibujarMenuOSD() {
             int yPos = 9 + (i * 8);
 
             if (cursorSubmenu == itemIndex) {
-                display->setTextColor(display->color565(255, 255, 0));  // Cursor Amarillo
+                display->setTextColor(display->color565(255, 255, 0));  // Yellow cursor
                 display->setCursor(offset + 2, yPos); display->print(">");
-                display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+                display->setTextColor(display->color565(255, 255, 255)); // White text
             } else {
-                display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+                display->setTextColor(display->color565(150, 150, 150)); // Gray text
                 display->setCursor(offset + 2, yPos); display->print(" ");
             }
 
@@ -1558,12 +1546,12 @@ void dibujarMenuOSD() {
      
     }
     // ----------------------------------------------------------------
-    // 6. DIBUJO SUBMENÚ: RELOJ
+    // 6. DRAW SUBMENU: CLOCK
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_RELOJ) {
         int pagReloj = cursorSubmenu / 3;
 
-        // Título con centrado automático
+        // Title with automatic centering
         snprintf(titleBuf, sizeof(titleBuf), "%s%d/2", msg("SUBMENU_RELOJ", "titulo"), pagReloj + 1);
         printMenuCentrado(titleBuf, 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
@@ -1571,15 +1559,15 @@ void dibujarMenuOSD() {
         int inicio = pagReloj * 3;
         for (int i = 0; i < 3; i++) {
             int itemIndex = inicio + i;
-            if (itemIndex > 6) break; // Total 7 opciones (0 a 6)
+            if (itemIndex > 6) break; // Total of 7 options (0 to 6)
             int yPos = 9 + (i * 8);
             
             if (cursorSubmenu == itemIndex) {
-                display->setTextColor(display->color565(255, 255, 0));  // Cursor Amarillo
+                display->setTextColor(display->color565(255, 255, 0));  // Yellow cursor
                 display->setCursor(offset + 2, yPos); display->print(">");
-                display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+                display->setTextColor(display->color565(255, 255, 255)); // White text
             } else {
-                display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+                display->setTextColor(display->color565(150, 150, 150)); // Gray text
                 display->setCursor(offset + 2, yPos); display->print(" ");
             }
 
@@ -1606,46 +1594,46 @@ void dibujarMenuOSD() {
         }
     }
     // ----------------------------------------------------------------
-    // 7. DIBUJO SUBMENÚ: TIEMPO
+    // 7. DRAW SUBMENU: WEATHER
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_TIEMPO) {
-        // Título con centrado automático
+        // Title with automatic centering
         printMenuCentrado(msg("SUBMENU_CLIMA", "titulo"), 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
 
-        // Opción: Activar
+        // Option: Enable
         int y0 = 13;
         if (cursorSubmenu == 0) {
-            display->setTextColor(display->color565(255, 255, 0)); // Cursor Amarillo
+            display->setTextColor(display->color565(255, 255, 0)); // Yellow cursor
             display->setCursor(offset + 2, y0); display->print(">");
-            display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+            display->setTextColor(display->color565(255, 255, 255)); // White text
         } else {
-            display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+            display->setTextColor(display->color565(150, 150, 150)); // Gray text
             display->setCursor(offset + 2, y0); display->print(" ");
         }
         display->setCursor(offset + 10, y0);
         display->printf("%s: %s", msg("ESTADOS", "activar"), (weatherEnable ? msg("ESTADOS", "si") : msg("ESTADOS", "no")));
 
-        // Opción: Volver
+        // Option: Back
         int y1 = 23;
         if (cursorSubmenu == 1) {
-            display->setTextColor(display->color565(255, 255, 0)); // Cursor Amarillo
+            display->setTextColor(display->color565(255, 255, 0)); // Yellow cursor
             display->setCursor(offset + 2, y1); display->print(">");
-            display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+            display->setTextColor(display->color565(255, 255, 255)); // White text
         } else {
-            display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+            display->setTextColor(display->color565(150, 150, 150)); // Gray text
             display->setCursor(offset + 2, y1); display->print(" ");
         }
         display->setCursor(offset + 10, y1);
         display->print(msg("ESTADOS", "volver"));
     }
     // ----------------------------------------------------------------
-    // 8. DIBUJO SUBMENÚ: TEMPORIZADOR
+    // 8. DRAW SUBMENU: TIMER
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_TEMPORIZADOR) {
         int pagTimer = cursorSubmenu / 3; 
         
-        // Título con centrado automático y paginado
+        // Title with automatic centering y paginado
         snprintf(titleBuf, sizeof(titleBuf), "%s%d/2", msg("SUBMENU_TEMPORIZADOR", "titulo"), pagTimer + 1);
         printMenuCentrado(titleBuf, 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
@@ -1658,30 +1646,30 @@ void dibujarMenuOSD() {
             int yPos = 9 + (i * 8);
 
             if (cursorSubmenu == itemIndex) {
-                display->setTextColor(display->color565(255, 255, 0)); // Cursor Amarillo
+                display->setTextColor(display->color565(255, 255, 0)); // Yellow cursor
                 display->setCursor(offset + 2, yPos); display->print(">");
-                display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+                display->setTextColor(display->color565(255, 255, 255)); // White text
             } else {
-                display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+                display->setTextColor(display->color565(150, 150, 150)); // Gray text
                 display->setCursor(offset + 2, yPos); display->print(" ");
             }
 
             display->setCursor(offset + 10, yPos);
             switch (itemIndex) {
                 case 0: display->printf("%s: %s", msg("ESTADOS", "activar"), (timerEnable ? msg("ESTADOS", "si") : msg("ESTADOS", "no"))); break;
-                case 1: display->printf("ON:  %02d:%02d", hOn, mOn); break; // Texto fijo NO esta en JSON
-                case 2: display->printf("OFF: %02d:%02d", hOff, mOff); break; // Texto fijo NO esta en JSON
+                case 1: display->printf("ON:  %02d:%02d", hOn, mOn); break; // Fixed text is NOT in JSON
+                case 2: display->printf("OFF: %02d:%02d", hOff, mOff); break; // Fixed text is NOT in JSON
                 case 3: display->print(msg("ESTADOS", "volver")); break;
             }
         }
     }
     // ----------------------------------------------------------------
-    // 9. DIBUJO SUBMENÚ: AVANZADO
+    // 9. DRAW SUBMENU: ADVANCED
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_AVANZADO) {
         int pagAv = cursorSubmenu / 3; 
         
-        // Título con centrado automático y paginado
+        // Title with automatic centering y paginado
         snprintf(titleBuf, sizeof(titleBuf), "%s%d/3", msg("SUBMENU_AVANZADO", "titulo"), pagAv + 1);
         printMenuCentrado(titleBuf, 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
@@ -1694,11 +1682,11 @@ void dibujarMenuOSD() {
             int yPos = 9 + (i * 8);
             
             if (cursorSubmenu == itemIndex) {
-                display->setTextColor(display->color565(255, 255, 0)); // Cursor Amarillo
+                display->setTextColor(display->color565(255, 255, 0)); // Yellow cursor
                 display->setCursor(offset + 2, yPos); display->print(">");
-                display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+                display->setTextColor(display->color565(255, 255, 255)); // White text
             } else {
-                display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+                display->setTextColor(display->color565(150, 150, 150)); // Gray text
                 display->setCursor(offset + 2, yPos); display->print(" ");
             }
 
@@ -1718,13 +1706,13 @@ void dibujarMenuOSD() {
         }
     }
     // ----------------------------------------------------------------
-    // 9.1.  DIBUJO SUBMENÚ: AVANZADO -> MAPEADO IR
+    // 9.1.  DRAW SUBMENU: ADVANCED -> IR MAPPING
     // ----------------------------------------------------------------
     if (estadoActual == ESTADO_SUBMENU_MAPEADO_IR) {
         
         int pagAv = cursorSubmenu / 3; 
         
-        // Título con centrado automático y paginado
+        // Title with automatic centering y paginado
         snprintf(titleBuf, sizeof(titleBuf), "%s%d/3", msg("SUBMENU_MAPEADO_IR", "titulo"), pagAv + 1);
         printMenuCentrado(titleBuf, 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
@@ -1737,11 +1725,11 @@ void dibujarMenuOSD() {
             int yPos = 9 + (i * 8);
             
             if (cursorSubmenu == itemIndex) {
-                display->setTextColor(display->color565(255, 255, 0)); // Cursor Amarillo
+                display->setTextColor(display->color565(255, 255, 0)); // Yellow cursor
                 display->setCursor(offset + 2, yPos); display->print(">");
-                display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+                display->setTextColor(display->color565(255, 255, 255)); // White text
             } else {
-                display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+                display->setTextColor(display->color565(150, 150, 150)); // Gray text
                 display->setCursor(offset + 2, yPos); display->print(" ");
             }
 
@@ -1760,12 +1748,12 @@ void dibujarMenuOSD() {
         }
     }
     // ----------------------------------------------------------------
-    // 10. DIBUJO SUBMENÚ: ACTUALIZACIÓN
+    // 10. DRAW SUBMENU: UPDATE
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_ACTUALIZACION) {
         int pagOTA = cursorSubmenu / 3;
 
-        // Título con centrado automático
+        // Title with automatic centering
         snprintf(titleBuf, sizeof(titleBuf), msg("SUBMENU_ACTUALIZACION", "titulo"));
         printMenuCentrado(titleBuf, 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
@@ -1777,11 +1765,11 @@ void dibujarMenuOSD() {
             int yPos = 9 + (i * 8);
 
             if (cursorSubmenu == itemIndex) {
-                display->setTextColor(display->color565(255, 255, 0));  // Cursor Amarillo
+                display->setTextColor(display->color565(255, 255, 0));  // Yellow cursor
                 display->setCursor(offset + 2, yPos); display->print(">");
-                display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+                display->setTextColor(display->color565(255, 255, 255)); // White text
             } else {
-                display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+                display->setTextColor(display->color565(150, 150, 150)); // Gray text
                 display->setCursor(offset + 2, yPos); display->print(" ");
             }
 
@@ -1794,32 +1782,32 @@ void dibujarMenuOSD() {
         }
     }
     // ----------------------------------------------------------------
-    // 11. DIBUJO SUBMENÚ: FTP
+    // 11. DRAW SUBMENU: FTP
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_FTP) {
-        // Título con centrado automático
+        // Title with automatic centering
         printMenuCentrado(msg("SUBMENU_FTP", "titulo"), 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
 
-        // Opción: Estado
+        // Option: Status
         int y0 = 13;
         if (cursorSubmenu == 0) {
-            display->setTextColor(display->color565(255, 255, 0)); // Cursor Amarillo
+            display->setTextColor(display->color565(255, 255, 0)); // Yellow cursor
             display->setCursor(offset + 2, y0); display->print(">");
-            display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+            display->setTextColor(display->color565(255, 255, 255)); // White text
         } else {
-            display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+            display->setTextColor(display->color565(150, 150, 150)); // Gray text
             display->setCursor(offset + 2, y0); display->print(" "); 
         }
         display->setCursor(offset + 10, y0);
         display->printf(msg("SUBMENU_FTP", "activar"));
 
-        // Opción: Volver
+        // Option: Back
         int y1 = 23;
         if (cursorSubmenu == 1) {
-            display->setTextColor(display->color565(255, 255, 0)); // Cursor Amarillo
-            display->setCursor(offset + 2, y1); display->print(">"); // Texto Blanco
-            display->setTextColor(display->color565(255, 255, 255)); // Texto Gris
+            display->setTextColor(display->color565(255, 255, 0)); // Yellow cursor
+            display->setCursor(offset + 2, y1); display->print(">"); // White text
+            display->setTextColor(display->color565(255, 255, 255)); // Gray text
         } else {
             display->setTextColor(display->color565(150, 150, 150)); 
             display->setCursor(offset + 2, y1); display->print(" ");
@@ -1828,10 +1816,10 @@ void dibujarMenuOSD() {
         display->print(msg("ESTADOS", "volver"));
     }
     // ----------------------------------------------------------------
-    // 12. DIBUJO SUBMENÚ: IDIOMA
+    // 12. DRAW SUBMENU: LANGUAGE
     // ----------------------------------------------------------------
     else if (estadoActual == ESTADO_SUBMENU_IDIOMA) {
-        // Título con centrado automático
+        // Title with automatic centering
         printMenuCentrado(msg("SUBMENU_IDIOMA", "titulo"), 0, display->color565(0, 255, 255), offset);
         display->drawLine(offset, 7, offset + offset, 7, display->color565(100, 100, 100));
 
@@ -1845,11 +1833,11 @@ void dibujarMenuOSD() {
 
             int yPos = 9 + (i * 8);
             if (cursorSubmenu == itemIndex) {
-                display->setTextColor(display->color565(255, 255, 0)); // Cursor Amarillo
+                display->setTextColor(display->color565(255, 255, 0)); // Yellow cursor
                 display->setCursor(offset + 2, yPos); display->print(">");
-                display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+                display->setTextColor(display->color565(255, 255, 255)); // White text
             } else {
-                display->setTextColor(display->color565(150, 150, 150)); // Texto Gris
+                display->setTextColor(display->color565(150, 150, 150)); // Gray text
                 display->setCursor(offset + 2, yPos); display->print(" ");
             }
 
@@ -1862,7 +1850,7 @@ void dibujarMenuOSD() {
         }
     }
 
-    display->flipDMABuffer(); // Volcamos a los LEDs
+    display->flipDMABuffer(); // Send the buffer to the LEDs
 }
 
 // ====================================================================
@@ -1933,7 +1921,7 @@ static int32_t GIFSeekFile(GIFFILE *pFile, int32_t iPosition) {
 }
 
 // ====================================================================
-//                     FUNCIONES RELOJ LITE
+//                     LITE CLOCK FUNCTIONS
 // ====================================================================
 uint16_t hsvTo565(uint16_t h, uint8_t s, uint8_t v) {
     float fH = h / 60.0; float fS = s / 255.0; float fV = v / 255.0;
@@ -1966,12 +1954,12 @@ void mostrarRelojLite(bool conTransicion = false) {
     char lastTimeStr[9] = "";
     unsigned long lastColorMs = 0;
 
-    // Solo los estilos animados necesitan actualizarse más de 1Hz
+    // Only animated styles need to update faster than 1Hz
     // 1=Aurora 2=Rainbow, 4=Fuego, 5=Glitch
     const bool esAnimado = (clockStyle == 1 || clockStyle == 2 || clockStyle == 4 ||
                             clockStyle == 5);
 
-    // TRANSICIÓN DE ENTRADA (GIF → RELOJ)
+    // ENTRANCE TRANSITION (GIF → CLOCK)
     if (conTransicion) transicionParticulasFormanRelojLite();
 
     unsigned long startTime = millis(); 
@@ -2058,7 +2046,7 @@ void mostrarRelojLite(bool conTransicion = false) {
             } else if (colorCambio) {
                 uint32_t ms = millis();
                 for (int i = 0; i < 8; i++) {
-                    if (fullTimeStr[i] < '0' || fullTimeStr[i] > '9') continue; // el dos puntos no varía
+                    if (fullTimeStr[i] < '0' || fullTimeStr[i] > '9') continue; // the colon does not change
                     int xPos = startX + (i * 16);
                     uint16_t color;
                     switch (clockStyle) {
@@ -2085,7 +2073,7 @@ void mostrarRelojLite(bool conTransicion = false) {
                                 color = display->color565(0, verde, 40);
                             }
                         } break;
-                        default: continue; // otros estilos no animan — no hace falta redibuja aquí
+                        default: continue; // other styles are not animated — no redraw needed here
                     }
                     drawCustomChar(xPos, startY, fullTimeStr[i] - '0', color, 3);
                 }
@@ -2096,52 +2084,52 @@ void mostrarRelojLite(bool conTransicion = false) {
 
         delay(esAnimado ? 16 : 50);
     }
-    // TRANSICIÓN DE SALIDA (RELOJ → GIF)
+    // EXIT TRANSITION (CLOCK → GIF)
     if (conTransicion && !interrumpirReproduccion) transicionRelojDispersaLite();
 }
 
 void dibujarBarraNotificacionesLite() {
     if (weatherEnable == 0 || !weatherDataReady) return;
 
-    // 1. Selección de Icono y Color según el código de OpenWeatherMap
+    // 1. Select icon and color according to the OpenWeatherMap code
     uint16_t colorClima;
     const unsigned char* iconToDraw;
 
     if (weatherConditionCode >= 200 && weatherConditionCode < 300) {
-        iconToDraw = icon_storm; colorClima = display->color565(200, 0, 200); // Tormenta
+        iconToDraw = icon_storm; colorClima = display->color565(200, 0, 200); // Storm
     } else if (weatherConditionCode >= 300 && weatherConditionCode < 600) {
-        iconToDraw = icon_rain;  colorClima = display->color565(0, 100, 255); // Lluvia
+        iconToDraw = icon_rain;  colorClima = display->color565(0, 100, 255); // Rain
     } else if (weatherConditionCode >= 600 && weatherConditionCode < 700) {
-        iconToDraw = icon_snow;  colorClima = display->color565(255, 255, 255); // Nieve
+        iconToDraw = icon_snow;  colorClima = display->color565(255, 255, 255); // Snow
     } else if (weatherConditionCode >= 700 && weatherConditionCode < 800) {
-        iconToDraw = icon_fog;   colorClima = display->color565(180, 180, 200); // Niebla
+        iconToDraw = icon_fog;   colorClima = display->color565(180, 180, 200); // Fog
     } else if (weatherConditionCode == 800) {
         if (isNight) {
-            iconToDraw = icon_moon;   colorClima = display->color565(200, 200, 255); // Luna;
+            iconToDraw = icon_moon;   colorClima = display->color565(200, 200, 255); // Moon;
         } else {
-        iconToDraw = icon_sun;   colorClima = display->color565(255, 255, 0); // Sol
+        iconToDraw = icon_sun;   colorClima = display->color565(255, 255, 0); // Sun
         }
     } else {
-        iconToDraw = icon_cloud; colorClima = display->color565(180, 180, 180); // Nubes
+        iconToDraw = icon_cloud; colorClima = display->color565(180, 180, 180); // Clouds
     }
     
 
-    // 2. Dibujar el Mensaje del .ini (Game Room) a la izquierda
-    display->setFont(NULL); // Fuente estándar 5x7
+    // 2. Draw the .ini message (Game Room) on the left
+    display->setFont(NULL); // Standard 5x7 font
     display->setTextSize(1);
     display->setCursor(offset + 2, 0);
-    display->setTextColor(display->color565(200, 200, 200)); // Gris claro
+    display->setTextColor(display->color565(200, 200, 200)); // Light gray
     display->print(weatherCustomMsg); 
 
-    // 3. Dibujar Icono Bitmap (en la posición 97 del panel)
+    // 3. Draw bitmap icon (at panel position 97)
     display->drawBitmap(offset + 97, 0, iconToDraw, 8, 8, colorClima);
 
-    // 4. Dibujar Temperatura
+    // 4. Draw temperature
     display->setTextColor(display->color565(200, 200, 200));
     display->setCursor(offset + 107, 0); 
-    display->print((int)currentTemp); // (int) para quitar decimales y ahorrar espacio
+    display->print((int)currentTemp); // (int) removes decimals to save space
     
-    // Símbolo de grado (pequeño cuadrado 2x2) y la "C"
+    // Degree symbol (small 2x2 square) and the "C"
     display->drawRect(offset + 119, 0, 2, 2, display->color565(200, 200, 200));
     display->setCursor(offset + 122, 0);
     display->print("C");
@@ -2150,18 +2138,18 @@ void dibujarBarraNotificacionesLite() {
 void actualizarClimaLite() {
     if (WiFi.status() != WL_CONNECTED) return; 
     
-    // 1. Codificación para URL
+    // 1. URL encoding
     String encodedCity = weatherCity;
     encodedCity.replace(" ", "%20");
 
     HTTPClient http;
-    // 2. Timeout preventivo para el Core 3-X
+    // 2. Preventive timeout for the Core 3-X
     http.setTimeout(5000); 
 
     String url = "http://api.openweathermap.org/data/2.5/weather?q=" + encodedCity + "&appid=" + weatherKey + "&units=metric";
     
-    Serial.println(F("[CLIMA] Conectando a OpenWeatherMap..."));
-    Serial.print(F("[CLIMA] URL: ")); Serial.println(url);
+    Serial.println(F("[WEATHER] Connecting to OpenWeatherMap..."));
+    Serial.print(F("[WEATHER] URL: ")); Serial.println(url);
 
     if (http.begin(url)) {
         int httpCode = http.GET();
@@ -2187,7 +2175,7 @@ void actualizarClimaLite() {
                 isNight = (iconCode != nullptr && iconCode[strlen(iconCode) - 1] == 'n');
 
                 weatherDataReady = true;
-                Serial.printf(PSTR("[OK] %.1f°C, ID: %d, Noche: %s\n"), currentTemp, weatherConditionCode, isNight ? "SI" : "NO");
+                Serial.printf(PSTR("[OK] %.1f°C, ID: %d, Night: %s\n"), currentTemp, weatherConditionCode, isNight ? "YES" : "NO");
             } else {
                 Serial.print(F("[ERROR] JSON: "));
                 Serial.println(error.c_str());
@@ -2197,24 +2185,24 @@ void actualizarClimaLite() {
         }
         http.end();
     } else {
-        Serial.println(F("[ERROR] No se pudo iniciar la conexión HTTP"));
+        Serial.println(F("[ERROR] Could not start HTTP connection"));
     }
 }
 
 void gestionarActualizacionClima() {
-    // 1. Si no toca actualizar por tiempo, salimos
+    // 1. If it is not time to update yet, exit
     if (weatherEnable == 0 || (millis() - lastWeatherUpdate < (unsigned long)weatherInterval * 60000UL)) return;
 
-    Serial.println(F("\n[SISTEMA] Ventana de actualización de clima alcanzada."));
+    Serial.println(F("\n[SYSTEM] Weather update window reached."));
 
-    // 2. Estrategia según Double Buffer
+    // 2. Strategy based on Double Buffer
     if (doubleBuff == 1) {
-        Serial.println(F("[MEMORIA] Double Buffer detectado. Reiniciando para actualizar limpio..."));
+        Serial.println(F("[MEMORY] Double Buffer detected. Restarting for a clean update..."));
         delay(1000);
         ESP.restart();
     } 
     else {
-        // 3. Intento de conexión estándar (Solo si no hay Double Buffer)
+        // 3. Standard connection attempt (Only if Double Buffer is disabled)
         WiFi.mode(WIFI_STA);
         WiFi.begin(wifi_ssid, wifi_pass);
 
@@ -2228,7 +2216,7 @@ void gestionarActualizacionClima() {
             actualizarClimaLite();
             configTzTime(time_zone, ntpServer);
             lastWeatherUpdate = millis();
-            Serial.println(F("[CLIMA] Datos actualizados OK."));
+            Serial.println(F("[WEATHER] Data updated OK."));
         }
 
         WiFi.disconnect(true);
@@ -2237,7 +2225,7 @@ void gestionarActualizacionClima() {
 }
 
 // ====================================================================
-//               SISTEMA DE TRANSICIÓN DE PARTÍCULAS
+//               PARTICLE TRANSITION SYSTEM
 // ====================================================================
 #define TRANS_BUF_W  (PANEL_RES_X * panelChain)
 #define TRANS_BUF_H  PANEL_RES_Y
@@ -2326,7 +2314,7 @@ static void transicionParticulasFormanRelojLite() {
     size_t needed = TRANS_BUF_W * TRANS_BUF_H * sizeof(uint16_t)
                   + MAX_PARTICULAS * sizeof(ParticulaLite) + 2048;
     if (ESP.getMaxAllocHeap() < needed) {
-        Serial.printf(PSTR("[TRANS] Sin bloque contiguo: %u/%u\n"), ESP.getMaxAllocHeap(), needed);
+        Serial.printf(PSTR("[TRANS] No contiguous block: %u/%u\n"), ESP.getMaxAllocHeap(), needed);
         return;
     }
 
@@ -2337,7 +2325,7 @@ static void transicionParticulasFormanRelojLite() {
     if (!frameBuf || !parts) {
         if (frameBuf) free(frameBuf);
         if (parts)    free(parts);
-        Serial.println(F("[TRANS] Fallo malloc entrada"));
+        Serial.println(F("[TRANS] Input malloc failed"));
         return;
     }
 
@@ -2408,7 +2396,7 @@ static void transicionRelojDispersaLite() {
     size_t needed = TRANS_BUF_W * TRANS_BUF_H * sizeof(uint16_t)
                   + MAX_PARTICULAS * sizeof(ParticulaLite) + 2048;
     if (ESP.getMaxAllocHeap() < needed) {
-        Serial.printf("[TRANS] Sin bloque contiguo: %u/%u\n", ESP.getMaxAllocHeap(), needed);
+        Serial.printf("[TRANS] No contiguous block: %u/%u\n", ESP.getMaxAllocHeap(), needed);
         return;
     }
 
@@ -2419,7 +2407,7 @@ static void transicionRelojDispersaLite() {
     if (!frameBuf || !parts) {
         if (frameBuf) free(frameBuf);
         if (parts)    free(parts);
-        Serial.println(F("[TRANS] Fallo malloc salida"));
+        Serial.println(F("[TRANS] Output malloc failed"));
         return;
     }
 
@@ -2492,7 +2480,7 @@ static void transicionRelojDispersaLite() {
 }
 
 // ====================================================================
-//                     FUNCIONES TEXTO LITE
+//                     LITE TEXT FUNCTIONS
 // ====================================================================
 String utf8ToExtended(const String& in) {
     String out;
@@ -2506,7 +2494,7 @@ String utf8ToExtended(const String& in) {
             uint8_t c2 = (uint8_t)in[i + 1];
             uint16_t codepoint = ((c & 0x1F) << 6) | (c2 & 0x3F);
 
-            // Re-mapeo especial de caracteres polacos al rango 0x80 - 0x8F
+            // Special remapping of Polish characters to the 0x80 - 0x8F range
             switch (codepoint) {
                 case 0x0104: out += (char)0x80; break; // Ą
                 case 0x0105: out += (char)0x81; break; // ą
@@ -2525,7 +2513,7 @@ String utf8ToExtended(const String& in) {
                 case 0x017B: out += (char)0x8E; break; // Ż
                 case 0x017C: out += (char)0x8F; break; // ż
                 default:
-                    // Si es un carácter dentro de Latin-1 (ej. tildes o ñ), lo mantenemos
+                    // If it is a character within Latin-1 (e.g. accented characters or ñ), keep it
                     if (codepoint <= 0xFF) {
                         out += (char)codepoint;
                     } else {
@@ -2535,7 +2523,7 @@ String utf8ToExtended(const String& in) {
             }
             i += 2;
         } else {
-            // Fallback para emojis o UTF-8 de 3-4 bytes
+            // Fallback for emojis or 3-4-byte UTF-8
             out += '?';
             i += 1;
             while (i < in.length() && (((uint8_t)in[i]) & 0xC0) == 0x80) i++;
@@ -2551,14 +2539,14 @@ void mostrarTextoScroll() {
     if (ahora - textoScrollUltimoPaso < (unsigned long)textoScrollVelocidad) return;
     textoScrollUltimoPaso = ahora;
 
-    // Solo reconvertimos y remedimos el texto cuando cambia el mensaje o la fuente
+    // Only reconvert and remeasure the text when the message or font changes
     static String ultimoMensajeCacheado = "";
     static const GFXfont* ultimaFuenteCacheada = NULL;
 
     if (textoScrollMsg != ultimoMensajeCacheado || textoScrollFuente != ultimaFuenteCacheada) {
         textoScrollMsgProcesado = utf8ToExtended(textoScrollMsg);
 
-        // Aplicamos la fuente ANTES de medir para que el cálculo sea exacto
+        // Apply the font BEFORE measuring so the calculation is accurate
         display->setFont(textoScrollFuente);
         display->setTextSize(1);
 
@@ -2567,7 +2555,7 @@ void mostrarTextoScroll() {
         display->getTextBounds(textoScrollMsgProcesado, 0, 0, &x1, &y1, &textoScrollAnchoCache, &altoTexto);
 
         ultimoMensajeCacheado = textoScrollMsg;
-        ultimaFuenteCacheada = textoScrollFuente; // Actualizamos la caché
+        ultimaFuenteCacheada = textoScrollFuente; // Update the cache
     }
 
     display->fillScreen(0);
@@ -2576,7 +2564,7 @@ void mostrarTextoScroll() {
         (textoScrollColor >> 8) & 0xFF,
         textoScrollColor & 0xFF));
         
-    // Aplicamos la fuente almacenada para pintar
+    // Apply the stored font for rendering
     display->setFont(textoScrollFuente);
     display->setTextSize(1);
     
@@ -2593,7 +2581,7 @@ void mostrarTextoScroll() {
 }
 
 // ====================================================================
-//                 FUNCIONES DE ENERGÍA Y TEMPORIZADOR
+//                 POWER AND TIMER FUNCTIONS
 // ====================================================================
 void cargarAjustesTimer() {
     Preferences prefs;
@@ -2619,24 +2607,24 @@ void guardarAjustesTimer() {
 
 void toggleEnergia(bool dormir) {
     if (dormir) {
-        if (isSleeping) return; // Ya está dormido
-        Serial.println(F("[ENERGÍA] Entrando en Modo Sueño..."));
+        if (isSleeping) return; // Already sleeping
+        Serial.println(F("[POWER] Entering Sleep Mode..."));
         
         mostrarAnimacionApagado();
 
-        // Cierre de hardware
-        gif.close(); // Libera la tarjeta SD
+        // Hardware shutdown
+        gif.close(); // Releases the SD card
         display->fillScreen(0);
         display->flipDMABuffer();
-        digitalWrite(OE_PIN, HIGH); // Apaga LEDs
-        setCpuFrequencyMhz(80); // Baja CPU a 80MHz
+        digitalWrite(OE_PIN, HIGH); // Turns off LEDs
+        setCpuFrequencyMhz(80); // Lowers CPU to 80MHz
         isSleeping = true;
     } else {
         if (!isSleeping) return;
-        Serial.println(F("[ENERGÍA] Despertando sistema..."));
-        setCpuFrequencyMhz(240);    // CPU a tope
+        Serial.println(F("[POWER] Waking system..."));
+        setCpuFrequencyMhz(240);    // CPU at full speed
         delay(150);
-        digitalWrite(OE_PIN, LOW);  // Enciende LEDs
+        digitalWrite(OE_PIN, LOW);  // Turns on LEDs
         display->fillScreen(0);
         display->flipDMABuffer();
         isSleeping = false;
@@ -2650,39 +2638,39 @@ void verificarTemporizador() {
     if (!timerEnable) return;
 
     struct tm timeinfo;
-    if (!getLocalTime(&timeinfo)) return; // Si no hay hora NTP, no hace nada
+    if (!getLocalTime(&timeinfo)) return; // If there is no NTP time, do nothing
 
     int minutosAhora = timeinfo.tm_hour * 60 + timeinfo.tm_min;
     int minutosOn = hOn * 60 + mOn;
     int minutosOff = hOff * 60 + mOff;
 
-    //1. GESTIÓN DEL OVERRIDE
+    //1. OVERRIDE HANDLING
     static int ultimoMinuto = -1;
     if (minutosAhora != ultimoMinuto) {
-        // Cuando entramos exactamente en el minuto de encendido o de apagado programado,
-        // el temporizador recupera el control automáticamente anulando el modo manual.
+        // When we reach exactly the scheduled power-on or power-off minute,
+        // the timer automatically takes control back and overrides manual mode.
         if (minutosAhora == minutosOn || minutosAhora == minutosOff) {
             manualOverride = false; 
         }
         ultimoMinuto = minutosAhora;
     }
 
-    // Si el usuario ha tocado un botón, bloqueamos los cambios de estado (hasta la próxima alarma)
+    // If the user has pressed a button, block state changes (until the next alarm)
     if (manualOverride) return;
 
-    // 2. LÓGICA DE ESTADO
+    // 2. STATE LOGIC
     bool deberiaEstarEncendido = false;
     if (minutosOn < minutosOff) {
         deberiaEstarEncendido = (minutosAhora >= minutosOn && minutosAhora < minutosOff);
-    } else { // Caso cruce de medianoche
+    } else { // Midnight crossover case
         deberiaEstarEncendido = (minutosAhora >= minutosOn || minutosAhora < minutosOff);
     }
 
-    // 3. APLICAR CAMBIOS
+    // 3. APPLY CHANGES
     if (deberiaEstarEncendido && isSleeping) {
-        toggleEnergia(false); // Es hora de despertar
+        toggleEnergia(false); // Time to wake up
     } else if (!deberiaEstarEncendido && !isSleeping) {
-        toggleEnergia(true); // Es hora de dormir
+        toggleEnergia(true); // Time to sleep
     }
 }
 
@@ -2691,13 +2679,13 @@ void mostrarAnimacionApagado() {
     int centroY = PANEL_RES_Y / 2;
     uint16_t colorAmbar = display->color565(255, 255, 255);
 
-    // Icono de "en espera"
+    // "Standby" icon
     display->fillScreen(0);
 
-    // Símbolo de power: círculo con una muesca arriba + línea vertical
+    // Power symbol: circle with a notch at the top + vertical line
     display->drawCircle(centroX, centroY - 7, 7, colorAmbar);
     display->drawLine(centroX, centroY - 14, centroX, centroY - 7, colorAmbar);
-    display->drawPixel(centroX - 1, centroY - 14, 0); // tapamos la muesca
+    display->drawPixel(centroX - 1, centroY - 14, 0); // cover the notch
     display->drawPixel(centroX,     centroY - 14, 0);
     display->drawPixel(centroX + 1, centroY - 14, 0);
 
@@ -2708,7 +2696,7 @@ void mostrarAnimacionApagado() {
     display->flipDMABuffer();
     delay(800);
 
-    // Colapso estilo CRT (la barra se encoge y se apaga)
+    // CRT-style collapse (the bar shrinks and turns off)
     int medioAncho = 128;
     for (int i = 0; i <= 10; i++) {
         int w = medioAncho - (medioAncho * i / 10);
@@ -2732,13 +2720,13 @@ void mostrarAnimacionApagado() {
 }
 
 // ====================================================================
-//             SISTEMA DE RECONEXION WIFI EN CASO DE FALLO
+//             WIFI RECONNECTION SYSTEM IN CASE OF FAILURE
 // ====================================================================
 void gestionarReconexionWiFi() {
     static bool avisado = false;
     static unsigned long ultimoIntento = 0;
 
-    if (!wifiDebeEstarActivo) return; // WiFi apagado a propósito: no insistimos
+    if (!wifiDebeEstarActivo) return; // WiFi intentionally disabled: do not retry
 
     if (WiFi.status() == WL_CONNECTED) {
         avisado = false;
@@ -2746,11 +2734,11 @@ void gestionarReconexionWiFi() {
     }
 
     if (!avisado) {
-        Serial.println(F("[WIFI] Conexión perdida. Reintentando cada 10s..."));
+        Serial.println(F("[WIFI] Connection lost. Retrying every 10s..."));
         avisado = true;
     }
 
-    // Reintento no bloqueante: WiFi.begin() es asíncrono, no se espera aquí
+    // Non-blocking retry: WiFi.begin() is asynchronous, so we do not wait here
     if (millis() - ultimoIntento < 10000UL) return;
     ultimoIntento = millis();
 
@@ -2759,9 +2747,9 @@ void gestionarReconexionWiFi() {
 }
 
 // ====================================================================
-//                     SISTEMA DE ACTUALIZACIÓN OTA
+//                     OTA UPDATE SYSTEM
 // ====================================================================
-int resultadoOTA = -1; // -1: nada, 0: al día, 1: actualizado, 2: error
+int resultadoOTA = -1; // -1: none, 0: up to date, 1: updated, 2: error
 
 void triggerActualizacionOTA() {
     Preferences prefs;
@@ -2769,7 +2757,7 @@ void triggerActualizacionOTA() {
     prefs.putBool("ota_pending", true);
     prefs.end();
     
-    Serial.println(F("[SISTEMA] Bandera OTA marcada. Reiniciando..."));
+    Serial.println(F("[SYSTEM] OTA flag set. Restarting..."));
     delay(500);
     ESP.restart();
 }
@@ -2793,7 +2781,7 @@ int buscarEInstalarOTA() {
     HTTPClient http;
     http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
 
-    // 2. Obtener versión
+    // 2. Get version
     int newVersion = 0;
     char binUrl[256] = "";
     if (http.begin(client, GITHUB_VERSION_URL)) {
@@ -2807,23 +2795,23 @@ int buscarEInstalarOTA() {
         http.end();
     }
 
-    // 3. Instalación
+    // 3. Installation
     if (newVersion > CURRENT_VERSION_NUM && binUrl[0] != '\0') {
         if (http.begin(client, binUrl)) {
             if (http.GET() == 200) {
                 int contentLength = http.getSize();
                 
-                Update.abort(); // Limpieza por si acaso
+                Update.abort(); // Cleanup just in case
                 
                 if (Update.begin(contentLength, U_FLASH)) {
-                    Serial.println(F("[OTA] Escribiendo binario..."));
+                    Serial.println(F("[OTA] Writing binary..."));
                     WiFiClient* stream = http.getStreamPtr();
                     
-                    // Usamos la escritura directa
+                    // Use direct writing
                     size_t escrito = Update.writeStream(*stream);
                     
                     if (escrito == contentLength && Update.end(true)) {
-                        Serial.println(F("[OTA] ¡Actualización Realizada con Éxito!"));
+                        Serial.println(F("[OTA] Update completed successfully!"));
                         
                         Preferences prefs;
                         prefs.begin("sistema", false);
@@ -2832,20 +2820,20 @@ int buscarEInstalarOTA() {
 
                         delay(1000);
                         ESP.restart();
-                        return 1; // Realmente no llegará aquí por el restart
+                        return 1; // This should never be reached because of the restart
                     } else {
                         Serial.printf("[OTA] Error: %s\n", Update.errorString());
-                        return 2; // Error al escribir
+                        return 2; // Write error
                     }
                 }
             }
             http.end();
         }
-        return 2; // Error al escribir
+        return 2; // Write error
     } else {
-        // No hay una nueva versión
-        Serial.println(F("[OTA] El sistema ya está actualizado."));
-        return 0; // Sistema al día
+        // There is no new version
+        Serial.println(F("[OTA] The system is already up to date."));
+        return 0; // System is up to date
     }
 }
 
@@ -2855,39 +2843,39 @@ void triggerDescargaIdiomas() {
     prefs.putBool("idiomas_pending", true);
     prefs.end();
 
-    Serial.println(F("[Idiomas] Bandera de descarga marcada. Reiniciando..."));
+    Serial.println(F("[LANGUAGE] Download flag set. Restarting..."));
     delay(500);
     ESP.restart();
 }
 
 int descargarIdiomasGitHub(String &resumen) {
-    Serial.printf("[Idiomas] Inicio. RAM Heap libre: %u bytes | Bloque max contiguo: %u bytes\n", 
+    Serial.printf("[LANGUAGE] Started. Free heap: %u bytes | Max contiguous block: %u bytes\n", 
                   ESP.getFreeHeap(), ESP.getMaxAllocHeap());
 
     if (WiFi.status() != WL_CONNECTED) { 
-        resumen = "Sin WiFi"; 
-        Serial.println("[Idiomas] Error: No hay conexion WiFi.");
+        resumen = "No WiFi connection"; 
+        Serial.println("[LANGUAGE] Error: No WiFi connection.");
         return 0; 
     }
 
-    // 1. Verificación explícita de DNS
+    // 1. Explicit DNS verification
     IPAddress ipGitHub;
     if (!WiFi.hostByName("raw.githubusercontent.com", ipGitHub)) {
-        resumen = "Fallo DNS (raw.githubusercontent.com)";
-        Serial.println("[Idiomas] ERROR: No se pudo resolver la IP de GitHub via DNS.");
+        resumen = "DNS failure (raw.githubusercontent.com)";
+        Serial.println("[LANGUAGE] ERROR: Could not resolve GitHub IP via DNS.");
         return 0;
     }
-    Serial.printf("[Idiomas] DNS resuelto correctamente -> IP: %s\n", ipGitHub.toString().c_str());
+    Serial.printf("[LANGUAGE] DNS resolved successfully -> IP: %s\n", ipGitHub.toString().c_str());
 
     const char* carpetaSD = "/idioma";
     if (!SD.exists(carpetaSD)) {
         SD.mkdir(carpetaSD);
-        Serial.println("[Idiomas] Carpeta /idioma creada en la SD");
+        Serial.println("[LANGUAGE] /idioma folder created on SD");
     }
 
     String contenidoLista = "";
 
-    // 2. Descargar idiomas.txt con URL completa (configura SNI TLS automáticamente)
+    // 2. Download idiomas.txt using the full URL (automatically configures TLS SNI)
     {
         WiFiClientSecure client;
         client.setInsecure();
@@ -2895,35 +2883,35 @@ int descargarIdiomasGitHub(String &resumen) {
         HTTPClient http;
         String urlLista = String(GITHUB_RAW_BASE_URL) + "idiomas.txt";
 
-        Serial.printf("[Idiomas] Conectando a: %s\n", urlLista.c_str());
+        Serial.printf("[LANGUAGE] Connecting to: %s\n", urlLista.c_str());
 
         if (http.begin(client, urlLista)) {
             http.setUserAgent("RetroPixelLED-Lite");
             http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
-            http.setTimeout(10000); // Timeout de 10s
+            http.setTimeout(10000); // 10s timeout
 
             int code = http.GET();
             if (code == 200) {
                 contenidoLista = http.getString();
-                Serial.printf("[Idiomas] idiomas.txt obtenido correctamente (%d bytes)\n", contenidoLista.length());
+                Serial.printf("[LANGUAGE] idiomas.txt retrieved successfully (%d bytes)\n", contenidoLista.length());
             } else {
-                resumen = "idiomas.txt dio error (" + String(code) + ")";
-                Serial.printf("[Idiomas] Error HTTP al descargar idiomas.txt. Código: %d\n", code);
+                resumen = "idiomas.txt returned an error (" + String(code) + ")";
+                Serial.printf("[LANGUAGE] HTTP error downloading idiomas.txt. Code: %d\n", code);
             }
             http.end();
         } else {
-            resumen = "Error http.begin con URL";
-            Serial.println("[Idiomas] Fallo http.begin() al procesar la URL");
+            resumen = "http.begin failed with URL";
+            Serial.println("[LANGUAGE] http.begin() failed while processing URL");
         }
         client.stop();
     }
 
     if (contenidoLista.length() == 0) {
-        if (resumen == "") resumen = "idiomas.txt esta vacio";
+        if (resumen == "") resumen = "idiomas.txt is empty";
         return 0;
     }
 
-    // 3. Recorrer la lista descargada y obtener cada archivo .json
+    // 3. Iterate through the downloaded list and retrieve each .json file
     int descargados = 0, fallidos = 0;
     int posInicio = 0;
 
@@ -2937,7 +2925,7 @@ int descargarIdiomasGitHub(String &resumen) {
 
         if (linea.length() == 0 || !linea.endsWith(".json")) continue;
 
-        Serial.printf("[Idiomas] Descargando '%s'... Heap libre: %u | Bloque max: %u\n", 
+        Serial.printf("[LANGUAGE] Downloading '%s'... Free heap: %u | Max block: %u\n", 
                       linea.c_str(), ESP.getFreeHeap(), ESP.getMaxAllocHeap());
 
         WiFiClientSecure fileClient;
@@ -2959,36 +2947,36 @@ int descargarIdiomasGitHub(String &resumen) {
                     httpFile.writeToStream(&f);
                     f.close();
                     descargados++;
-                    Serial.printf("[Idiomas] Guardado '%s' en SD correctamente\n", linea.c_str());
+                    Serial.printf("[LANGUAGE] '%s' saved to SD successfully\n", linea.c_str());
                 } else {
                     fallidos++;
-                    Serial.printf("[Idiomas] Error al abrir/escribir en SD la ruta '%s'\n", rutaSD.c_str());
+                    Serial.printf("[LANGUAGE] Error opening/writing SD path '%s'\n", rutaSD.c_str());
                 }
             } else {
                 fallidos++;
-                Serial.printf("[Idiomas] Error HTTP %d al descargar '%s'\n", codeArchivo, linea.c_str());
+                Serial.printf("[LANGUAGE] HTTP error %d downloading '%s'\n", codeArchivo, linea.c_str());
             }
             httpFile.end();
         } else {
             fallidos++;
-            Serial.printf("[Idiomas] Fallo httpFile.begin() para '%s'\n", linea.c_str());
+            Serial.printf("[LANGUAGE] httpFile.begin() failed for '%s'\n", linea.c_str());
         }
         fileClient.stop();
     }
 
-    resumen = String(descargados) + " archivo(s) descargado(s)";
-    if (fallidos > 0) resumen += ", " + String(fallidos) + " fallo(s)";
+    resumen = String(descargados) + " file(s) downloaded";
+    if (fallidos > 0) resumen += ", " + String(fallidos) + " failed";
 
-    Serial.printf("[Idiomas] Proceso completado. Descargados: %d, Fallidos: %d. Heap final: %u\n", 
+    Serial.printf("[LANGUAGE] Process complete. Downloaded: %d, Failed: %d. Final heap: %u\n", 
                   descargados, fallidos, ESP.getFreeHeap());
 
     return descargados;
 }
 // ====================================================================
-//                        FUNCIONES DE FTP
+//                        FTP FUNCTIONS
 // ====================================================================
 void ejecutarModoFTP() {
-    // 1. Forzar WiFi
+    // 1. Force WiFi
     if (wifiEnable == 1 && wifi_ssid[0] != '\0') {
         if (WiFi.status() != WL_CONNECTED) {
             WiFi.mode(WIFI_STA);
@@ -2998,59 +2986,59 @@ void ejecutarModoFTP() {
         }
     }
 
-    // 2. Iniciar FTP
-    ftpSrv.begin(ftp_user, ftp_pass);
+    // 2. Start FTP
+    ftpSrv.begin("admin", "admin"); 
 
-    // 3. Interfaz Visual Estática
+    // 3. Static Visual Interface
     display->fillScreen(0);
     
-    // 1. CARPETA (Cuerpo principal amarillo de la imagen)
-    uint16_t colorCarpeta = display->color565(255, 230, 100); // Amarillo suave
+    // 1. FOLDER (Main yellow body of the image)
+    uint16_t colorCarpeta = display->color565(255, 230, 100); // Soft yellow
     display->fillRoundRect(offset + 4, 11, 24, 16, 2, colorCarpeta); 
-    // Pestaña superior de la carpeta
+    // Top folder tab
     display->fillRoundRect(offset + 4, 9, 10, 5, 1, colorCarpeta);
 
-    // 2. FLECHAS (Verde subida, Azul bajada como en la imagen)
-    uint16_t colorVerde = display->color565(50, 200, 50); // Verde brillante
-    uint16_t colorAzul = display->color565(50, 150, 255);  // Azul claro
+    // 2. ARROWS (Green upload, blue download as shown in the image)
+    uint16_t colorVerde = display->color565(50, 200, 50); // Green brillante
+    uint16_t colorAzul = display->color565(50, 150, 255);  // Light blue
 
-    // Flecha de Subida (Verde)
-    // Triángulo (punta)
+    // Upload Arrow (Green)
+    // Triangle (tip)
     display->fillTriangle(offset + 14, 1, offset + 18, 5, offset + 10, 5, colorVerde);
-    // Rectángulo (cuerpo)
+    // Rectangle (body)
     display->fillRect(offset + 13, 5, 3, 4, colorVerde);
 
-    // Flecha de Bajada (Azul)
-    // Triángulo (punta)
+    // Download Arrow (Blue)
+    // Triangle (tip)
     display->fillTriangle(offset + 24, 9, offset + 28, 5, offset + 20, 5, colorAzul);
-    // Rectángulo (cuerpo)
+    // Rectangle (body)
     display->fillRect(offset + 23, 1, 3, 4, colorAzul);
 
-    // 3. TEXTO "FTP" DENTRO DE LA CARPETA
+    // 3. "FTP" TEXT INSIDE THE FOLDER
     display->setTextSize(1);
-    display->setTextColor(0); // Negro, para contrastar con el amarillo
-    // Centramos "FTP" dentro del rectángulo de la carpeta
-    // Coordenadas calculadas para que quede centrado en el RoundRect de 24x16
+    display->setTextColor(0); // Black, for contrast with the yellow
+    // Center "FTP" inside the folder rectangle
+    // Coordinates calculated to center it in the 24x16 RoundRect
     display->setCursor(offset + 8, 16); 
     display->print("FTP");
 
-    // Dirección IP (A la derecha de la carpeta)
-    display->setTextColor(display->color565(255, 255, 255)); // Blanco
+    // IP address (To the right of the folder)
+    display->setTextColor(display->color565(255, 255, 255)); // White
     display->setCursor(offset + 34, 16);
     display->print(WiFi.localIP().toString());
 
     display->flipDMABuffer();
 
-    Serial.print(F("[FTP] Servidor listo en IP: "));
+    Serial.print(F("[FTP] Server ready at IP: "));
     Serial.println(WiFi.localIP().toString());
 
-    // 4. Bucle infinito de mantenimiento
+    // 4. Infinite maintenance loop
     while (true) {
         ftpSrv.handleFTP();
 
-        // Si pulsas el botón (cualquier duración), salimos
+        // If the button is pressed (any duration), exit
         if (digitalRead(PIN_BOTON_MENU) == LOW) {
-            Serial.println(F("[FTP] Cerrando FTP por Botón físico"));
+            Serial.println(F("[FTP] Closing FTP via physical button"));
             Preferences p;
             p.begin("sistema", false);
             p.putBool("ftp_mode", false);
@@ -3059,14 +3047,14 @@ void ejecutarModoFTP() {
             ESP.restart();
         }
 
-        // Si pulsas cualquier botón IR, salimos
+        // If any IR button is pressed, exit
         if (IrReceiver.decode()) {
         //uint32_t codigoRecibido = IrReceiver.decodedIRData.command;
         uint32_t codigoRecibido = IrReceiver.decodedIRData.decodedRawData;
     
-            // Solo salimos si el botón pulsado es exactamente el de OK/Validar
+            // Only exit if the pressed button is exactly the OK/Confirm button
             if (codigoRecibido == ir_btn_ok) { 
-                Serial.println(F("[FTP] Boton OK detectado. Cerrando servidor y reiniciando..."));
+                Serial.println(F("[FTP] OK button detected. Closing server and restarting..."));
                 Preferences p;
                 p.begin("sistema", false);
                 p.putBool("ftp_mode", false);
@@ -3075,7 +3063,7 @@ void ejecutarModoFTP() {
                 ESP.restart();
             }
 
-            //Limpiar el buffer para permitir la siguiente lectura
+            // Clear the buffer to allow the next read
             IrReceiver.resume();
         }
         
@@ -3085,11 +3073,11 @@ void ejecutarModoFTP() {
 }
 
 // ====================================================================
-//                MOTOR DE REPRODUCCIÓN ARCADE REPLAYOS
+//                REPLAYOS ARCADE PLAYBACK ENGINE
 // ====================================================================
-bool marqueeEsGif = false;              // true si la marquesina actual es GIF, false si es BMP
-std::vector<String> marqueeGifSecuencia; // rutas de los .gif a reproducir en bucle (base + _01, _02...)
-int marqueeGifIndiceSecuencia = 0;       // qué elemento de la secuencia toca ahora
+bool marqueeEsGif = false;              // true if the current marquee is a GIF, false if it is a BMP
+std::vector<String> marqueeGifSecuencia; // paths of the .gif files to play in a loop (base + _01, _02...)
+int marqueeGifIndiceSecuencia = 0;       // which element of the sequence is next
 
 bool buscarSecuenciaGif(const char* rutaBase, std::vector<String>& out) {
     out.clear();
@@ -3116,17 +3104,17 @@ bool buscarJuegoEnIndice_ReplayOS(const char* sistema, const char* juego) {
     long hi = archivo.size();
     char linea[80];
 
-    // Fase 1: saltos binarios hasta acotar una ventana pequeña (~512 bytes).
-    // No exigimos alineación perfecta en cada salto (fuente de bugs con
-    // líneas de longitud variable): solo nos acercamos, el ajuste fino
-    // lo hace la Fase 2.
+    // Phase 1: binary jumps to narrow down a small window (~512 bytes).
+    // We do not require perfect alignment on every jump (variable-length lines
+    // can cause bugs): we only get close, then fine-tune
+    // Phase 2 handles this.
     while (hi - lo > 512) {
         long mid = lo + (hi - lo) / 2;
         archivo.seek(mid);
-        while (archivo.position() < hi && archivo.read() != '\n') {} // alinear a inicio de línea
+        while (archivo.position() < hi && archivo.read() != '\n') {} // align to start of line
 
         long pos = archivo.position();
-        if (pos >= hi) break; // sin más saltos de línea útiles: pasamos a la Fase 2
+        if (pos >= hi) break; // no more useful line breaks: proceed to Phase 2
 
         int len = archivo.readBytesUntil('\n', linea, sizeof(linea) - 1);
         linea[len] = '\0';
@@ -3137,7 +3125,7 @@ bool buscarJuegoEnIndice_ReplayOS(const char* sistema, const char* juego) {
         else hi = pos;
     }
 
-    // Fase 2: barrido lineal de la ventana ya acotada (siempre pocas líneas)
+    // Phase 2: linear scan of the narrowed window (always only a few lines)
     archivo.seek(lo);
     if (lo > 0) { while (archivo.position() < hi && archivo.read() != '\n') {} }
 
@@ -3156,7 +3144,7 @@ bool buscarJuegoEnIndice_ReplayOS(const char* sistema, const char* juego) {
 
 void reproducirMarquesinaGIF_ReplayOS() {
     if (marqueeGifSecuencia.empty()) { marqueeEsGif = false; return; }
-    interrumpirReproduccion = false; // limpiamos la señal que nos trajo aquí
+    interrumpirReproduccion = false; // clear the signal that brought us here
 
     String gifPath = marqueeGifSecuencia[marqueeGifIndiceSecuencia];
     if (gif.open(gifPath.c_str(), GIFOpenFile, GIFCloseFile, GIFReadFile, GIFSeekFile, GIFDraw)) {
@@ -3165,16 +3153,16 @@ void reproducirMarquesinaGIF_ReplayOS() {
         int delayMs;
         while (gif.playFrame(true, &delayMs)) {
             display->flipDMABuffer();
-            verificarReplayOSLite(); // respeta su propio throttle (replayOSIntervaloActual)
+            verificarReplayOSLite(); // respects its own throttle (replayOSIntervaloActual)
             if (digitalRead(PIN_BOTON_MENU) == LOW || interrumpirReproduccion || estadoActual != ESTADO_ARCADE) {
                 gif.close();
-                return; // cambio de juego, fin de partida o menú
+                return; // game change, end of game, or menu
             }
             delay(delayMs > 0 ? delayMs : 10);
         }
         gif.close();
     } else {
-        Serial.printf("[ReplayOS] Error abriendo GIF: %s\n", gifPath.c_str());
+        Serial.printf("[ReplayOS] Error opening GIF: %s\n", gifPath.c_str());
     }
     marqueeGifIndiceSecuencia = (marqueeGifIndiceSecuencia + 1) % marqueeGifSecuencia.size();
 }
@@ -3182,60 +3170,60 @@ void reproducirMarquesinaGIF_ReplayOS() {
 void mostrarMarquesinaBMP(const char* path) {
     File bmpFile = SD.open(path);
     if (!bmpFile) {
-        Serial.print(F("Error: No se pudo abrir el BMP en "));
+        Serial.print(F("Error: Could not open BMP at "));
         Serial.println(path);
         return;
     }
 
-    // Validamos que sea un BMP real antes de fiarnos de sus offsets
+    // Verify that this is a real BMP before trusting its offsets
     char firma[2];
     bmpFile.read((uint8_t*)firma, 2);
     if (firma[0] != 'B' || firma[1] != 'M') {
-        Serial.println(F("[BMP] Archivo no valido (falta cabecera BM)."));
+        Serial.println(F("[BMP] Invalid file (missing BM header)."));
         bmpFile.close();
         return;
     }
 
-    // 1. Detectar profundidad de bits (está en el byte 28)
+    // 1. Detect bit depth (stored at byte 28)
     bmpFile.seek(28);
     uint16_t bitsPerPixel = 0;
     bmpFile.read((uint8_t*)&bitsPerPixel, 2);
 
-    // 2. Detectar dónde empiezan los píxeles (está en el byte 10)
+    // 2. Detect where the pixels start (stored at byte 10)
     bmpFile.seek(10);
     uint32_t dataOffset = 0;
     bmpFile.read((uint8_t*)&dataOffset, 4);
 
-    // Calculamos cuántos bytes ocupa cada píxel (3 o 4)
+    // Calculate how many bytes each pixel occupies (3 or 4)
     int bytesPorPixel = bitsPerPixel / 8;
     if (bytesPorPixel != 3 && bytesPorPixel != 4) {
-        Serial.printf(PSTR("[BMP] Profundidad no soportada: %d bits\n"), bitsPerPixel);
+        Serial.printf(PSTR("[BMP] Unsupported bit depth: %d bits\n"), bitsPerPixel);
         bmpFile.close();
         return;
     }
 
-    Serial.printf(PSTR("[BMP] Cargando %dbits (%d bytes/px) desde %s\n"), bitsPerPixel, bytesPorPixel, path);
+    Serial.printf(PSTR("[BMP] Loading %dbits (%d bytes/px) from %s\n"), bitsPerPixel, bytesPorPixel, path);
 
     bmpFile.seek(dataOffset);
 
-    // 3. Dibujamos BMP leyendo fila a fila (1 lectura SPI por fila, no por byte)
+    // 3. Draw BMP row by row (1 SPI read per row, not per byte)
     const int ANCHO = 128;
-    uint8_t filaBuffer[ANCHO * 4]; // suficiente para 24 o 32 bits
+    uint8_t filaBuffer[ANCHO * 4]; // enough for 24 or 32 bits
 
     for (int y = 31; y >= 0; y--) {
         int leidos = bmpFile.read(filaBuffer, ANCHO * bytesPorPixel);
-        if (leidos < ANCHO * bytesPorPixel) break; // archivo truncado: cortamos limpio
+        if (leidos < ANCHO * bytesPorPixel) break; // truncated file: stop cleanly
 
         for (int x = 0; x < ANCHO; x++) {
             uint8_t* px = filaBuffer + (x * bytesPorPixel);
-            // BMP guarda en orden BGR
+            // BMP stores pixels in BGR order
             uint8_t b = px[0], g = px[1], r = px[2];
             display->drawPixel(x + offset, y, display->color565(r, g, b));
         }
     }
 
     bmpFile.close();
-    Serial.println(F("Marquesina dibujada con éxito."));
+    Serial.println(F("Marquee drawn successfully."));
 }
 
 void verificarReplayOSLite() {
@@ -3256,7 +3244,7 @@ void verificarReplayOSLite() {
     http.setReuse(true); 
 
     if (!http.begin(client, url)) {
-        Serial.println(F("[ReplayOS] No se pudo iniciar conexión"));
+        Serial.println(F("[ReplayOS] Could not start connection"));
         return;
     }
     http.addHeader("X-RePlay-Token", replayOS_Token);
@@ -3270,10 +3258,10 @@ void verificarReplayOSLite() {
             replayOSIntervaloActual = min(3000UL * (1UL << min(replayOSFallosConsecutivos - 1, 3)), 30000UL);
         }
         if (httpCode > 0) {
-            Serial.printf(PSTR("[ReplayOS] Fallo HTTP: %d (intento %d, próximo en %lums)\n"),
+            Serial.printf(PSTR("[ReplayOS] HTTP failure: %d (attempt %d, next in %lums)\n"),
                           httpCode, replayOSFallosConsecutivos, replayOSIntervaloActual);
         } else {
-            Serial.printf(PSTR("[ReplayOS] Sin respuesta (err %d, intento %d, próximo en %lums)\n"),
+            Serial.printf(PSTR("[ReplayOS] No response (err %d, attempt %d, next in %lums)\n"),
                           httpCode, replayOSFallosConsecutivos, replayOSIntervaloActual);
         }
         return;
@@ -3293,16 +3281,16 @@ void verificarReplayOSLite() {
     http.end();
 
     if (err) {
-        Serial.printf(PSTR("[ReplayOS] Error JSON: %s\n"), err.c_str());
+        Serial.printf(PSTR("[ReplayOS] JSON error: %s\n"), err.c_str());
         return;
     }
 
     int viewId = doc["view_id"] | 0;
 
-    // CASO 1: NO ESTAMOS JUGANDO
+    // CASE 1: NOT PLAYING
     if (viewId != 2) {
         if (ultimoJuegoCargado.length() > 0) {
-            Serial.println(F("[ReplayOS] Fuera de juego. Restableciendo a modo normal."));
+            Serial.println(F("[ReplayOS] Out of game. Returning to normal mode."));
             ultimoJuegoCargado = "";
             marqueeEsGif = false;
             marqueeGifSecuencia.clear();
@@ -3313,7 +3301,7 @@ void verificarReplayOSLite() {
         return;
     }
 
-    // CASO 2: SI ESTAMOS JUGANDO 
+    // CASE 2: PLAYING 
     const char* rawSystem   = doc["system"];
     const char* rawGameFile = doc["game_file"];
     if (!rawSystem || !rawGameFile) return;
@@ -3334,9 +3322,9 @@ void verificarReplayOSLite() {
     ultimoJuegoCargado = juegoLimpio;
     interrumpirReproduccion = true;
 
-    Serial.printf(PSTR("[ReplayOS] Nuevo juego detectado: %s [%s]\n"), juegoLimpio, rawSystem);
+    Serial.printf(PSTR("[ReplayOS] New game detected: %s [%s]\n"), juegoLimpio, rawSystem);
 
-    // --- GIF: (juego -> sistema -> _default) ---
+    // --- GIF: (game -> system -> _default) ---
     char baseSubcarpeta[96], baseDirecta[80], baseSistema[80];
     snprintf(baseSubcarpeta, sizeof(baseSubcarpeta), "/arcade/%s/%s", rawSystem, juegoLimpio);
     snprintf(baseDirecta,    sizeof(baseDirecta),    "/arcade/%s", juegoLimpio);
@@ -3364,7 +3352,7 @@ void verificarReplayOSLite() {
     marqueeEsGif = false;
     // --- FIN GIF ---
 
-    // --- BMP: (juego -> sistema -> _default) ---
+    // --- BMP: (game -> system -> _default) ---
     char rutaSubcarpeta[96], rutaDirecta[80], rutaSistema[80];
     snprintf(rutaSubcarpeta, sizeof(rutaSubcarpeta), "/arcade/%s/%s.bmp", rawSystem, juegoLimpio);
     snprintf(rutaDirecta,    sizeof(rutaDirecta),    "/arcade/%s.bmp", juegoLimpio);
@@ -3400,22 +3388,22 @@ void verificarReplayOSLite() {
         mostrarMarquesinaBMP(rutaFinalBMP);
         display->flipDMABuffer();
     } else {
-        Serial.println(F("[ReplayOS] Faltan logo y juego. Derivando al motor de GIFs"));
+        Serial.println(F("[ReplayOS] Logo and game missing. Falling back to GIF engine"));
         estadoActual = ESTADO_GIFS;
         saliendoAGifs = true;
     }
 }
 // ====================================================================
-//          MOTOR DE REPRODUCCIÓN ARCADE BATOCERA / RECALBOX
+//          BATOCERA / RECALBOX ARCADE PLAYBACK ENGINE
 // ====================================================================
-// --- Estado persistente del streaming de marquesina/animación por TCP ---
+// --- Persistent state for TCP marquee/animation streaming ---
 static WiFiClient marqueeClient;
 static uint8_t* marqueeBuffer = nullptr;
 static int marqueeIndice = 0;
 static unsigned long marqueeUltimoByte = 0;
 
-// Solo libera recursos de red (buffer + socket). NUNCA toca estadoActual:
-// la imagen o el último frame se quedan en pantalla hasta que llegue un STOP explícito.
+// Only release network resources (buffer + socket). NEVER touch estadoActual:
+// the image or last frame remains on screen until an explicit STOP is received.
 void liberarRecursosMarquesina() {
     if (marqueeClient) marqueeClient.stop();
     if (marqueeBuffer) { free(marqueeBuffer); marqueeBuffer = nullptr; }
@@ -3425,15 +3413,15 @@ void liberarRecursosMarquesina() {
 void verificarMarquesinaTCP() {
     if (WiFi.status() != WL_CONNECTED || arcadeEnable == 0) return;
 
-    // 1. ¿Hay un cliente nuevo? Si ya había uno activo, lo sustituimos
-    //    (el último que se conecta manda: útil si cambias rápido de juego).
+    // 1. Is there a new client? If one was already active, replace it
+    //    (the most recently connected client takes over: useful when switching games quickly).
     WiFiClient nuevoClient = tcpServer.available();
     if (nuevoClient) {
         liberarRecursosMarquesina();
         marqueeClient = nuevoClient;
         marqueeBuffer = (uint8_t*)malloc(12288);
         if (marqueeBuffer == nullptr) {
-            Serial.println(F("[ERROR] No hay memoria RAM suficiente para el buffer TCP"));
+            Serial.println(F("[ERROR] Not enough RAM for the TCP buffer"));
             marqueeClient.stop();
             return;
         }
@@ -3448,10 +3436,10 @@ void verificarMarquesinaTCP() {
 
     int disponibles = marqueeClient.available();
     if (disponibles == 0) {
-        // 3s sin nada: puede ser un frame estático que ya se cerró por su cuenta,
-        // o un streamer que murió/la red se cortó a media partida.
-        // En AMBOS casos solo limpiamos el socket — jamás tocamos estadoActual aquí.
-        // Solo el STOP explícito (más abajo) puede devolvernos a GIFs de playlist.
+        // 3s with no data: it may be a static frame that already closed on its own,
+        // or a streamer that died/the network was interrupted mid-game.
+        // In BOTH cases, only clear the socket — never touch estadoActual here.
+        // Only the explicit STOP (below) can return us to playlist GIFs.
         if (millis() - marqueeUltimoByte > 3000) {
             liberarRecursosMarquesina();
         }
@@ -3459,8 +3447,8 @@ void verificarMarquesinaTCP() {
     }
     marqueeUltimoByte = millis();
 
-    // 2. Detección de STOP: exigimos los 4 bytes exactos "STOP", no solo el primero,
-    //    para no confundir un píxel con valor 0x53 (='S') con un comando real.
+    // 2. STOP detection: require all 4 exact bytes "STOP", not just the first,
+    //    so a pixel with value 0x53 (='S') is not mistaken for a real command.
     if (marqueeIndice < 4) {
         int necesarios = 4 - marqueeIndice;
         int aLeerCabecera = min(disponibles, necesarios);
@@ -3468,7 +3456,7 @@ void verificarMarquesinaTCP() {
         if (leidosCabecera > 0) marqueeIndice += leidosCabecera;
         disponibles -= leidosCabecera;
 
-        if (marqueeIndice < 4) return; // aún no hay suficientes bytes para decidir
+        if (marqueeIndice < 4) return; // not enough bytes yet to decide
 
         if (memcmp(marqueeBuffer, "STOP", 4) == 0) {
             liberarRecursosMarquesina();
@@ -3477,11 +3465,11 @@ void verificarMarquesinaTCP() {
             interrumpirReproduccion = true;
             return;
         }
-        // No era STOP: esos 4 bytes ya acumulados son píxeles válidos del frame,
-        // seguimos rellenando el resto con normalidad abajo.
+        // It was not STOP: those 4 accumulated bytes are valid frame pixels,
+        // continue filling the rest normally below.
     }
 
-    // 3. Rellenamos el buffer con lo que haya disponible AHORA, sin esperar a nada más
+    // 3. Fill the buffer with whatever is available NOW, without waiting for anything else
     int espacio = 12288 - marqueeIndice;
     int aLeer = min(disponibles, espacio);
     if (aLeer > 0) {
@@ -3489,7 +3477,7 @@ void verificarMarquesinaTCP() {
         if (leidos > 0) marqueeIndice += leidos;
     }
 
-    // 4. ¿Frame completo? Lo pintamos y seguimos escuchando el siguiente por el MISMO socket
+    // 4. Complete frame? Draw it and keep listening for the next one on the SAME socket
     if (marqueeIndice >= 12288) {
         interrumpirReproduccion = true;
         estadoActual = ESTADO_ARCADE;
@@ -3506,25 +3494,25 @@ void verificarMarquesinaTCP() {
         }
         display->flipDMABuffer();
 
-        marqueeIndice = 0; // no cerramos: listos para recibir el siguiente frame
+        marqueeIndice = 0; // do not close: ready to receive the next frame
     }
 }
 
 // ====================================================================
-//                     MOTOR DE REPRODUCCIÓN GIFs
+//                     GIF PLAYBACK ENGINE
 // ====================================================================
 String obtenerSiguienteGifSD() {
-    // Si no hay playlist seleccionada, no intentamos abrir nada
+    // If no playlist is selected, do not try to open anything
     if (playlistActiva[0] == '\0') return "";
 
     File cacheFile = SD.open(playlistActiva, FILE_READ);
     if (!cacheFile) {
-        Serial.print(F("Error: No se pudo abrir "));
+        Serial.print(F("Error: Could not open "));
         Serial.println(playlistActiva);
         return "";
     }
 
-    // Lógica de Random / Secuencial
+    // Random / Sequential logic
     if (randomMode == 1) {
         uint32_t fileSize = cacheFile.size();
         if (fileSize > 15) { 
@@ -3548,7 +3536,7 @@ String obtenerSiguienteGifSD() {
     String gifPath = cacheFile.readStringUntil('\n');
     gifPath.trim();
 
-    // Guardamos posición para el modo secuencial
+    // Save position for sequential mode
     if (randomMode == 0) gifCachePosition = cacheFile.position();
     
     cacheFile.close();
@@ -3561,34 +3549,34 @@ void ejecutarModoGifLite() {
         saliendoAGifs = false;
     }
 
-    if (interrumpirReproduccion) return; // Si algo lo bloqueó, no hacemos nada
+    if (interrumpirReproduccion) return; // If something blocked it, do nothing
 
     String gifPath = obtenerSiguienteGifSD();
-    if (gifPath == "" || interrumpirReproduccion) return; // Si se activó la bandera buscando en la SD, salimos
+    if (gifPath == "" || interrumpirReproduccion) return; // If the flag was activated while searching the SD card, exit
 
-    // Abrimos el archivo GIF
+    // Open the GIF file
     if (gif.open(gifPath.c_str(), GIFOpenFile, GIFCloseFile, GIFReadFile, GIFSeekFile, GIFDraw)) {
         
-        // Ajustamos el offset para centrar en el segundo panel
+        // Adjust the offset to center on the second panel
         x_offset = (offset - gif.getCanvasWidth()) / 2; 
         y_offset = (PANEL_RES_Y - gif.getCanvasHeight()) / 2; 
         
         display->clearScreen(); 
 
         int delayMs;
-        // Bucle de frames del GIF
+        // GIF frame loop
         while (gif.playFrame(true, &delayMs)) {
 
             leerControlRemoto();
 
-            // 1. Escuchamos siempre el servidor web (PWA, Ajustes, Temporizador...)
+            // 1. Always handle the web server (PWA, Settings, Timer...)
              server.handleClient();
             if (arcadeEnable > 0) {
                 verificarMarquesinaTCP(); // Batocera y Recalbox
                 if (arcadeEnable == 3) verificarReplayOSLite(); // ReplayOS
             }
 
-            // 2. Salida inmediata si hay cambio de estado o botón
+            // 2. Immediate exit if the state or button changes
             if (digitalRead(PIN_BOTON_MENU) == LOW || interrumpirReproduccion || (arcadeEnable > 0 && estadoActual == ESTADO_ARCADE)) {
                 interrumpirReproduccion = true;
                 break;
@@ -3596,7 +3584,7 @@ void ejecutarModoGifLite() {
             
             display->flipDMABuffer();
 
-            // 3. Reemplazamos delay(delayMs) por un bucle "atento"
+            // 3. Replace delay(delayMs) with an "attentive" loop
             unsigned long tiempoInicio = millis();
             while (millis() - tiempoInicio < (unsigned long)delayMs) {
 
@@ -3612,25 +3600,25 @@ void ejecutarModoGifLite() {
                     }
                 }
                 if (digitalRead(PIN_BOTON_MENU) == LOW) break;
-                yield(); // Mantiene estable el WiFi
+                yield(); // Keeps WiFi stable
             }
             if (interrumpirReproduccion) break;
         }
         
         gif.close();
         
-        // Solo contamos el GIF si se reprodujo entero
+        // Only count the GIF if it played completely
         if (!interrumpirReproduccion) {
             gifsPlayed++;
         }
         
     } else {
-        Serial.printf("Error abriendo GIF: %s\n", gifPath.c_str());
+        Serial.printf("Error opening GIF: %s\n", gifPath.c_str());
     }
 }
 
 // ====================================================================
-//                     SETUP Y LOOP PRINCIPAL
+//                     SETUP AND MAIN LOOP
 // ====================================================================
 void setup() {
     Serial.begin(115200);
@@ -3638,41 +3626,41 @@ void setup() {
 
     pinMode(PIN_BOTON_MENU, INPUT_PULLUP);
 
-    // 0. Inicializar el receptor IR
+    // 0. Initialize the IR receiver
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); 
-    Serial.println(F("Receptor IR inicializado en GPIO 34"));
+    Serial.println(F("IR receiver initialized on GPIO 34"));
     
-    // 1. Iniciar SD y Cargar Configuración
+    // 1. Initialize SD and Load Configuration
     bool sdOk = true;
 
     SPI.begin(VSPI_SCLK, VSPI_MISO, VSPI_MOSI, SD_CS_PIN);
     if (!SD.begin(SD_CS_PIN)) {
-        Serial.println(F("Error FATAL: No se detecta SD."));
+        Serial.println(F("FATAL ERROR: SD card not detected."));
         sdOk = false;
     } else {
         leerConfigIni();
         cargarAjustesTimer();
     }
 
-    // 2. Comprobacion para entrar en Modo FTP
+    // 2. Check whether to enter FTP Mode
     Preferences pFTP;
     pFTP.begin("sistema", true);
     bool entrarFTP = pFTP.getBool("ftp_mode", false);
     pFTP.end();
 
-    // Si la SD falló, ignoramos el modo FTP por seguridad
+    // If the SD failed, ignore FTP mode for safety
     if (!sdOk) entrarFTP = false;
 
     if (sdOk) {
-        // 3. Comprobacion de Actualización
+        // 3. Check for Updates
         Preferences prefsOTA;
         prefsOTA.begin("sistema", false);
     
-        // A. ¿Hay actualización pendiente?
+        // A. Is an update pending?
         bool otaPendiente = prefsOTA.getBool("ota_pending", false);
-        // B. ¿Venimos de actualizar con éxito?
+        // B. Did we just complete an update successfully?
         bool otaRecienHecha = prefsOTA.getBool("ota_done", false);
-        // C. ¿Descarda de Idiomas?
+        // C. Language download?
         bool idiomasPendiente = prefsOTA.getBool("idiomas_pending", false);
 
         if (otaPendiente) {
@@ -3681,9 +3669,9 @@ void setup() {
             resultadoOTA = buscarEInstalarOTA();
 
         } else if (otaRecienHecha) {
-            prefsOTA.putBool("ota_done", false); // Limpiamos la bandera
+            prefsOTA.putBool("ota_done", false); // Clear the flag
             prefsOTA.end();
-            resultadoOTA = 1; // Marcamos ÉXITO para el panel
+            resultadoOTA = 1; // Mark SUCCESS for the panel
 
         } else if (idiomasPendiente) {
             prefsOTA.putBool("idiomas_pending", false);
@@ -3702,7 +3690,7 @@ void setup() {
             if (WiFi.status() == WL_CONNECTED) {
                 n = descargarIdiomasGitHub(resumenIdiomas);
             } else {
-                resumenIdiomas = "Sin WiFi tras reinicio";
+                resumenIdiomas = "No WiFi connection tras reinicio";
             }
 
             Preferences prefsRes;
@@ -3715,14 +3703,14 @@ void setup() {
             prefsOTA.end();
         }
 
-        // 4. Conexión WiFi
-        // Comprobamos primero si el WiFi está activado por el usuario y si vamos a entrar en FTP
+        // 4. WiFi Connection
+        // First check whether WiFi is enabled by the user and whether we are entering FTP
         if (wifiEnable == 1 && !entrarFTP && wifi_ssid[0] != '\0') { 
             WiFi.mode(WIFI_STA);
             WiFi.setSleep(false);
             WiFi.begin(wifi_ssid, wifi_pass);
     
-            Serial.print(F("Conectando para actualizar datos..."));
+            Serial.print(F("Connecting to update data..."));
             int attempts = 0;
             while (WiFi.status() != WL_CONNECTED && attempts < 20) {
                 delay(500);
@@ -3731,13 +3719,13 @@ void setup() {
             }
 
             if(WiFi.status() == WL_CONNECTED) {
-                Serial.println(F(" ¡Conectado!"));
-                Serial.print(F("IP local: ")); Serial.println(WiFi.localIP());
+                Serial.println(F(" Connected!"));
+                Serial.print(F("Local IP: ")); Serial.println(WiFi.localIP());
         
-                // A. Sincronizar Hora (Solo si el Reloj está ON)
+                // A. Synchronize Time (Only if the Clock is ON)
                 if (clockEnable == 1 || timerEnable == true) {
                     configTzTime(time_zone, ntpServer);
-                    // Esperar sincronización de hora
+                    // Wait for time synchronization
                     time_t now = time(nullptr);
                     attempts = 0;
                     while (now < 10000 && attempts < 10) { 
@@ -3746,34 +3734,34 @@ void setup() {
                         attempts++; 
                     }
                 }   
-                // B. Sincronizar Clima (Solo si el Tiempo está ON)
+                // B. Synchronize Weather (only if Time is ON)
                 if (weatherEnable == 1) {
                     actualizarClimaLite();
                     lastWeatherUpdate = millis();
                 }       
-                // C. Si Arcade está habilitado, el Modo Texto está activo o configuración por APP mantenemos WiFi conectado
+                // C. If Arcade is enabled, Text Mode is active, or APP configuration is enabled, keep WiFi connected
                 if (arcadeEnable > 0 || textEnable || confiAppEnable) {
                     wifiDebeEstarActivo = true;
-                    Serial.print(F("[WIFI] Manteniendo conexión activa por:"));
+                    Serial.print(F("[WIFI] Keeping connection active because:"));
     
                     if (arcadeEnable > 0) {
                      const char* nombresArcade[] = {"OFF", "Batocera", "Recalbox", "ReplayOS"};
-                        // Aseguramos que el índice esté en rango (1 a 3)
+                        // Ensure the index is in range (1 to 3)
                         int indexArcade = (arcadeEnable >= 1 && arcadeEnable <= 3) ? arcadeEnable : 0;
-                        Serial.printf(PSTR(" Modo Arcade [%s]"), nombresArcade[indexArcade]);
+                        Serial.printf(PSTR(" Arcade mode [%s]"), nombresArcade[indexArcade]);
                     }
     
                     if (textEnable) {
-                        Serial.print(F(" Modo Texto"));
+                        Serial.print(F(" Text mode"));
                     }
 
                     if (confiAppEnable) {
-                        Serial.print(F(" Confi APP"));
+                        Serial.print(F(" App configuration"));
                     }
     
-                    Serial.println(); // Salto de línea final
+                    Serial.println(); // Final line break
                 } else {
-                    Serial.println(F("[WIFI] Modo Arcade, Texto y Confi APP OFF: Desconectando tras actualización."));
+                    Serial.println(F("[WIFI] Arcade, Text and App configuration OFF: Disconnecting after update."));
                     WiFi.disconnect(true);
                     WiFi.mode(WIFI_OFF);
                     delay(500);
@@ -3782,19 +3770,19 @@ void setup() {
                 }
 
             } else {
-                Serial.println(F(" Falló la conexión."));
+                Serial.println(F(" Connection failed."));
             }
         
         } else {
-            Serial.println(F("WiFi desactivado por el usuario, SSID vacío o Modo FTP Activo. Saltando red para solicitar datos..."));
+            Serial.println(F("WiFi disabled by user, SSID empty, or FTP Mode active. Skipping network to request data..."));
         }
 
     }
 
-    // 5. Inicializar PANEL
+    // 5. Initialize PANEL
     const int FINAL_MATRIX_WIDTH = PANEL_RES_X * panelChain;
 
-    // A. Variables de mapeo dinámico (Inicializadas por defecto en RGB)
+    // A. Dynamic mapping variables (initialized to RGB by default)
     int8_t pR1 = R1_PIN;
     int8_t pG1 = G1_PIN;
     int8_t pB1 = B1_PIN;
@@ -3802,13 +3790,13 @@ void setup() {
     int8_t pG2 = G2_PIN;
     int8_t pB2 = B2_PIN;
 
-    // B. Aplicar lógica de intercambio según el config.ini
+    // B. Apply swap logic according to config.ini
     if (strcmp(colorOrder, "RBG") == 0) {
         pG1 = B1_PIN;
         pB1 = G1_PIN;
         pG2 = B2_PIN;
         pB2 = G2_PIN;
-        Serial.println(F("[PANEL] Orden de colores ajustado a RBG."));
+        Serial.println(F("[PANEL] Color order set to RBG."));
     } else if (strcmp(colorOrder, "GBR") == 0) {
         pR1 = G1_PIN;
         pG1 = B1_PIN;
@@ -3816,17 +3804,17 @@ void setup() {
         pR2 = G2_PIN;
         pG2 = B2_PIN;
         pB2 = R2_PIN;
-        Serial.println(F("[PANEL] Orden de colores ajustado a GBR."));
+        Serial.println(F("[PANEL] Color order set to GBR."));
     } else {
-        Serial.println(F("[PANEL] Orden de colores por defecto: RGB."));
+        Serial.println(F("[PANEL] Default color order: RGB."));
     }
 
-    // C. Configuración de pines usando las variables dinámicas y Offset segun numero de paneles
+    // C. Configure pins using the dynamic variables and offset according to the number of panels
     HUB75_I2S_CFG::i2s_pins pin_config = { pR1, pG1, pB1, pR2, pG2, pB2, A_PIN, B_PIN, C_PIN, D_PIN, E_PIN, LAT_PIN, OE_PIN, CLK_PIN };
 
     offset = PANEL_RES_X * panelChain;
 
-    // D. Inicialización de la configuración de la matriz
+    // D. Initialize the matrix configuration
     HUB75_I2S_CFG matrix_config(FINAL_MATRIX_WIDTH, MATRIX_HEIGHT, panelChain, pin_config);
     
     if (i2sSpeed == 0) matrix_config.i2sspeed = HUB75_I2S_CFG::HZ_8M;
@@ -3838,31 +3826,31 @@ void setup() {
     matrix_config.min_refresh_rate = refreshMin;
     matrix_config.clkphase = false;
     
-    // FTP, Arcade y Transició siempre con Doble Buff desactivado
+    // FTP, Arcade and Transition always with Double Buffer disabled
     bool usarDoubleBuff = (doubleBuff == 1) && !entrarFTP && (arcadeEnable == 0) && (transitionEnable != 1);
         matrix_config.double_buff = usarDoubleBuff;
 
     Serial.printf(PSTR("[PANEL] Intentando arrancar — DoubleBuff: %s "),usarDoubleBuff ? "ON" : "OFF");    
    
-    // Primer intento (con la configuración solicitada)
+    // First attempt (with the requested configuration)
     display = new MatrixPanel_I2S_DMA(matrix_config);
     if (display) { 
         if (!display || !display->begin()) {
-            // Fallback automático: si double_buff falló, reintenta con single
+            // Automatic fallback: if double_buff failed, retry with single
             if (usarDoubleBuff) {
-                Serial.println(F("[PANEL] Double Buffer insuficiente — reintentando con Single Buffer..."));
+                Serial.println(F("[PANEL] Double Buffer insufficient — retrying with Single Buffer..."));
                 if (display) { delete display; display = nullptr; }
                 matrix_config.double_buff = false;
                 display = new MatrixPanel_I2S_DMA(matrix_config);
 
                 if (!display || !display->begin()) {
-                    Serial.println(F("[ERROR FATAL] El display no puede arrancar en Single Buff."));
+                    Serial.println(F("[FATAL ERROR] Display cannot start with Single Buffer."));
                     delay(500);
                     ESP.restart();
                 }
-                Serial.println(F("[PANEL] Single Buffer activo (RAM insuficiente para Double Buffer)."));
+                Serial.println(F("[PANEL] Single Buffer active (insufficient RAM for Double Buffer)."));
             } else {
-                Serial.println(F("[ERROR FATAL] El display no puede arrancar."));
+                Serial.println(F("[FATAL ERROR] Display cannot start."));
                 delay(500);
                 ESP.restart();
             }
@@ -3873,39 +3861,39 @@ void setup() {
         display->setBrightness8(brightness);
         display->fillScreen(0);
 
-        // --- AVISO DE FALLO SD ---
+        // --- SD FAILURE NOTICE ---
         if (!sdOk) {
             display->setTextColor(display->color565(255, 0, 0));
             display->setCursor(offset + 31, 12);
-            display->print("ERROR NO SD");
+            display->print("SD ERROR");
             display->flipDMABuffer();
             
-            // Bloqueo total: el sistema se queda aquí hasta que se reinicie
+            // Complete lock: the system stays here until it is restarted
             while(true) { delay(1000); } 
         }
 
-        // Si entramos en FTP, saltamos a la función dedicada y el setup muere aquí
+        // If we enter FTP, jump to the dedicated function and setup ends here
         if (entrarFTP) {
             ejecutarModoFTP(); 
         }
 
-        // --- AVISO DE ESTADO DE ACTUALIZACIÓN ---
-        if (resultadoOTA == 0) { // Sistema al día
+        // --- UPDATE STATUS NOTICE ---
+        if (resultadoOTA == 0) { // System is up to date
             display->setTextColor(display->color565(255, 255, 255));
             display->setCursor(offset + 7, 8);
-            display->print("Ya tienes la ultima");
+            display->print("You have the latest");
             display->setCursor(offset + 1, 18);
-            display->print("No hay que actualizar");
+            display->print("No update needed");
             display->flipDMABuffer();
             delay(3000);
             display->fillScreen(0);
         } 
-        else if (resultadoOTA == 1) { // ¡ACTUALIZADO CON ÉXITO!
+        else if (resultadoOTA == 1) { // UPDATED SUCCESSFULLY!
             display->setTextColor(display->color565(255, 255, 255));
             display->setCursor(offset + 25, 8);
-            display->print("Actualizacion");
+            display->print("Update");
             display->setCursor(offset + 4, 18);
-            display->print("Completada con Exito");
+            display->print("Completed Successfully");
             display->flipDMABuffer();
             delay(3000);
             display->fillScreen(0);
@@ -3913,45 +3901,45 @@ void setup() {
         else if (resultadoOTA == 2) { // Error
             display->setTextColor(display->color565(255, 0, 0));
             display->setCursor(offset + 10, 12);
-            display->print("ERROR ACTUALIZANDO");
+            display->print("UPDATE ERROR");
             display->flipDMABuffer();
             delay(3000);
             display->fillScreen(0);
         }
 
-        // --- DIBUJO DEL LOGO "RETRO PIXEL" ---
+        // --- DRAW "RETRO PIXEL" LOGO ---
         display->setTextSize(1);
         display->setTextColor(display->color565(150, 150, 150)); 
         display->setCursor(offset + 30, 3);
         display->print("RETRO PIXEL");
 
-        // --- DIBUJO DE "LED" (Coloreado) ---
-        // L en Rojo
+        // --- DRAW "LED" (Colored) ---
+        // L in Red
         display->setTextColor(display->color565(255, 0, 0));
         display->setCursor(offset + 40, 15);
         display->print("L");
         
-        // E en Verde
+        // E in Green
         display->setTextColor(display->color565(0, 255, 0));
         display->setCursor(offset + 48, 15);
         display->print("E");
         
-        // D en Azul
+        // D in Blue
         display->setTextColor(display->color565(0, 0, 255));
         display->setCursor(offset + 56, 15);
         display->print("D");
 
-        // --- DIBUJO DE "lite" ---
+        // --- DRAW "lite" ---
         display->setTextColor(display->color565(200, 200, 200));
         display->setCursor(offset + 65, 15);
         display->print("lite");
 
-        // --- LÍNEAS DE CONTORNO ---
+        // --- OUTLINE LINES ---
         uint16_t borderCol = display->color565(80, 80, 80);
         display->drawRect(offset + 28, 1, 72, 11, borderCol); 
         display->drawRect(offset + 33, 13, 62, 11, borderCol); 
 
-        // --- MOSTRAR VERSIÓN DEL FIRMWARE ---
+        // --- SHOW FIRMWARE VERSION ---
         display->setCursor(offset + 46, 25);
         display->setTextColor(display->color565(100, 100, 100)); // Gris suave
         display->print("v");
@@ -3963,38 +3951,38 @@ void setup() {
     
     gif.begin(LITTLE_ENDIAN_PIXELS);
 
-    // 5. Arrancamos el servidor
-    // Solo si el WiFi está conectado
+    // 5. Start the server
+    // Only if WiFi is connected
     if (WiFi.status() == WL_CONNECTED) {
         registrarRutasWeb();
     }
 
     if (mostrarIP) {
-        // 1. DIBUJO DEL MÓVIL
-    uint16_t colorMovil = display->color565(70, 70, 70);       // Gris oscuro para la carcasa externa
-    uint16_t colorPantalla = display->color565(20, 180, 255);  // Azul celeste para la pantalla
-    uint16_t colorDetalle = display->color565(255, 255, 255);  // Blanco para altavoz y botón
+        // 1. DRAW MOBILE ICON
+    uint16_t colorMovil = display->color565(70, 70, 70);       // Dark gray for the outer casing
+    uint16_t colorPantalla = display->color565(20, 180, 255);  // Sky blue for the screen
+    uint16_t colorDetalle = display->color565(255, 255, 255);  // White for speaker and button
 
     display->fillScreen(0);
 
-    // Carcasa del móvil (x, y, ancho, alto, radio, color)
+    // Mobile casing (x, y, width, height, radius, color)
     display->fillRoundRect(offset + 8, 4, 14, 24, 2, colorMovil); 
 
-    // Pantalla interior
+    // Inner screen
     display->fillRect(offset + 10, 7, 10, 16, colorPantalla);
 
-    // Altavoz (Pequeña línea horizontal en el marco superior)
+    // Speaker (small horizontal line in the upper frame)
     display->drawLine(offset + 13, 5, offset + 16, 5, colorDetalle);
 
-    // Botón de inicio (Dos píxeles en el marco inferior)
+    // Home button (two pixels in the lower frame)
     display->drawPixel(offset + 14, 25, colorDetalle);
     display->drawPixel(offset + 15, 25, colorDetalle);
 
-    // 2. TEXTO CON LA DIRECCIÓN IP
+    // 2. IP ADDRESS TEXT
     display->setTextSize(1);
-    display->setTextColor(display->color565(255, 255, 255)); // Texto Blanco
+    display->setTextColor(display->color565(255, 255, 255)); // White text
     
-    // Alineamos el texto a la derecha del móvil y centrado en el eje Y
+    // Align the text to the right of the mobile icon and centered on the Y axis
     display->setCursor(offset + 32, 13); 
     display->print(WiFi.localIP().toString());
 
@@ -4004,28 +3992,28 @@ void setup() {
     display->fillScreen(0);
     }
 
-    // Intentamos recuperar la última playlist guardada
+    // Try to restore the last saved playlist
     Preferences prefs;
-    prefs.begin("retro-lite", true); // Modo lectura
+    prefs.begin("retro-lite", true); // Read mode
     String tmp = prefs.getString("lastList", "");
     strlcpy(playlistActiva, tmp.c_str(), sizeof(playlistActiva));
     prefs.end();
 
-    // --- LÓGICA DE FALLBACK (PLUG & PLAY) ---
+    // --- FALLBACK LOGIC (PLUG & PLAY) ---
     if (playlistActiva[0] == '\0' || !SD.exists(playlistActiva)) {
-        Serial.println(F("[SISTEMA] Sin playlist activa o archivo no encontrado."));
+        Serial.println(F("[SYSTEM] No active playlist or file not found."));
         
-        // 1. Escaneamos la carpeta /playlists para ver qué hay
+        // 1. Scan the /playlists folder to see what is available
         cargarNombresPlaylists(); 
         
         if (listaPlaylists.size() > 0) {
-            // 2. ¡Hay listas! Cogemos la primera que exista en la SD alfabéticamente
+            // 2. Playlists found! Use the first one that exists on the SD alphabetically
             snprintf(playlistActiva, sizeof(playlistActiva),
              "/playlists/%s.txt", listaPlaylists[0].c_str());
-            Serial.print(F("[INFO] Auto-asignando primera lista encontrada: "));
+            Serial.print(F("[INFO] Auto-assigning first playlist found: "));
             Serial.println(playlistActiva);
             
-            // Guardamos esta lista en memoria para que arranque más rápido la próxima vez
+            // Save this playlist in memory so it starts faster next time
             prefs.begin("retro-lite", false);
             prefs.putString("lastList", playlistActiva);
             prefs.end();
@@ -4034,14 +4022,14 @@ void setup() {
             interrumpirReproduccion = false;
             estadoActual = ESTADO_GIFS;
         } else {
-            // 3. Error Crítico: No hay ni un solo archivo .txt en la carpeta
-            Serial.println(F("[CRÍTICO] La carpeta /playlists está vacía."));
+            // 3. Critical error: There is not a single .txt file in the folder
+            Serial.println(F("[CRITICAL] The /playlists folder is empty."));
             estadoActual = ESTADO_MENU_PRINCIPAL;
             interrumpirReproduccion = true;
         }
     } else {
-        // La lista guardada existe y está bien
-        Serial.print(F("[SISTEMA] Cargando playlist: "));
+        // The saved playlist exists and is valid
+        Serial.print(F("[SYSTEM] Loading playlist: "));
         Serial.println(playlistActiva);
         interrumpirReproduccion = false;
         estadoActual = ESTADO_GIFS;
@@ -4060,7 +4048,7 @@ void loop() {
         server.handleClient();
     }
 
-    // Si está dormido, no procesamos GIFs ni menús
+    // If sleeping, do not process GIFs or menus
     if (isSleeping) {
         delay(100); 
         return;
@@ -4087,14 +4075,14 @@ void loop() {
 
     if (estadoActual == ESTADO_CONFIG_APP) {
     delay(50);
-    return;   // solo servimos peticiones HTTP, no tocamos GIFs/reloj
+    return;   // only serve HTTP requests; do not touch GIFs/clock
     }
 
-    // Decidimos qué dibujar en el panel
+    // Decide what to draw on the panel
     if (estadoActual == ESTADO_GIFS) {
 
         if (saliendoAGifs) {
-            // Reseteo total al volver a los GIFs
+            // Full reset when returning to GIFs
             gifCachePosition = 0; 
             gifsPlayed = 0;
             interrumpirReproduccion = false;        
@@ -4110,29 +4098,29 @@ void loop() {
             
             tiempoPresionado = millis();
             saliendoAGifs = false; 
-            Serial.println(F("[SISTEMA] Regreso a GIFs: Banderas de botón reseteadas."));
+            Serial.println(F("[SYSTEM] Returning to GIFs: Button flags reset."));
         }
 
         if (modoVisual == 1) { 
-            // --- MODO: SOLO RELOJ ---
+            // --- MODE: CLOCK ONLY ---
             mostrarRelojLite(false);
-            gestionarActualizacionClima(); // Se encarga del tiempo
+            gestionarActualizacionClima(); // Handles the weather data
             
         } else {
-            // --- MODO GIFS ---
-            // ¿Toca mostrar el reloj?
+            // --- GIF MODE ---
+            // Is it time to show the clock?
             if (clockEnable == 1 && autoClockInt > 0 && gifsPlayed >= autoClockInt) {
         
-                // A. Mostrar el reloj en pantalla
+                // A. Show the clock on screen
                 if (transitionEnable == 1) {
-                    mostrarRelojLite(true); // Con transición de particulas 
+                    mostrarRelojLite(true); // With particle transition 
                 }else
-                    mostrarRelojLite(false);// Sin transición de particulas
+                    mostrarRelojLite(false);// Without particle transition
         
-                // B. Gestionar la actualización de datos (Solo si toca por tiempo)
+                // B. Handle data updates (only when the interval is due)
                 gestionarActualizacionClima(); 
 
-                // C. Reiniciamos contador para volver a los GIFs
+                // C. Reset counter to return to GIFs
                 gifsPlayed = 0;
 
             } else {
@@ -4141,7 +4129,7 @@ void loop() {
         }
 
     }else {
-    // --- MODO MENÚ ---
+    // --- MENU MODE ---
     static EstadoSistema prevEstado    = ESTADO_GIFS;
     static int           prevCursorP   = -1;
     static int           prevCursorS   = -1;
