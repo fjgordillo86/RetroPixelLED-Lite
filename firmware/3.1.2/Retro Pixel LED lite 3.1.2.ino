@@ -21,8 +21,8 @@
 // ====================================================================
 //                     CONSTANTES & FIRMWARE LITE
 // ====================================================================
-#define FIRMWARE_VERSION "3.1.2" // Se añaden distintas fuentes seleccionables desde la APP e Integración con HA por REST.
-#define CURRENT_VERSION_NUM 312 // Versión numérica para comparar (2.1.0 -> 210)
+#define FIRMWARE_VERSION "3.1.2" // Adds selectable fonts from the app and REST integration with Home Assistant.
+#define CURRENT_VERSION_NUM 312 // Numeric version used for comparison (2.1.0 -> 210)
 #define GITHUB_VERSION_URL "https://github.com/fjgordillo86/RetroPixelLED-Lite/raw/refs/heads/main/docs/version.json"
 #define GITHUB_RAW_BASE_URL "https://raw.githubusercontent.com/fjgordillo86/RetroPixelLED-Lite/main/Contenido%20SD/idioma/"
 #define CONFIG_FILE "/config.ini"
