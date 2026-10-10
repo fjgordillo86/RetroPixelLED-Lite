@@ -775,7 +775,7 @@ PALETTE.forEach(p => {
 });
 
 function refreshSwatchSelection(hex){
-  document.querySelectorAll('.swatch').forEach(s => {
+  document.querySelectorAll('#swatches .swatch').forEach(s => {
     s.classList.toggle('active', s.dataset.color.toLowerCase() === hex.toLowerCase());
     if (s.classList.contains('active')) s.style.color = hex;
   });
