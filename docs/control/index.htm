@@ -319,6 +319,14 @@
   .irMsg{font-size:10px; text-align:center; min-height:14px; margin-top:10px;}
   .irMsg.ok{color:#5FDB7E;}
   .irMsg.err{color:var(--red-alert);}
+  
+  /* ---------- AVISO DE ACTUALIZACIÓN ---------- */
+  .gear{position:relative;}
+  .gear.hasUpdate::after{
+    content:""; position:absolute; top:3px; right:3px; width:8px; height:8px;
+    border-radius:50%; background:var(--amber); box-shadow:0 0 6px var(--amber);
+  }
+  
 </style>
 </head>
 <body>
@@ -534,7 +542,8 @@
     <div class="otaBox">
       <h3>Firmware (OTA)</h3>
       <p>Comprueba si hay una versión nueva publicada y, si la hay, la descarga e instala. El panel se reiniciará automáticamente durante el proceso.</p>
-      <button id="otaBtn">⬆ BUSCAR ACTUALIZACIÓN</button>
+      <div class="otaResult" id="otaInfo" style="margin:0 0 10px;"></div>
+	  <button id="otaBtn">⬆ BUSCAR ACTUALIZACIÓN</button>
     </div>
 
     <div class="otaBox">
@@ -547,6 +556,62 @@
 </div>
 
 <script>
+/* =========================================================
+   AVISO DE ACTUALIZACIÓN
+   Lee docs/version.json (mismo origen que la PWA) y lo compara
+   con la versión que informa el panel en /status.
+   ========================================================= */
+const VERSION_URL = '../version.json';
+const VERSION_TTL = 6 * 3600 * 1000;      // como mucho una consulta cada 6 h (salvo al abrir el modal 🔄)
+
+function fmtVersion(n){ return Math.floor(n / 100) + '.' + (Math.floor(n / 10) % 10) + '.' + (n % 10); }
+
+async function leerVersionPublicada(forzar){
+  try {
+    const g = JSON.parse(localStorage.getItem('rpl_ver') || 'null');
+    if (!forzar && g && Date.now() - g.t < VERSION_TTL) return g;
+  } catch (e) {}
+  const r = await fetch(VERSION_URL, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+  if (!r.ok) throw new Error(r.status);
+  const j = await r.json();
+  const dato = { t: Date.now(), v: Number(j.v) || 0, name: j.name || '' };
+  try { localStorage.setItem('rpl_ver', JSON.stringify(dato)); } catch (e) {}
+  return dato;
+}
+
+async function comprobarActualizacion(st, forzar){
+  try {
+    const actual = Number(st && st.fwNum);
+    if (!actual) return;                                  // firmware sin fwNum: no podemos comparar
+    const pub = await leerVersionPublicada(forzar);
+    if (!pub.v) return;
+
+    const hay = pub.v > actual;
+    const nombre = pub.name || fmtVersion(pub.v);
+    const info = document.getElementById('otaInfo');
+    const btn  = document.getElementById('otaBtn');
+
+    document.getElementById('updateBtn').classList.toggle('hasUpdate', hay);
+
+    if (hay) {
+      info.className = 'otaResult ok';
+      info.textContent = 'Disponible: ' + nombre + ' (instalada: ' + st.fw + ')';
+      btn.textContent = '⬆ INSTALAR ' + nombre;
+    } else {
+      info.className = 'otaResult';
+      info.textContent = actual > pub.v
+        ? 'Versión de desarrollo: ' + st.fw
+        : 'Estás al día: ' + st.fw;
+      btn.textContent = '⬆ BUSCAR ACTUALIZACIÓN';
+    }
+  } catch (e) { /* sin internet o GitHub no responde: no molestamos al usuario */ }
+}
+
+// Al abrir el modal 🔄 se vuelve a consultar sin usar la caché local
+document.getElementById('updateBtn').addEventListener('click', () => {
+  if (panelStatus) comprobarActualizacion(panelStatus, true);
+});
+
 /* =========================================================
    FUENTE DE PUNTOS 5x7 (misma lógica que el panel físico)
    ========================================================= */
@@ -903,6 +968,7 @@ async function cargarEstadoPanel(){
     if (!res.ok) return;
     panelStatus = await res.json();
     aplicarEstadoPanelAUI(panelStatus);
+	comprobarActualizacion(panelStatus, false);
   } catch (e) { /* sin conexión: dejamos los valores por defecto */ }
 }
 
