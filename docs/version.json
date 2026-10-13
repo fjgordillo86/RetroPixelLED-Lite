@@ -1,4 +1,9 @@
 {
-  "v": 314,
-  "url": "https://github.com/fjgordillo86/RetroPixelLED-Lite/raw/refs/heads/main/docs/firmware.bin"
+  "v": 315,
+  "url": "https://github.com/fjgordillo86/RetroPixelLED-Lite/raw/refs/heads/main/docs/firmware.bin",
+  "notes": [
+    "Aviso de nuevo Update desde la PWA",
+    "Consulta de diagnostico desde la PWA"
+  ]
+}
 }
