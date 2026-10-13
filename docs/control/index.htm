@@ -325,6 +325,9 @@
   .gear.hasUpdate::after{
     content:""; position:absolute; top:3px; right:3px; width:8px; height:8px;
     border-radius:50%; background:var(--amber); box-shadow:0 0 6px var(--amber);
+  .otaNotes{display:none; margin:0 0 10px; padding:2px 0 2px 22px; border-left:2px solid var(--amber);
+    font-size:10px; line-height:1.6; color:var(--text-dim); list-style:disc;}
+  .otaNotes.show{display:block;}
   }
   
 </style>
@@ -543,6 +546,7 @@
       <h3>Firmware (OTA)</h3>
       <p>Comprueba si hay una versión nueva publicada y, si la hay, la descarga e instala. El panel se reiniciará automáticamente durante el proceso.</p>
       <div class="otaResult" id="otaInfo" style="margin:0 0 10px;"></div>
+	  <ul class="otaNotes" id="otaNotes"></ul>
 	  <button id="otaBtn">⬆ BUSCAR ACTUALIZACIÓN</button>
     </div>
 
@@ -574,7 +578,8 @@ async function leerVersionPublicada(forzar){
   const r = await fetch(VERSION_URL, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
   if (!r.ok) throw new Error(r.status);
   const j = await r.json();
-  const dato = { t: Date.now(), v: Number(j.v) || 0, name: j.name || '' };
+    const notes = Array.isArray(j.notes) ? j.notes : (j.notes ? [j.notes] : []);
+  const dato = { t: Date.now(), v: Number(j.v) || 0, name: j.name || '', notes: notes.slice(0, 8).map(String) };
   try { localStorage.setItem('rpl_ver', JSON.stringify(dato)); } catch (e) {}
   return dato;
 }
@@ -590,6 +595,14 @@ async function comprobarActualizacion(st, forzar){
     const nombre = pub.name || fmtVersion(pub.v);
     const info = document.getElementById('otaInfo');
     const btn  = document.getElementById('otaBtn');
+	const ul = document.getElementById('otaNotes');
+    ul.replaceChildren();
+    if (hay && pub.notes && pub.notes.length) {
+      pub.notes.forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+      ul.classList.add('show');
+    } else {
+      ul.classList.remove('show');
+    }
 
     document.getElementById('updateBtn').classList.toggle('hasUpdate', hay);
 
@@ -840,7 +853,7 @@ PALETTE.forEach(p => {
 });
 
 function refreshSwatchSelection(hex){
-  document.querySelectorAll('#swatches .swatch').forEach(s => {
+	document.querySelectorAll('#swatches .swatch').forEach(s => {
     s.classList.toggle('active', s.dataset.color.toLowerCase() === hex.toLowerCase());
     if (s.classList.contains('active')) s.style.color = hex;
   });
