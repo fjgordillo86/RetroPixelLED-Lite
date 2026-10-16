@@ -34,8 +34,9 @@
   "SUBMENU_WIFI": {
     "titulo": "WIFI ",
 	"mostrar_ip": "Show IP: ",
-	"anadir_red": "Add network",
-	"portal_abriendo": "Opening portal",
+	"control_app": "APP Control: ",
+	"anadir_red": "Add Network",
+	"portal_abriendo": "Opening Portal",
 	"portal_reinicio": "Restarting..."
   },
   "SUBMENU_RELOJ": {
