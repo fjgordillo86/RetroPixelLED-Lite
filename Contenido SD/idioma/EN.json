@@ -33,7 +33,10 @@
   },
   "SUBMENU_WIFI": {
     "titulo": "WIFI ",
-	"mostrar_ip": "Show IP: "
+	"mostrar_ip": "Show IP: ",
+	"anadir_red": "Add network",
+	"portal_abriendo": "Opening portal",
+	"portal_reinicio": "Restarting..."
   },
   "SUBMENU_RELOJ": {
     "titulo": "CLOCK ",
