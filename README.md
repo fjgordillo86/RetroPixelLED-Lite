@@ -1,7 +1,7 @@
 # ✨ Retro Pixel LED Lite
 
 <p align="center">
-  <img alt="Versión" src="https://img.shields.io/badge/versión-3.1.4-blue">
+  <img alt="Versión" src="https://img.shields.io/badge/versión-3.1.5-blue">
   <img alt="Plataforma" src="https://img.shields.io/badge/plataforma-ESP32-informational">
   <img alt="Licencia" src="https://img.shields.io/badge/licencia-MIT-green">
   <img alt="Estado" src="https://img.shields.io/badge/estado-activo-success">
@@ -30,11 +30,13 @@ Si la rama 2.x.x trajo el Menú OSD, la **v3.0.0** fue el salto definitivo hacia
 
 **Desde la v3.1.0 controlas el panel desde una app (PWA)**, y desde la **v3.1.2** también desde **Home Assistant**. 🏠
 
+**Desde la v3.1.5 ya no hace falta editar ningún archivo para conectarlo a tu WiFi:** el panel abre su propio portal de configuración desde el móvil, y después lo encuentras siempre en `retropixel.local`. 📶
+
 ---
 
 ## 📑 Índice
 
-1. [🆕 Novedades de la versión actual](#-novedades-de-la-versión-v314-lite)
+1. [🆕 Novedades de la versión actual](#-novedades-de-la-versión-v315-lite)
 2. [🚀 Guía rápida](#-guía-rápida-primeros-pasos)
 3. [🎛️ Funciones principales](#️-funciones-principales)
    - [🖥️ Menú OSD](#️-menú-osd-navegación-inteligente)
@@ -46,6 +48,7 @@ Si la rama 2.x.x trajo el Menú OSD, la **v3.0.0** fue el salto definitivo hacia
    - [🌐 Multi-idioma](#-multi-idioma)
    - [📂 Servidor FTP](#-servidor-ftp)
    - [🔄 Actualización OTA](#-actualización-ota)
+   - [📶 Portal WiFi y acceso por nombre](#-portal-wifi-y-acceso-por-nombre-mdns)
 4. [⚙️ Instalación y configuración](#️-instalación-y-configuración)
    - [1. Programar el ESP32](#1--programar-el-esp32-web-installer)
    - [2. Preparar la tarjeta SD](#2--preparación-de-la-tarjeta-sd)
@@ -56,7 +59,7 @@ Si la rama 2.x.x trajo el Menú OSD, la **v3.0.0** fue el salto definitivo hacia
 6. [🕹️ Integración con Arcade](#️-integración-con-arcade-batocera-recalbox-retrobat-o-replayos)
 7. [🏠 Integración con Home Assistant](#-integración-con-home-assistant-guía-completa)
 8. [🧠 Arquitectura interna / Core Lite](#-arquitectura-interna--core-lite)
-9. [📜 Historial de cambios detallado](#-historial-de-cambios-detallado-v300--v314)
+9. [📜 Historial de cambios detallado](#-historial-de-cambios-detallado-v300--v315)
 10. [🛒 Lista de materiales](#-lista-de-materiales)
 11. [🔌 Conexiones (Pinout)](#-conexiones)
 12. [🛠️ Roadmap](#️-roadmap)
@@ -64,16 +67,19 @@ Si la rama 2.x.x trajo el Menú OSD, la **v3.0.0** fue el salto definitivo hacia
 
 ---
 
-## 🆕 Novedades de la versión v3.1.4 Lite
+## 🆕 Novedades de la versión v3.1.5 Lite
 
-- **🕹️ Soporte para el sistema RetroBat:** reproducción automática de GIFs y marquesinas retro al cambiar de juego mediante integración con el frontend RetroBat.
-- **💾 Velocidad de lectura de la SD configurable:** elige entre 4, 10, 20 o 25 MHz desde la PWA, el menú OSD (Ajustes avanzados) o el parámetro `SD_SPEED` del `config.ini`. Por defecto 10 MHz. Si la tarjeta no arranca a la velocidad elegida, el sistema baja solo a una inferior.
-- **🎞️ Fix de velocidad en los GIFs:** eliminada la doble espera entre frames, con una reproducción más fluida y ajustada al tiempo real de cada frame.
+- **📶 Portal WiFi integrado:** conecta el panel a tu red desde el móvil, sin editar `config.ini`. Se abre desde `Menú OSD → WiFi → Añadir red`, o solo en el primer arranque si no hay red configurada. El panel muestra su red y una clave aleatoria, eliges tu WiFi de una lista y él mismo comprueba la conexión antes de guardarla. Textos en español, inglés y francés. [Ver cómo funciona](#-portal-wifi-y-acceso-por-nombre-mdns).
+- **🏷️ Acceso por nombre (mDNS):** el panel responde en `retropixel.local`, sin depender de la IP. La PWA recuerda la última IP y te ofrece volver a ella si el nombre no se resuelve en tu dispositivo.
+- **🔔 Aviso de actualización en la PWA:** un punto ámbar sobre el icono 🔄 te avisa cuando hay una versión nueva, con su número y las novedades.
+- **ℹ️ Nueva página "Acerca de" en la PWA:** versiones de la PWA y del firmware, creador, licencia y **diagnóstico en vivo** del panel (memoria, último reinicio, WiFi, SD...), con botón para copiar el informe.
+- **🩺 Diagnóstico `/diag`:** consulta rápida del estado interno desde el navegador (`http://retropixel.local/diag`).
+- **🔐 Contraseñas WiFi con `#`:** corregido un fallo de lectura de `config.ini` que cortaba el SSID o la contraseña a partir de un `#`.
+- **🛡️ PWA más fiable al actualizarse:** el service worker lleva ahora una versión única, instala aunque falle algún archivo y deja de interceptar las peticiones al panel.
 
+> ⚠️ **Al actualizar desde versiones anteriores a la v3.1.4:** desde esa versión se usa el esquema de particiones *Minimal SPIFFS* (1,9 MB para la app con OTA) y el firmware ya no cabe en el espacio antiguo. No se puede instalar por OTA: reinstálalo desde el instalador web. Se borran los datos guardados en la memoria interna (playlist activa, ajustes del temporizador); la configuración y los GIFs de la SD se conservan. Si ya tienes la v3.1.4, puedes pasar a la v3.1.5 por OTA.
 
-> ⚠️ **Al actualizar desde versiones anteriores:** esta versión usa el esquema de particiones *Minimal SPIFFS* (1,9 MB para la app con OTA) y el firmware ya no cabe en el espacio antiguo. No se puede instalar por OTA: reinstálalo desde el instalador web. Se borran los datos guardados en la memoria interna (playlist activa, ajustes del temporizador); la configuración y los GIFs de la SD se conservan.
-
-Para el detalle de versiones anteriores (marquesinas GIF en Arcade, reconexión WiFi, IP en el menú OSD...) consulta el [Historial de cambios](#-historial-de-cambios-detallado-v300--v314).
+Para el detalle de versiones anteriores (marquesinas GIF en Arcade, reconexión WiFi, IP en el menú OSD...) consulta el [Historial de cambios](#-historial-de-cambios-detallado-v300--v315).
 
 ---
 
@@ -83,10 +89,10 @@ Si es la primera vez que instalas Retro Pixel LED Lite, este es el camino más c
 
 1. **Flashea el firmware** con el [instalador web](#1--programar-el-esp32-web-installer) — solo necesitas Chrome o Edge, nada que instalar en el PC.
 2. **Prepara la MicroSD** en FAT32 con el [contenido de la carpeta `Contenido SD`](#2--preparación-de-la-tarjeta-sd).
-3. **Edita `config.ini`** con tu WiFi y tus preferencias — es el único archivo que necesitas tocar para arrancar ([referencia completa](#3--configuración-vía-configini)).
-4. **Enciende el panel.** Sincronizará la hora, cargará tus GIFs y estará listo. ✨
+3. **Revisa `config.ini`** con tus preferencias (zona horaria, ciudad del clima...) — [referencia completa](#3--configuración-vía-configini). El WiFi puedes dejarlo vacío: el panel te lo pedirá desde el móvil en el primer arranque.
+4. **Enciende el panel.** Si no tiene red configurada, abre el [portal WiFi](#-portal-wifi-y-acceso-por-nombre-mdns): conecta el móvil a la red que muestra la pantalla y elige tu WiFi. Después sincronizará la hora, cargará tus GIFs y estará listo. ✨
 5. *(Opcional)* Instala la [PWA](#-pwa--app-de-control-remoto) para controlarlo desde el móvil, o [intégralo con Home Assistant](#-integración-con-home-assistant-guía-completa) si usas domótica.
-6. *(Opcional)* Si tienes Batocera, Recalbox, RetroBat o ReplayOS, sigue la [guía de integración Arcade](#️-integración-con-arcade-batocera-recalbox-RetroBat-o-replayos) para marquesinas dinámicas.
+6. *(Opcional)* Si tienes Batocera, Recalbox, RetroBat o ReplayOS, sigue la [guía de integración Arcade](#️-integración-con-arcade-batocera-recalbox-retrobat-o-replayos) para marquesinas dinámicas.
 
 El resto de este documento es la referencia detallada de cada función — no hace falta leerlo entero para empezar. 🙂
 
@@ -128,9 +134,10 @@ El sistema se controla mediante un **único botón** (o el mando IR), con una l�
 │   └── Brillo: [5% - 100%]
 ├── 📶 WiFi: [ON / OFF]
 │   ├── 🔄 Activar: [SI / NO]
-│   ├── 🔎 Mostrar IP: [SI / NO]
-│   ├── 🏷️ IP: [192.168.1.117]
+│   ├── ➕ Añadir red Wifi
 │   ├── 📱 Control APP: [SI / NO]
+│   ├── 🏷️ IP: [192.168.1.117]
+│   ├── 🔎 Mostrar IP: [SI / NO]
 │   └── 🔙 Volver
 ├── 🕒 Reloj: [ON / OFF]
 │   ├── 🔄 Activar: [SI / NO]
@@ -184,7 +191,7 @@ App web moderna, instalable en cualquier dispositivo (móvil, tablet, ordenador)
 
 https://github.com/user-attachments/assets/f5231448-7862-4476-901e-ac25ac7f4248
 
-La interfaz se divide en **5 secciones**:
+La interfaz se divide en **6 secciones**:
 
 **1️⃣ Página principal (Home)**
 - **☀️ Control de brillo:** slider 0-100% con aplicación instantánea, sin reinicio.
@@ -209,6 +216,7 @@ La interfaz se divide en **5 secciones**:
 
 **4️⃣ Actualización 🔄**
 - **OTA de firmware:** comprueba GitHub y actualiza automáticamente si hay versión nueva.
+- **Aviso de nueva versión:** un punto ámbar sobre el icono 🔄 indica que hay una versión nueva; al abrir el modal ves cuál es y sus novedades. *(nuevo en v3.1.5)*
 - **Descarga de idiomas:** trae los `.json` desde GitHub a `/idiomas` de la SD.
 
 **5️⃣ Ajustes 🛠**
@@ -217,10 +225,17 @@ Edición remota de `config.ini`, organizada en 7 secciones: WiFi (SSID, contrase
 
 Reinicio automático tras guardar, solo si el cambio lo requiere.
 
+**6️⃣ Acerca de ℹ️** *(nuevo en v3.1.5)*
+
+Se abre desde el enlace "ℹ Acerca de" al pie de la pantalla principal.
+- **Versiones:** de la PWA y del firmware del panel, con aviso si hay una versión nueva.
+- **Créditos:** creador (`fjgordillo86`), licencia MIT y enlace al código.
+- **Diagnóstico en vivo:** memoria libre, último reinicio, señal WiFi, SD, CPU y uso de la partición de firmware, con botón para **copiar el informe** y adjuntarlo al reportar un problema.
+
 #### ⚙️ Instalación y configuración de la PWA
 
 1. Abre <https://fjgordillo86.github.io/RetroPixelLED-Lite/control/> desde tu dispositivo.
-2. Toca el icono de conexión (⚙) y escribe la IP local de tu panel (ej. `192.168.1.117`).
+2. Toca el icono de conexión (⚙) y escribe el nombre del panel (`retropixel.local`) o su IP local (ej. `192.168.1.117`). Si el nombre no se encuentra en tu dispositivo, la PWA te ofrece usar la última IP conocida.
 3. *(Opcional)* Instálala como app: Chrome/Edge suele ofrecerlo solo; si no, menú (⋮) → "Instalar aplicación".
 4. Listo — aparece como una app normal, sin escribir URLs cada vez. 🎉
 
@@ -283,6 +298,8 @@ Sistema de **diccionarios dinámicos**: el idioma NO reside en RAM constantement
   - 🔡 Incluye los dos puntos y el espacio si quieres que aparezcan (ej: `"modo": "Modo: "`).
   - 💾 Guarda en UTF-8 sin BOM.
 - **Descarga remota:** desde la PWA o el menú OSD (`Actualización → Descargar idiomas`), directo desde GitHub, sin SD extraíble.
+- **Portal WiFi:** sus textos (panel y web) van dentro del firmware en ES, EN y FR, según `LANGUAGE`; cualquier otro idioma muestra inglés. No usan estos archivos.
+- **Claves nuevas en v3.1.5:** el bloque `SUBMENU_WIFI` incluye `anadir_red`, `portal_abriendo` y `portal_reinicio`. Si mantienes un idioma propio, añádelas; mientras falten, el menú muestra el texto en español.
 
 ---
 
@@ -317,12 +334,44 @@ Ver el [paso a paso completo con capturas](#-explorador-sd-ftp--detalle) más ab
 ### 🔄 Actualización OTA
 
 Sin necesidad de conectar el panel al PC:
-1. WiFi configurado y activo en `config.ini`.
-2. `Menú OSD → Actualización → Buscar OTA` (o desde la PWA).
-3. El sistema descarga el firmware desde GitHub y se reinicia solo. 🔃
+1. WiFi configurado y activo (en `config.ini` o con el [portal WiFi](#-portal-wifi-y-acceso-por-nombre-mdns)).
+2. La PWA te avisa cuando hay una versión nueva: punto ámbar sobre 🔄, con la versión disponible y sus novedades.
+3. `Menú OSD → Actualización → Buscar OTA` (o el botón de la PWA).
+4. El sistema descarga el firmware desde GitHub y se reinicia solo. 🔃
 
 > [!WARNING]
 > No desconectes la alimentación durante la actualización.
+
+---
+
+### 📶 Portal WiFi y acceso por nombre (mDNS)
+
+Conecta el panel a tu red **sin editar `config.ini`** ni sacar la MicroSD, y encuéntralo siempre en `retropixel.local`.
+
+**Cuándo se abre el portal:**
+- `Menú OSD → WiFi → Añadir red` — para cambiar de router o de contraseña cuando quieras.
+- **Automáticamente** al encender, si `WIFI_ENABLE=1` y `SSID` está vacío en `config.ini` (primera instalación).
+
+**Paso a paso:**
+1. El panel muestra su propia red: `WiFi: RetroPixel-LED`, `Pass:` (8 dígitos aleatorios, distintos cada vez) e `IP: 192.168.4.1`.
+2. Conecta el móvil a esa red. La página de configuración se abre sola; si no, entra en `192.168.4.1`.
+3. Toca tu red en la lista (o escribe el nombre si está oculta), introduce la contraseña y pulsa **Conectar**.
+4. El panel prueba la conexión (hasta 15 s). Si conecta, la guarda en `config.ini`, muestra su IP y `retropixel.local`, y se reinicia. Si falla, muestra `NO CONECTA` y puedes intentarlo de nuevo.
+
+**Para salir sin guardar:** botón **Cancelar** de la página, tecla **OK** del mando IR o el botón físico. Si nadie lo usa, el portal se cierra solo a los 5 minutos.
+
+> [!NOTE]
+> - Necesita la tarjeta SD, porque la red se guarda en `config.ini`.
+> - El ESP32 solo funciona con redes de **2,4 GHz**.
+> - Los textos salen en español o francés si `LANGUAGE` es `ES` o `FR`; con cualquier otro idioma, en inglés.
+> - Para ahorrar memoria, el panel arranca sin *Double Buffer* mientras el portal está abierto. Tu ajuste se conserva.
+
+**Acceso por nombre (mDNS):** con el WiFi activo, el panel responde en **`http://retropixel.local`**. En la PWA escribe `retropixel.local` en lugar de la IP; si tu dispositivo no lo resuelve, la PWA te ofrece volver a la última IP conocida.
+
+> [!TIP]
+> `.local` funciona en Windows 10/11, macOS, iOS y Linux. Algunos Android y ciertas redes (invitados, VLAN, routers que filtran multicast) no lo resuelven: en ese caso usa la IP.
+
+**Diagnóstico:** `http://retropixel.local/diag` devuelve un JSON con la memoria libre y mínima, el motivo del último reinicio, la señal WiFi, la SD y el uso de la partición de firmware. Es lo mismo que muestra la página **Acerca de** de la PWA.
 
 ---
 
@@ -372,16 +421,19 @@ El archivo `config.ini` está en la carpeta [Contenido SD](https://github.com/fj
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v3.1.4 - ARCHIVO DE CONFIGURACIÓN
+# 🕹️ RETRO PIXEL LED LITE v3.1.5 - ARCHIVO DE CONFIGURACIÓN
 # ============================================================
 # Nota: No dejes espacios alrededor del símbolo '='.
 # Ejemplo correcto: BRIGHTNESS=40
 
 [WIFI_NTP]
-# Configura tu red WiFi
+# Configura tu red WiFi. Déjala vacía (SSID= y PASS=) para elegirla desde el móvil con el portal WiFi del panel
+# Si tu contraseña contiene '#', escríbela tal cual (solo es comentario un '#' precedido de un espacio)
 WIFI_ENABLE=1
-SSID=Nombre_De_Tu_Red
-PASS=Password_De_Tu_Red
+SSID=
+PASS=
+# Mostrar IP al iniciar
+MOSTRAR_IP=0
 # Configura tu zona horaria
 TZ=CET-1CEST,M3.5.0,M10.5.0/3
 
@@ -420,7 +472,7 @@ RANDOM_MODE=1
 AUTO_CLOCK_INT=6
 # Duracion: Cuantos segundos se muestra el reloj
 CLOCK_DURATION=10
-# Estilos: 0=Matrix, 1=Solid, 2=Rainbow, 3=Pulse, 4=Gradient
+# Estilos: 0=Solid, 1=Aurora, 2=Rainbow, 3=Gradient, 4= Fuego, 5=Glitch
 CLOCK_STYLE=2
 # Activa la transicion del reloj a GIFs con una explosion de particulas : 0=OFF, 1=ON
 TRANSITION_ENABLE=1
@@ -559,6 +611,10 @@ Detalles técnicos de cómo funciona el sistema por dentro:
 - **Motor de búsqueda binaria (Arcade):** localiza marquesinas entre miles de archivos en milisegundos, saltando directamente a la posición en la SD gracias a índices ordenados alfabéticamente — no "escanea" carpetas.
 - **Memoria adaptativa (Single/Double Buffer):** Double Buffer para fluidez total en GIFs; conmuta a Single Buffer en modo Arcade al cargar bitmaps de alta definición.
 - **API HTTP en tiempo real:** receptor de comandos para sincronización con Batocera, Recalbox, ReplayOS y Home Assistant.
+- **📶 Portal WiFi integrado:** punto de acceso temporal con DNS de portal cautivo y un servidor web propio que se destruye al terminar, sin dejar rutas abiertas en la red. Escanea las redes *antes* de levantar el punto de acceso, genera una clave aleatoria que solo se ve en el panel y arranca sin Double Buffer para ahorrar RAM (se restaura el valor del usuario al guardar).
+- **🏷️ mDNS:** el panel se anuncia como `retropixel.local` mientras hay WiFi; la PWA guarda la última IP como alternativa.
+- **🩺 Diagnóstico `/diag`:** JSON de solo lectura, sin acceso a la SD, con memoria, motivo de reinicio, WiFi y uso de la partición OTA.
+- **🧩 Código modular:** las rutas HTTP viven en `WebRoutes.ino` y el portal en `PortalWiFi.ino` (con `PortalPaginas.h` y `PortalTextos.h`).
 - **Smart Text Centering:** alinea automáticamente menús y estados al centro de la matriz (`offset + 64px`), calculando el ancho de cada cadena.
 - **WiFi Stealth Mode:** el WiFi solo se activa brevemente para sincronizar hora y clima; el resto del tiempo el sistema va **100% offline**, con **0 lag** en la reproducción.
 - **Barra de notificaciones dinámica:** con el clima activo, el reloj baja su posición (`startY=9`) para mostrar `WEATHER_MSG`, el icono del tiempo y la temperatura.
@@ -570,10 +626,17 @@ Detalles técnicos de cómo funciona el sistema por dentro:
 
 ---
 
-## 📜 Historial de cambios detallado (v3.0.0 → v3.1.4)
+## 📜 Historial de cambios detallado (v3.0.0 → v3.1.5)
 
 | Característica | Detalle técnico | Beneficio |
 | :--- | :--- | :--- |
+| **📶 Portal WiFi integrado** | Punto de acceso temporal (`RetroPixel-LED`) con clave aleatoria en pantalla, DNS de portal cautivo y página web propia con la lista de redes ordenada por señal. Prueba la conexión antes de guardarla en `config.ini`. Se abre desde `Menú OSD → WiFi → Añadir red` o solo, con `WIFI_ENABLE=1` y `SSID` vacío. Textos en ES/EN/FR dentro del firmware. | **Conecta el panel sin editar archivos.** Cambiar de router ya no obliga a sacar la SD. |
+| **🏷️ Acceso por nombre (mDNS)** | El panel se anuncia como `retropixel.local`. La PWA acepta nombre o IP (`GET /status` incluye ahora `ip`), recuerda la última IP conocida y ofrece usarla si el nombre no se resuelve. | **Sin depender de la IP**, que puede cambiar con el router. |
+| **🔔 Aviso de actualización** | La PWA compara la versión del firmware (`fw` y `fwNum` en `GET /status`) con `version.json` en GitHub Pages. Punto ámbar sobre 🔄, versión disponible y novedades (`notes`). | **Te enteras de las versiones nuevas** sin tener que buscarlas. |
+| **ℹ️ Página "Acerca de" (PWA)** | Versión de la PWA (leída de la caché del service worker) y del firmware, creador, licencia y diagnóstico en vivo con botón de copiar informe. | **Informes de errores más fáciles** y estado del panel a la vista. |
+| **🩺 Endpoint `/diag`** | `GET /diag`: uptime, heap libre y mínimo, mayor bloque libre, motivo del último reinicio, RSSI, tamaño y velocidad de la SD, CPU y uso de la partición OTA. | **Diagnóstico de memoria y estabilidad** sin cable USB. |
+| **🔐 Contraseñas WiFi con `#`** | En `config.ini`, para `SSID` y `PASS` solo se considera comentario un `#` precedido de un espacio. | **Cualquier contraseña funciona**, también las que llevan `#`. |
+| **🛡️ Service worker de la PWA** | Versión única en `sw.js` (nombre de la caché), instalación tolerante a fallos, coincidencia exacta de rutas (no intercepta las peticiones al panel) y borrado solo de sus propias cachés. | **Actualizaciones de la PWA más fiables.** |
 | **🕹️ Soporte RetroBat** | Integración con el frontend RetroBat para la detección y reproducción automática de GIFs/marquesinas asociadas a los juegos. | **Experiencia arcade dinámica.** Muestra el marquee del juego activo al cambiar de título en RetroBat. |
 | **💾 Velocidad de lectura SD configurable** | Parámetro `SD_SPEED` (4, 10, 20 o 25 MHz; 10 por defecto) editable desde la PWA, el menú OSD (Ajustes avanzados) y `config.ini`. Arranque en dos fases con *fallback* automático a una velocidad inferior si la tarjeta no responde. | **Carga de GIFs más rápida** y ajustable a la calidad de cada tarjeta, sin recompilar. |
 | **🎞️ Fix de velocidad de reproducción de GIFs** | Eliminada la doble espera entre frames (`playFrame` sincronizado + retardo propio). El tiempo de decodificación ahora se descuenta de la espera. | **Reproducción más fluida** y fiel al tiempo real de cada frame del GIF. |
@@ -709,11 +772,11 @@ Esta función activa un servidor de archivos inalámbrico. Su objetivo es facili
 
 ### ⚡ Optimización y funcionalidad
 
-*(pendiente de definir)*
+- 📂 Gestor de archivos en la PWA: subir GIFs y crear playlists por WiFi (solo si resulta estable y rápido).
 
 ### 🎨 Estética y conectividad
 
-*(pendiente de definir)*
+- 🎮 Mini-juegos (Snake, Pong) controlados con el mando IR.
 
 ---
 
