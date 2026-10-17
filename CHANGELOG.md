@@ -1,7 +1,7 @@
 ## 📝 Changelog (Registro de Cambios)
 
 ### [v3.1.5] - 2026-10-17
-**Retro Pixel LED Lite: "Fluidez Total"**
+**Retro Pixel LED Lite: "Conexiones"**
 
 #### ✨ Añadido
 * **Portal WiFi integrado:** conecta el panel a tu red desde el móvil, sin editar `config.ini`. Se abre desde `Menú OSD → WiFi → Añadir red`, o solo en el primer arranque si no hay red configurada. El panel muestra su red y una clave aleatoria, eliges tu WiFi de una lista y él mismo comprueba la conexión antes de guardarla. Textos en español, inglés y francés.
