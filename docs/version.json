@@ -1,8 +1,11 @@
 {
-  "v": 314,
+  "v": 315,
   "url": "https://github.com/fjgordillo86/RetroPixelLED-Lite/raw/refs/heads/main/docs/firmware.bin",
   "notes": [
-    "Aviso de nuevo Update desde la PWA",
-    "Consulta de diagnostico desde la PWA"
+    "Portal WiFi integrado",
+    "Acceso por nombre (mDNS)",
+    "Aviso de actualización en la PWA",
+    "Nueva página 'Acerca de' en la PWA",
+    "Correciones de errores y mejoras"
   ]
 }
