@@ -24,7 +24,7 @@
 
 ## 💡 Descripción del proyecto
 
-**Retro Pixel LED Lite** es la versión de alto rendimiento de Retro Pixel LED, pensada para quienes buscan estabilidad absoluta, velocidad instantánea y un sistema libre de mantenimiento. A diferencia de la versión estándar, el firmware **LITE** se quita de encima el servidor web y la conectividad permanente para dedicar el 100% de la potencia del ESP32 a hacer una sola cosa muy bien: renderizar GIFs.
+**Retro Pixel LED Lite** es la versión de alto rendimiento de Retro Pixel LED, pensada para quienes buscan estabilidad absoluta, velocidad instantánea y un sistema libre de mantenimiento.
 
 Si la rama 2.x.x trajo el Menú OSD, la **v3.0.0** fue el salto definitivo hacia la independencia del hardware: el panel se convirtió en un dispositivo inteligente autónomo, sin necesidad de conectarlo al ordenador para mantenimiento ni configuración. `config.ini` y las playlists se editan directamente desde el Explorador de Windows o un cliente FTP, convirtiendo la tarjeta SD en una unidad de red inalámbrica. También trae soporte nativo para mando a distancia: navega por el Menú OSD, ajusta el brillo y enciende/apaga desde el sofá.
 
@@ -32,7 +32,9 @@ Si la rama 2.x.x trajo el Menú OSD, la **v3.0.0** fue el salto definitivo hacia
 
 **Desde la v3.1.5 ya no hace falta editar ningún archivo para conectarlo a tu WiFi:** el panel abre su propio portal de configuración desde el móvil, y después lo encuentras siempre en `retropixel.local`. 📶
 
----
+### 🖼️ Video de Retro Pixel LED Lite en funcionamiento.
+[![Funcionamiento de Retro Pixel LED Lite](https://img.youtube.com/vi/PCU4Z985G7Y/maxresdefault.jpg)](https://youtu.be/PCU4Z985G7Y)
+
 
 ## 📑 Índice
 
