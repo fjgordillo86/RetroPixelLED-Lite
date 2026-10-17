@@ -1,5 +1,25 @@
 ## 📝 Changelog
 
+### [v3.1.5] - 2026-10-17
+**Retro Pixel LED Lite: "Connections"**
+
+#### ✨ Added
+- **Built-in WiFi Portal:** Connect the panel to your network directly from your mobile phone, without editing `config.ini`. Opens from `OSD Menu → WiFi → Add network`, or automatically on first boot if no network is configured. The panel displays its network SSID and a random password; select your WiFi from a list, and it will verify the connection before saving. Texts available in Spanish, English, and French.
+- **Access by Name (mDNS):** The panel responds at `retropixel.local`, without depending on an IP address. The PWA remembers the last known IP and prompts you to use it if the name cannot be resolved on your device.
+- **`/diag` Diagnostics:** Quick view of the internal system state directly from your browser (`http://retropixel.local/diag`).
+
+#### ⚙️ Improvements / Internal Changes
+- **Update Notification in PWA:** An amber badge over the 🔄 icon notifies you when a new version is available, displaying its version number and changelog.
+- **New "About" Page in PWA:** Shows PWA and firmware versions, creator credits, license, and **live diagnostics** of the panel (free memory, last reboot reason, WiFi signal, SD card status...), with a one-click button to copy the report.
+- **`/diag` Diagnostics:** Quick status check of the internal system state directly from your browser (`http://retropixel.local/diag`).
+
+#### 🛡️ Fixes
+- **WiFi Passwords containing `#`:** Fixed a parsing issue in `config.ini` that truncated the SSID or password at a `#` character.
+
+#### ⚠️ Update Notice
+- **Upgrading from versions prior to v3.1.4:** Starting from v3.1.4, the *Minimal SPIFFS* partition scheme (1.9 MB application space with OTA support) is used, and the firmware no longer fits in the old partition layout. Installation via OTA is not possible: please reinstall using the Web Installer. Data stored in internal flash memory (active playlist, timer settings) will be reset; SD card configuration files and GIFs will remain intact. If you are already running v3.1.4, you can upgrade directly to v3.1.5 via OTA.
+
+---
 ### [v3.1.4] - 2026-10-04
 **Retro Pixel LED Lite: "Total Smoothness"**
 
