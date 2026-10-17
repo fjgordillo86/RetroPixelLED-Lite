@@ -1,5 +1,25 @@
 ## 📝 Changelog (Registre des modifications)
 
+### [v3.1.5] - 2026-10-17
+**Retro Pixel LED Lite : "Connexions"**
+
+#### ✨ Ajouté
+- **Portail WiFi intégré :** connectez le panneau à votre réseau depuis votre smartphone, sans éditer `config.ini`. Il s'ouvre depuis `Menu OSD → WiFi → Ajouter réseau`, ou automatiquement au premier démarrage si aucun réseau n'est configuré. Le panneau affiche son réseau et une clé aléatoire, vous choisissez votre WiFi dans une liste et il vérifie lui-même la connexion avant de la sauvegarder. Textes en espagnol, anglais et français.
+- **Accès par nom (mDNS) :** le panneau répond à l'adresse `retropixel.local`, sans dépendre de l'IP. La PWA conserve en mémoire la dernière IP connue et vous propose de l'utiliser si le nom ne se résout pas sur votre appareil.
+- **Diagnostic `/diag` :** consultation rapide de l'état interne depuis le navigateur (`http://retropixel.local/diag`).
+
+#### ⚙️ Améliorations / Changements internes
+- **Notification de mise à jour dans la PWA :** un point ambre sur l'icône 🔄 vous informe lorsqu'une nouvelle version est disponible, avec son numéro et ses nouveautés.
+- **Nouvelle page "À propos" dans la PWA :** versions de la PWA et du firmware, créateur, licence et **diagnostic en direct** du panneau (mémoire, dernier redémarrage, WiFi, carte SD...), avec un bouton pour copier le rapport.
+- **Diagnostic `/diag` :** consultation rapide de l'état interne depuis le navigateur (`http://retropixel.local/diag`).
+
+#### 🛡️ Correctifs
+- **Mots de passe WiFi contenant `#` :** correction d'une erreur de lecture de `config.ini` qui tronquait le SSID ou le mot de passe à partir d'un `#`.
+
+#### ⚠️ Note de mise à jour
+- **Lors d'une mise à jour depuis une version antérieure à la v3.1.4 :** à partir de cette version, le schéma de partitionnement *Minimal SPIFFS* (1,9 Mo pour l'application avec OTA) est utilisé et le firmware ne rentre plus dans l'ancien espace. La mise à jour OTA est impossible : réinstallez-le depuis l'installateur web. Les données sauvegardées dans la mémoire interne seront effacées (playlist active, paramètres du minuteur) ; la configuration et les GIFs de la carte SD seront conservés. Si vous possédez déjà la v3.1.4, vous pouvez passer à la v3.1.5 via OTA.
+---
+
 ### [v3.1.4] - 2026-10-04
 **Retro Pixel LED Lite : « Fluidité Totale »**
 
