@@ -329,6 +329,25 @@
     font-size:12px; line-height:1.6; color:var(--text-dim); list-style:disc;}
   .otaNotes.show{display:block;}
   
+  /* ---------- ACERCA DE ---------- */
+  .aboutLink{text-align:center; margin:4px 0 20px;}
+  .aboutLink button{
+    background:none; border:none; color:var(--text-dim); font-size:11px;
+    letter-spacing:.5px; cursor:pointer; padding:8px 12px;
+  }
+  .infoGrid{display:grid; grid-template-columns:auto 1fr; gap:7px 14px; font-size:11px; margin-bottom:6px;}
+  .infoGrid .k{color:var(--text-dim);}
+  .infoGrid .v{color:var(--text-primary); text-align:right; word-break:break-word;}
+  .infoGrid .v a{color:var(--amber); text-decoration:none;}
+  .infoGrid .v.ok{color:#5FDB7E;}
+  .infoGrid .v.upd{color:var(--amber);}
+  .infoGrid .v.warn{color:var(--red-alert);}
+  #aboutCopy{
+    width:100%; margin-top:10px; padding:11px; border-radius:8px; border:2px solid var(--amber);
+    background:transparent; color:var(--amber); font-family:var(--font-pixel);
+    font-size:10px; letter-spacing:1px; cursor:pointer;
+  }
+  
 </style>
 </head>
 <body>
@@ -348,9 +367,10 @@
   </header>
 
   <div class="conn" id="connPanel">
-    <label for="ip">IP del panel en la red local</label>
-    <input type="text" id="ip" placeholder="192.168.1.50" inputmode="decimal">
-    <div class="hint">La app envía peticiones a <code>http://IP/</code>. Debe estar en la misma red WiFi que el panel.</div>
+    <label for="ip">Dirección del panel (nombre o IP)</label>
+    <input type="text" id="ip" placeholder="retropixel.local" inputmode="url" autocapitalize="none" autocorrect="off" spellcheck="false">
+    <div class="hint">Puedes usar <code>retropixel.local</code> o la IP del panel (por ejemplo <code>192.168.1.50</code>). Debe estar en la misma red WiFi que el panel. Si el nombre no funciona en tu móvil, usa la IP.</div>
+    <div class="hint" id="ipFallback" style="display:none;"></div>
   </div>
 
   <section class="powerSection">
@@ -460,6 +480,8 @@
 
   <div class="status" id="statusMsg"></div>
 
+  <div class="aboutLink"><button id="aboutBtn">ℹ Acerca de</button></div>
+
 </div>
 
 <div class="modalOverlay" id="cfgOverlay">
@@ -554,6 +576,27 @@
       <p>Descarga desde GitHub todos los <code>.json</code> de la carpeta de idioma y los guarda en <code>/idioma</code> de la SD, sustituyendo los que ya existan. <span style="color: white;"></span></p>
       <button id="idiomasBtn">📥 DESCARGAR IDIOMAS</button>
       <div class="otaResult" id="idiomasResultado" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<<div class="modalOverlay" id="aboutOverlay">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>ACERCA DE</h2>
+      <button class="modalClose" id="aboutClose">✕</button>
+    </div>
+
+    <div class="otaBox">
+      <h3>Retro Pixel LED Lite</h3>
+      <div class="infoGrid" id="aboutInfo"></div>
+    </div>
+
+    <div class="otaBox">
+      <h3>Diagnóstico del panel</h3>
+      <div class="infoGrid" id="aboutDiag"><span class="k">Conectando…</span><span class="v"></span></div>
+      <div class="otaResult" id="aboutMsg" style="margin:6px 0 0;"></div>
+      <button id="aboutCopy">Copiar informe</button>
     </div>
   </div>
 </div>
@@ -916,6 +959,38 @@ function saveIp(ip){
   try { localStorage.setItem('rpl_ip', ip); } catch(e){}
 }
 
+/* ---------- Nombre (mDNS) con IP alternativa ---------- */
+function esIP(h){ return /^\d{1,3}(\.\d{1,3}){3}$/.test(h); }
+
+function ipConocida(){
+  try { return localStorage.getItem('rpl_ip_last') || ''; } catch (e) { return ''; }
+}
+function recordarIpPanel(ip){
+  if (!ip || !esIP(ip)) return;
+  try { localStorage.setItem('rpl_ip_last', ip); } catch (e) {}
+}
+
+function mostrarFallbackIp(){
+  const caja = document.getElementById('ipFallback');
+  const host = ipEl.value.trim();
+  const ultima = ipConocida();
+  caja.replaceChildren();
+  if (!host || esIP(host) || !ultima) { caja.style.display = 'none'; return; }
+
+  caja.append('No se encuentra «' + host + '». Última IP conocida: ' + ultima + ' ');
+  const b = document.createElement('button');
+  b.textContent = 'Usar esa IP';
+  b.style.cssText = 'margin-left:8px; padding:4px 8px; border:1px solid var(--amber); background:transparent; ' +
+                    'color:var(--amber); border-radius:6px; font-size:10px; cursor:pointer;';
+  b.onclick = () => {
+    ipEl.value = ultima; saveIp(ultima);
+    caja.style.display = 'none';
+    pingPanel(); cargarEstadoPanel();
+  };
+  caja.append(b);
+  caja.style.display = 'block';
+}
+
 ipEl.value = loadIp();
 if (!ipEl.value) connPanel.classList.add('open');
 
@@ -941,9 +1016,12 @@ async function pingPanel(){
     await fetch(`http://${ip}/`, { method: 'GET', mode: 'no-cors', signal: AbortSignal.timeout(2500) });
     connDot.style.background = '#5FDB7E';
     connDot.style.boxShadow = '0 0 8px #5FDB7E';
+    recordarIpPanel(ip);
+    document.getElementById('ipFallback').style.display = 'none';
   } catch (e) {
     connDot.style.background = 'var(--red-alert)';
     connDot.style.boxShadow = '0 0 8px var(--red-alert)';
+    mostrarFallbackIp();
   }
 }
 pingPanel();
@@ -980,6 +1058,7 @@ async function cargarEstadoPanel(){
     if (!res.ok) return;
     panelStatus = await res.json();
     aplicarEstadoPanelAUI(panelStatus);
+	recordarIpPanel(panelStatus.ip);
 	comprobarActualizacion(panelStatus, false);
   } catch (e) { /* sin conexión: dejamos los valores por defecto */ }
 }
@@ -1776,6 +1855,160 @@ if ('serviceWorker' in navigator){
     });
   });
 }
+
+/* =========================================================
+   ACERCA DE: versiones, créditos y diagnóstico del panel
+   ========================================================= */
+// La versión de la PWA vive en sw.js (PWA_VERSION): aquí se lee del nombre de su caché
+const APP_CREADOR      = 'fjgordillo86';
+const APP_CREADOR_URL  = 'https://github.com/fjgordillo86';
+const APP_REPO_URL     = 'https://github.com/fjgordillo86/RetroPixelLED-Lite';
+const APP_LICENCIA     = 'MIT';
+const APP_LICENCIA_URL = 'https://github.com/fjgordillo86/RetroPixelLED-Lite/blob/main/LICENSE';
+const APP_COPYRIGHT    = '© 2025-2026 fjgordillo86';
+
+const ABOUT_RESET = {0:'Desconocido', 1:'Encendido', 2:'Reset externo', 3:'Reinicio por software',
+  4:'PANIC (excepción)', 5:'Watchdog (interrupción)', 6:'Watchdog (tarea)', 7:'Watchdog',
+  8:'Deep sleep', 9:'Brownout (alimentación)', 10:'SDIO'};
+const ABOUT_RESET_MAL  = [4, 5, 6, 7, 9];           // motivos de reinicio que conviene mirar
+const ABOUT_BLOQUE_MIN = 20 * 1024;                 // aviso si el mayor bloque libre baja de aquí (ajústalo tras medir)
+const ABOUT_INTERVALO  = 5000;                      // ms entre consultas mientras el modal está abierto
+
+let aboutTimer = null, aboutBusy = false, aboutUltimo = null, aboutNota = null, aboutPwaVer = '';
+
+// Versión de la PWA: sale del nombre de la caché que crea sw.js (retropixel-shell-vX.Y.Z)
+async function aboutLeerVersionPwa(){
+  try {
+    const nombres = (await caches.keys()).filter(n => n.startsWith('retropixel-shell-v')).sort();
+    aboutPwaVer = nombres.length ? nombres[nombres.length - 1].replace('retropixel-shell-v', '') : '';
+  } catch (e) { aboutPwaVer = ''; }
+}
+
+function aboutKB(bytes){ return (bytes / 1024).toFixed(1) + ' KB'; }
+function aboutUptime(s){
+  const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+  return (d ? d + 'd ' : '') + h + 'h ' + m + 'm';
+}
+
+// Añade una fila (clave / valor) a una rejilla; si se pasa href, el valor es un enlace
+function aboutFila(grid, k, v, cls, href){
+  const a = document.createElement('span'); a.className = 'k'; a.textContent = k;
+  const b = document.createElement('span'); b.className = 'v' + (cls ? ' ' + cls : '');
+  if (href) {
+    const l = document.createElement('a');
+    l.href = href; l.target = '_blank'; l.rel = 'noopener'; l.textContent = v;
+    b.appendChild(l);
+  } else {
+    b.textContent = v;
+  }
+  grid.append(a, b);
+}
+
+// --- Bloque superior: versiones, creador, licencia, código ---
+function aboutPintarInfo(){
+  const g = document.getElementById('aboutInfo');
+  g.replaceChildren();
+  const fw = aboutUltimo ? aboutUltimo.fw : ((panelStatus && panelStatus.fw) || '—');
+  aboutFila(g, 'PWA', aboutPwaVer ? 'v' + aboutPwaVer : 'sin instalar');
+  aboutFila(g, 'Firmware', fw + (aboutNota ? ' · ' + aboutNota.texto : ''), aboutNota ? aboutNota.cls : '');
+  aboutFila(g, 'Creador', APP_CREADOR, '', APP_CREADOR_URL);
+  aboutFila(g, 'Licencia', APP_LICENCIA, '', APP_LICENCIA_URL);
+  aboutFila(g, 'Copyright', APP_COPYRIGHT);
+  aboutFila(g, 'Código fuente', 'GitHub', '', APP_REPO_URL);
+}
+
+// Compara el firmware del panel con la versión publicada (usa la caché de 6 h de leerVersionPublicada)
+async function aboutComprobarVersion(fwNum){
+  try {
+    const pub = await leerVersionPublicada(false);
+    if (!pub.v || !fwNum) return;
+    if (pub.v > fwNum)      aboutNota = { texto: 'disponible ' + (pub.name || fmtVersion(pub.v)), cls: 'upd' };
+    else if (fwNum > pub.v) aboutNota = { texto: 'versión de desarrollo', cls: '' };
+    else                    aboutNota = { texto: 'al día', cls: 'ok' };
+    aboutPintarInfo();
+  } catch (e) {}
+}
+
+// --- Bloque inferior: diagnóstico (/diag) ---
+function aboutPintarDiag(d){
+  aboutUltimo = d;
+  const pctFw = d.slotKB ? Math.round(d.sketchKB / d.slotKB * 100) : 0;
+  const g = document.getElementById('aboutDiag');
+  g.replaceChildren();
+  aboutFila(g, 'Encendido hace', aboutUptime(d.uptime));
+  aboutFila(g, 'Último reinicio', ABOUT_RESET[d.rst] || ('Código ' + d.rst), ABOUT_RESET_MAL.includes(d.rst) ? 'warn' : '');
+  aboutFila(g, 'RAM libre', aboutKB(d.heapFree) + ' de ' + aboutKB(d.heapTotal));
+  aboutFila(g, 'RAM mínima desde el arranque', aboutKB(d.heapMin));
+  aboutFila(g, 'Mayor bloque libre', aboutKB(d.heapBlock), d.heapBlock < ABOUT_BLOQUE_MIN ? 'warn' : 'ok');
+  aboutFila(g, 'Bloque mínimo observado', aboutKB(d.heapBlockMin), d.heapBlockMin < ABOUT_BLOQUE_MIN ? 'warn' : '');
+  aboutFila(g, 'WiFi', d.rssi + ' dBm', d.rssi < -80 ? 'warn' : '');
+  aboutFila(g, 'SD', d.sdMB + ' MB a ' + d.sdSpeed + ' MHz');
+  aboutFila(g, 'CPU', d.cpuMHz + ' MHz');
+  aboutFila(g, 'Firmware en flash', d.sketchKB + ' KB de ' + d.slotKB + ' KB (' + pctFw + '%)', pctFw > 90 ? 'warn' : '');
+
+  const msg = document.getElementById('aboutMsg');
+  msg.className = 'otaResult'; msg.textContent = '';
+  aboutPintarInfo();
+  aboutComprobarVersion(d.fwNum);
+}
+
+async function aboutCargarDiag(){
+  if (aboutBusy) return;
+  const msg = document.getElementById('aboutMsg');
+  const ip = ipEl.value.trim();
+  if (!ip) { msg.className = 'otaResult err'; msg.textContent = 'Configura la dirección del panel (⚙)'; return; }
+  aboutBusy = true;
+  try {
+    const r = await fetch(`http://${ip}/diag`, { signal: AbortSignal.timeout(4000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    aboutPintarDiag(await r.json());
+  } catch (e) {
+    msg.className = 'otaResult err';
+    msg.textContent = 'Sin datos: ' + (e.name === 'TimeoutError' ? 'el panel no responde' : e.message);
+  }
+  aboutBusy = false;
+}
+
+function aboutIniciar(){ aboutLeerVersionPwa().then(aboutPintarInfo); aboutCargarDiag(); if (!aboutTimer) aboutTimer = setInterval(aboutCargarDiag, ABOUT_INTERVALO); }
+function aboutParar(){ clearInterval(aboutTimer); aboutTimer = null; }
+
+// --- Abrir / cerrar; el sondeo arranca y para según el modal esté abierto, se abra como se abra ---
+const aboutOverlay = document.getElementById('aboutOverlay');
+document.getElementById('aboutBtn').addEventListener('click', () => aboutOverlay.classList.add('open'));
+document.getElementById('aboutClose').addEventListener('click', () => aboutOverlay.classList.remove('open'));
+new MutationObserver(() => {
+  if (aboutOverlay.classList.contains('open')) aboutIniciar(); else aboutParar();
+}).observe(aboutOverlay, { attributes: true, attributeFilter: ['class'] });
+
+// --- Copiar informe (con alternativa si el portapapeles directo no está disponible) ---
+function aboutCopiarTexto(txt){
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(txt);
+  return new Promise((ok, ko) => {
+    const ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy') ? ok() : ko(new Error('copy')); } catch (e) { ko(e); }
+    document.body.removeChild(ta);
+  });
+}
+
+document.getElementById('aboutCopy').addEventListener('click', async () => {
+  const msg = document.getElementById('aboutMsg');
+  if (!aboutUltimo) { msg.className = 'otaResult err'; msg.textContent = 'Aún no hay datos del panel que copiar'; return; }
+  const informe = {
+    pwa: aboutPwaVer,
+    navegador: navigator.userAgent,
+    ...aboutUltimo,
+    resetTexto: ABOUT_RESET[aboutUltimo.rst] || ''
+  };
+  try {
+    await aboutCopiarTexto(JSON.stringify(informe, null, 2));
+    msg.className = 'otaResult ok'; msg.textContent = 'Informe copiado';
+  } catch (e) {
+    msg.className = 'otaResult err'; msg.textContent = 'No se pudo copiar';
+  }
+});
+
 </script>
 </body>
 </html>
