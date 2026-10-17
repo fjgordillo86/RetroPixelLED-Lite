@@ -1,5 +1,22 @@
 ## 📝 Changelog (Registro de Cambios)
 
+### [v3.1.5] - 2026-10-17
+**Retro Pixel LED Lite: "Fluidez Total"**
+
+#### ✨ Añadido
+* **Portal WiFi integrado:** conecta el panel a tu red desde el móvil, sin editar `config.ini`. Se abre desde `Menú OSD → WiFi → Añadir red`, o solo en el primer arranque si no hay red configurada. El panel muestra su red y una clave aleatoria, eliges tu WiFi de una lista y él mismo comprueba la conexión antes de guardarla. Textos en español, inglés y francés.
+* **Acceso por nombre (mDNS):** el panel responde en `retropixel.local`, sin depender de la IP. La PWA recuerda la última IP y te ofrece volver a ella si el nombre no se resuelve en tu dispositivo.
+* **Diagnóstico `/diag`:** consulta rápida del estado interno desde el navegador (`http://retropixel.local/diag`)
+#### ⚙️ Mejoras / Cambios Internos
+* **Aviso de actualización en la PWA:** un punto ámbar sobre el icono 🔄 te avisa cuando hay una versión nueva, con su número y las novedades.
+* **Nueva página "Acerca de" en la PWA:** versiones de la PWA y del firmware, creador, licencia y **diagnóstico en vivo** del panel (memoria, último reinicio, WiFi, SD...), con botón para copiar el informe.
+* **Diagnóstico `/diag`:** consulta rápida del estado interno desde el navegador (`http://retropixel.local/diag`).
+#### 🛡️ Fixes
+* **Contraseñas WiFi con `#`:** corregido un fallo de lectura de `config.ini` que cortaba el SSID o la contraseña a partir de un `#`.
+#### ⚠️ Nota de actualización
+* **Al actualizar desde versiones anteriores a la v3.1.4:** desde esa versión se usa el esquema de particiones *Minimal SPIFFS* (1,9 MB para la app con OTA) y el firmware ya no cabe en el espacio antiguo. No se puede instalar por OTA: reinstálalo desde el instalador web. Se borran los datos guardados en la memoria interna (playlist activa, ajustes del temporizador); la configuración y los GIFs de la SD se conservan. Si ya tienes la v3.1.4, puedes pasar a la v3.1.5 por OTA..
+---
+
 ### [v3.1.4] - 2026-10-04
 **Retro Pixel LED Lite: "Fluidez Total"**
 
