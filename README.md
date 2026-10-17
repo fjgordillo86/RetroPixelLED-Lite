@@ -35,6 +35,7 @@ Si la rama 2.x.x trajo el Menú OSD, la **v3.0.0** fue el salto definitivo hacia
 ### 📺 Video de Retro Pixel LED Lite en funcionamiento.
 [![Funcionamiento de Retro Pixel LED Lite](https://img.youtube.com/vi/PCU4Z985G7Y/maxresdefault.jpg)](https://youtu.be/PCU4Z985G7Y)
 > 💡 *Haz clic en la imagen superior para ver el vídeo completo del funcionamiento en YouTube.*
+---
 
 ## 📑 Índice
 
