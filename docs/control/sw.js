@@ -1,7 +1,7 @@
 // ====================================================================
 //  Service worker de Retro Pixel LED (control)
 // ====================================================================
-const PWA_VERSION  = "1.0.0";
+const PWA_VERSION  = "2.0.0";
 const CACHE_PREFIX = "retropixel-shell-v";
 const CACHE_NAME   = CACHE_PREFIX + PWA_VERSION;
 
