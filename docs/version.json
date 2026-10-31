@@ -1,11 +1,11 @@
 {
-  "v": 315,
+  "v": 316,
   "url": "https://github.com/fjgordillo86/RetroPixelLED-Lite/raw/refs/heads/main/docs/firmware.bin",
   "notes": [
-    "Portal WiFi integrado",
-    "Acceso por nombre (mDNS)",
-    "Aviso de actualización en la PWA",
-    "Nueva página 'Acerca de' en la PWA",
+    "Reloj Dinámico con 28 temas",
+    "Cambio instantáneo entre Modo Reloj y GIFs",
+    "Añadir imagen de fondo a reloj lite",
+    "Subir/borrar de fondos desde la PWA",
     "Correciones de errores y mejoras"
   ]
 }
