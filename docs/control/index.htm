@@ -217,6 +217,30 @@
   .plItem .plCheck{opacity:0; font-size:14px;}
   .plItem.active .plCheck{opacity:1;}
 
+  /* ---------- Subida y borrado de fondos del reloj ---------- */
+  .bgUploadPanel{margin:12px 0 16px; padding:12px; background:var(--bg-deep); border:1px solid var(--grid-line); border-radius:8px;}
+  .bgUploadPanel .modalSub{margin:8px 0 4px;}
+  .bgRow{margin-top:12px; font-size:11px; color:var(--text-dim);}
+  .bgRow label{display:block; margin-bottom:6px;}
+  .bgRow label input[type=checkbox]{margin-right:6px; vertical-align:middle;}
+  .bgRow input[type=text]{
+    width:100%; padding:8px 10px; background:var(--panel); border:1px solid var(--grid-line);
+    border-radius:6px; color:var(--text-primary); font-family:var(--font-mono); font-size:13px;
+  }
+  #bgPreview{display:block; width:100%; height:auto; image-rendering:pixelated; background:#000; border:1px solid var(--grid-line); border-radius:6px;}
+  button.big.bgGo{background:var(--amber); color:#1a1200; box-shadow:0 3px 0 var(--amber-dim);}
+  button.big.bgGo:active{transform:translateY(2px); box-shadow:none;}
+  button.big.bgCancel{background:transparent; border:2px solid var(--grid-line); color:var(--text-dim);}
+  button.big:disabled{opacity:.5; cursor:default;}
+  .plRight{display:flex; align-items:center; gap:4px;}
+  .plTrash{background:none; border:none; color:var(--text-dim); font-size:16px; padding:2px 8px; cursor:pointer;}
+  .plTrash:active{color:var(--red-alert);}
+  .bgMsg{display:none; margin:0 0 12px; padding:9px 12px; border-radius:6px; font-size:12px; line-height:1.4;
+         background:var(--bg-deep); border:1px solid var(--grid-line); color:var(--text-dim);}
+  .bgMsg.ok{display:block; color:#5FDB7E; border-color:#5FDB7E;}
+  .bgMsg.err{display:block; color:var(--red-alert); border-color:var(--red-alert);}
+  .plCurrentRow.disabled{opacity:.55;}
+
   /* ---------- BLOQUE OTA (dentro de Ajustes) ---------- */
   .otaBox{
     background:var(--bg-deep); border:1px solid var(--grid-line); border-radius:10px;
@@ -347,6 +371,30 @@
     background:transparent; color:var(--amber); font-family:var(--font-pixel);
     font-size:10px; letter-spacing:1px; cursor:pointer;
   }
+
+  /* ---------- RELOJES DINÁMICOS ---------- */
+  .dynHide{display:none !important;}
+  .dynHint{font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.4;}
+  .dynRotRow{margin-top:8px;}
+  .dynGrid{display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-top:10px;}
+  .dynCard{
+    display:block; width:100%; padding:0; text-align:left; cursor:pointer; overflow:hidden;
+    background:var(--panel); border:1px solid var(--grid-line); border-radius:8px;
+    color:var(--text-primary); font-family:inherit;
+  }
+  .dynCard.active{border-color:var(--amber); box-shadow:0 0 0 1px var(--amber-dim);}
+  .dynThumb{position:relative; width:100%; aspect-ratio:4 / 1; background:#000; overflow:hidden;}
+  .dynThumb img{display:block; width:100%; height:100%; image-rendering:pixelated;}
+  .dynThumb::after{                       /* rejilla para que parezca el panel de LEDs */
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background-image:
+      linear-gradient(to right, rgba(0,0,0,.40) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,0,0,.40) 1px, transparent 1px);
+    background-size:calc(100% / 128) calc(100% / 32);
+  }
+  .dynName{font-size:12px; padding:8px 10px 2px;}
+  .dynSub{font-size:10px; color:var(--text-dim); padding:0 10px 8px;}
+  .dynCard.active .dynName{color:var(--amber);}
   
 </style>
 </head>
@@ -421,6 +469,21 @@
     <section>
       <div class="label-row"><span class="l">Color</span></div>
       <div class="swatches" id="clockSwatches"></div>
+      <div class="hexrow">
+        <input type="color" id="clockColorPicker" value="#FF0055">
+        <input type="text" id="clockColorHex" value="#FF0055" maxlength="7">
+      </div>
+    </section>
+    <section id="clockBgSection" style="display:none;">
+      <div class="label-row"><span class="l">Fondo</span></div>
+      <div class="plCurrentRow" id="clockBgBtn">
+        <span id="clockBgName">Negro</span>
+        <span class="plChevron">▸</span>
+      </div>
+    </section>
+    <section id="clockPosSection" style="display:none;">
+      <div class="label-row"><span class="l">Posición del reloj</span></div>
+      <div class="pillRow" id="clockPosRow"></div>
     </section>
   </div>
 
@@ -491,7 +554,7 @@
       <button class="modalClose" id="cfgClose">✕</button>
     </div>
     <div class="modalSub">
-      Se leen y escriben directamente sobre <code>config.ini</code>. El panel se reiniciará al guardar para aplicar los cambios.
+      Se leen y escriben directamente sobre <code>config.ini</code>. El panel solo se reinicia si el cambio lo necesita (hardware, WiFi, arcade, texto, transición…); el resto se aplica al momento.
     </div>
     <div id="cfgBody"><div class="cfgLoading">Cargando ajustes del panel...</div></div>
 
@@ -519,6 +582,39 @@
     </div>
     <div class="modalSub">Toca una playlist para activarla en el panel al instante.</div>
     <div id="plBody"><div class="cfgLoading">Cargando playlists...</div></div>
+  </div>
+</div>
+
+<div class="modalOverlay" id="bgOverlay">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>FONDOS DEL RELOJ</h2>
+      <button class="modalClose" id="bgClose">✕</button>
+    </div>
+    <div class="modalSub">Toca una imagen para usarla de fondo del reloj. Puedes subir cualquier imagen: se convierte a BMP de 128x32 antes de enviarla al panel.</div>
+    <div class="bgMsg" id="bgMsg"></div>
+    <div class="plCurrentRow" id="bgUploadBtn" style="margin-bottom:12px;">
+      <span id="bgUploadTxt">＋ Subir imagen…</span>
+    </div>
+    <input type="file" id="bgFile" accept="image/*" style="display:none;">
+    <div class="bgUploadPanel" id="bgUploadPanel" style="display:none;">
+      <canvas id="bgPreview" width="128" height="32"></canvas>
+      <div class="modalSub" id="bgNota"></div>
+      <div class="bgRow" id="bgModoRow">
+        <label>Ajuste</label>
+        <div class="pillRow" id="bgModoPills"></div>
+      </div>
+      <div class="bgRow"><label><input type="checkbox" id="bgDither"> Suavizar degradados (dithering)</label></div>
+      <div class="bgRow">
+        <label for="bgNombre">Nombre</label>
+        <input type="text" id="bgNombre" maxlength="31">
+      </div>
+      <div class="btnrow bgRow">
+        <button class="big bgGo" id="bgSubir">SUBIR</button>
+        <button class="big bgCancel" id="bgCancelar">CANCELAR</button>
+      </div>
+    </div>
+    <div id="bgBody"><div class="cfgLoading">Cargando fondos...</div></div>
   </div>
 </div>
 
@@ -580,7 +676,7 @@
   </div>
 </div>
 
-<<div class="modalOverlay" id="aboutOverlay">
+<div class="modalOverlay" id="aboutOverlay">
   <div class="modalBox">
     <div class="modalHead">
       <h2>ACERCA DE</h2>
@@ -1077,8 +1173,10 @@ function aplicarEstadoPanelAUI(st){
 
   // Reloj: estilo
   renderClockStylePills(st.clockStyle);
+  aplicarEstadoDinamico(st);
   // Reloj: color
-  refreshClockSwatchSelection(st.clockColorIndex);
+  refreshClockSwatchSelection(st.clockColorIndex);      // -1 = personalizado: ninguna paleta marcada
+  if (st.clockColorHex) mostrarColorRelojUI(st.clockColorHex)
 
   // Texto activado en firmware
   document.getElementById('textoDisabledWarning').style.display = st.textEnable ? 'none' : 'block';
@@ -1158,7 +1256,7 @@ function selectMode(mode, avisarPanel = true){
   document.getElementById('modeReloj').classList.toggle('active', mode === 'reloj');
   document.getElementById('modeTexto').classList.toggle('active', mode === 'texto');
 
-  if (mode === 'reloj') actualizarClockModeUI(panelPlayModeActual);
+  if (mode === 'reloj') { actualizarClockModeUI(panelPlayModeActual); cargarFondosReloj(); }
 
   if (!avisarPanel) return;
 
@@ -1229,6 +1327,7 @@ PALETTE.forEach((p, i) => {
   div.dataset.index = i;
   div.addEventListener('click', async () => {
     refreshClockSwatchSelection(i);
+    mostrarColorRelojUI(PALETTE[i].c);
     await enviarControl({ clockColorIndex: i });
   });
   clockSwatchesEl.appendChild(div);
@@ -1240,6 +1339,575 @@ function refreshClockSwatchSelection(index){
     s.classList.toggle('active', isActive);
     if (isActive) s.style.color = PALETTE[index].c;
   });
+}
+
+/* ---------- Modo RELOJ: relojes dinámicos (caras animadas) ---------- */
+// Datos de cada cara. La clave es el nombre que devuelve el firmware en /dynfaces
+// (en minúsculas y sin acentos). era = 8 o 16 bits; juego = subtítulo "estilo ...".
+// Una cara nueva del firmware que no esté aquí sale igualmente (sin época ni subtítulo).
+const DYN_INFO = {
+  mario:       { era: 8,  juego: 'Mario' },
+  luigi:       { era: 8,  juego: 'Luigi' },
+  peach:       { era: 8,  juego: 'Peach' },
+  invaders:    { era: 8,  juego: 'Space Invaders' },
+  pacman:      { era: 8,  juego: 'Pac-Man' },
+  tetris:      { era: 8,  juego: 'Tetris' },
+  zelda:       { era: 8,  juego: 'Zelda' },
+  donkey:      { era: 8,  juego: 'Donkey Kong' },
+  bubble:      { era: 8,  juego: 'Bubble Booble' },
+  sonic:       { era: 16, juego: 'Sonic' },
+  megamanx:    { era: 16, juego: 'Mega Man X' },
+  bomberman:   { era: 16, juego: 'Bomberman' },
+  streets:     { era: 16, juego: 'Streets of Rage' },
+  fighter:     { era: 16, juego: 'Street Fighter' },
+  castelvania: { era: 16, juego: 'Castlevania' },
+  chrono:      { era: 16, juego: 'Chrono Trigger' },
+  metalslug:   { era: 16, juego: 'Metal Slug' },
+  dragonball:  { era: 'anime', juego: 'Dragon Ball' },
+  naruto:      { era: 'anime', juego: 'Naruto' },
+  onepice:     { era: 'anime', juego: 'One Pice' },
+  pokemon:     { era: 'anime', juego: 'Pokemon' },
+  terminator:  { era: 'cine',  juego: 'Terminator' },
+  futuro:      { era: 'cine',  juego: 'Regreso al Futuro' },
+  matrix:      { era: 'cine',  juego: 'Matrix' },
+  starwars:    { era: 'cine',  juego: 'Star Wars' },
+  jurassic:    { era: 'cine',  juego: 'Jusassic Park' },
+  fantasma:    { era: 'cine',  juego: 'Ghostbusters' }
+};
+const DYN_MOSTRAR_JUEGO = false;                    // false = oculta el subtítulo "estilo ..."
+const DYN_ROT_OPCIONES = [[5, '5 min'], [15, '15 min'], [30, '30 min'], [60, '1 h'], [120, '2 h']];
+
+const dynSlug = n => String(n).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '');
+const dynEsc  = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function dynLeerUltima(){ try { return parseInt(localStorage.getItem('dynUltimaCara') || '1', 10) || 1; } catch (e) { return 1; } }
+function dynGuardarUltima(v){ try { localStorage.setItem('dynUltimaCara', String(v)); } catch (e) {} }
+
+let dynNombres = [];                               // lista que devuelve /dynfaces
+let dynSt = { clock: 0, mode: 0, rot: 15, modos: false };
+let dynFiltro = '0';                                 // 0 todas, 8, 16
+let dynUltima = dynLeerUltima();
+
+// Secciones del reloj Lite que no aplican al reloj dinámico
+function dynSeccionesLite(){
+  return ['clockStyleRow', 'clockSwatches', 'clockBgSection', 'clockPosSection']
+    .map(id => { const e = document.getElementById(id); return e && (e.tagName === 'SECTION' ? e : e.closest('section')); })
+    .filter(Boolean);
+}
+
+(function montarUIDinamico(){
+  const fila = document.querySelector('#modeReloj .applyModeRow');
+  if (!fila) return;
+  fila.insertAdjacentHTML('afterend', `
+    <section id="dynTypeSection" style="display:none;">
+      <div class="label-row"><span class="l">Tipo de reloj</span></div>
+      <div class="pillRow" id="dynTypeRow">
+        <button class="pill" data-type="lite">Reloj Lite</button>
+        <button class="pill" data-type="dyn">Reloj dinámico</button>
+      </div>
+    </section>
+    <div id="dynBox" style="display:none;">
+      <section id="dynModeSection">
+        <div class="label-row"><span class="l">Modo</span></div>
+        <div class="pillRow" id="dynModeRow">
+          <button class="pill" data-mode="0">Fija</button>
+          <button class="pill" data-mode="1">Aleatoria</button>
+          <button class="pill" data-mode="2">Rotar</button>
+        </div>
+        <div class="pillRow dynRotRow" id="dynRotRow" style="display:none;"></div>
+        <div class="dynHint" id="dynHint"></div>
+      </section>
+      <section id="dynGridSection">
+        <div class="label-row"><span class="l">Caras</span><span class="v" id="dynCountLbl"></span></div>
+        <div class="pillRow" id="dynFilterRow">
+          <button class="pill" data-era="0">Todas</button>
+          <button class="pill" data-era="8">8 bits</button>
+          <button class="pill" data-era="16">16 bits</button>
+          <button class="pill" data-era="anime">Anime</button>
+          <button class="pill" data-era="cine">Cine</button>
+        </div>
+        <div class="dynGrid" id="dynGrid"></div>
+      </section>
+    </div>`);
+
+  document.getElementById('dynTypeRow').addEventListener('click', async (e) => {
+    const b = e.target.closest('.pill'); if (!b) return;
+    const quiere = b.dataset.type === 'dyn';
+    const valor = quiere ? ((dynUltima >= 1 && dynUltima <= dynNombres.length) ? dynUltima : 1) : 0;
+    if (await enviarControl({ dynClock: valor }) !== false){ dynSt.clock = valor; dynRender(); avisoRelojPendiente(); }
+  });
+  document.getElementById('dynModeRow').addEventListener('click', async (e) => {
+    const b = e.target.closest('.pill'); if (!b) return;
+    const m = parseInt(b.dataset.mode, 10);
+    if (await enviarControl({ dynMode: m }) !== false){ dynSt.mode = m; dynRender(); avisoRelojPendiente(); }
+  });
+  document.getElementById('dynRotRow').addEventListener('click', async (e) => {
+    const b = e.target.closest('.pill'); if (!b) return;
+    const r = parseInt(b.dataset.rot, 10);
+    if (await enviarControl({ dynRot: r }) !== false){ dynSt.rot = r; dynRender(); }
+  });
+  document.getElementById('dynFilterRow').addEventListener('click', (e) => {
+    const b = e.target.closest('.pill'); if (!b) return;
+    dynFiltro = b.dataset.era;
+    dynRenderGrid();
+  });
+  document.getElementById('dynGrid').addEventListener('click', async (e) => {
+    const c = e.target.closest('.dynCard'); if (!c) return;
+    const v = parseInt(c.dataset.cara, 10);
+    if (await enviarControl({ dynClock: v }) !== false){
+      dynSt.clock = v; dynUltima = v; dynGuardarUltima(v);
+      dynRenderGrid(); avisoRelojPendiente();
+    }
+  });
+})();
+
+function dynRenderGrid(){
+  const items = dynNombres
+    .map((n, i) => ({ n, i, info: DYN_INFO[dynSlug(n)] || {} }))
+    .filter(x => dynFiltro === '0' || String(x.info.era) === dynFiltro);
+  document.getElementById('dynCountLbl').textContent = items.length + ' / ' + dynNombres.length;
+  document.querySelectorAll('#dynFilterRow .pill').forEach(p => p.classList.toggle('active', p.dataset.era === dynFiltro));
+  document.getElementById('dynGrid').innerHTML = items.map(x => `
+    <button class="dynCard ${dynSt.clock === x.i + 1 ? 'active' : ''}" data-cara="${x.i + 1}">
+      <div class="dynThumb"><img src="dyn/${dynSlug(x.n)}.png" alt="" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="dynName">${dynEsc(x.n)}</div>
+      ${DYN_MOSTRAR_JUEGO && x.info.juego ? `<div class="dynSub">estilo ${dynEsc(x.info.juego)}</div>` : '<div class="dynSub">&nbsp;</div>'}
+    </button>`).join('') || '<div class="dynHint">No hay caras con este filtro.</div>';
+}
+
+function dynRender(){
+  const dinamico = dynSt.clock > 0;
+  document.querySelectorAll('#dynTypeRow .pill').forEach(p => p.classList.toggle('active', (p.dataset.type === 'dyn') === dinamico));
+  document.getElementById('dynBox').style.display = dinamico ? '' : 'none';
+  dynSeccionesLite().forEach(s => s.classList.toggle('dynHide', dinamico));
+  if (!dinamico) return;
+
+  document.getElementById('dynModeSection').style.display = dynSt.modos ? '' : 'none';
+  document.querySelectorAll('#dynModeRow .pill').forEach(p => p.classList.toggle('active', parseInt(p.dataset.mode, 10) === dynSt.mode));
+  const rotRow = document.getElementById('dynRotRow');
+  rotRow.style.display = dynSt.mode === 2 ? '' : 'none';
+  rotRow.innerHTML = DYN_ROT_OPCIONES.map(([m, t]) => `<button class="pill ${m === dynSt.rot ? 'active' : ''}" data-rot="${m}">${t}</button>`).join('');
+  const rotTxt = (DYN_ROT_OPCIONES.find(o => o[0] === dynSt.rot) || [0, dynSt.rot + ' min'])[1];
+  document.getElementById('dynHint').textContent =
+      dynSt.mode === 1 ? 'Cada vez que aparezca el reloj, el panel elegirá una cara distinta.'
+    : dynSt.mode === 2 ? `El panel cambiará de cara cada ${rotTxt}, recorriendo todas.`
+    : '';
+  document.getElementById('dynGridSection').style.display = (!dynSt.modos || dynSt.mode === 0) ? '' : 'none';
+  dynRenderGrid();
+}
+
+async function cargarCarasDinamicas(){
+  const ip = ipEl.value.trim();
+  if (!ip) return false;
+  try {
+    const res = await fetch(`http://${ip}/dynfaces`, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return false;
+    const lista = await res.json();
+    if (!Array.isArray(lista)) return false;
+    dynNombres = lista;
+    return true;
+  } catch (e) { return false; }
+}
+
+async function aplicarEstadoDinamico(st){
+  const soporta = Number.isInteger(st.dynCount) && st.dynCount > 0;   // firmware antiguo: no hay nada que mostrar
+  document.getElementById('dynTypeSection').style.display = soporta ? '' : 'none';
+  if (!soporta){
+    document.getElementById('dynBox').style.display = 'none';
+    dynSeccionesLite().forEach(s => s.classList.remove('dynHide'));
+    return;
+  }
+  dynSt.clock = st.dynClock | 0;
+  dynSt.modos = ('dynMode' in st);
+  dynSt.mode  = dynSt.modos ? (st.dynMode | 0) : 0;
+  dynSt.rot   = (st.dynRot | 0) || 15;
+  if (dynSt.clock > 0){ dynUltima = dynSt.clock; dynGuardarUltima(dynSt.clock); }
+  if (dynNombres.length !== st.dynCount) await cargarCarasDinamicas();
+  dynRender();
+}
+
+/* ---------- Modo RELOJ: color RGB libre ---------- */
+const clockColorPicker = document.getElementById('clockColorPicker');
+const clockColorHex = document.getElementById('clockColorHex');
+let clockColorTimer = null;
+
+function mostrarColorRelojUI(hex){            // solo actualiza la interfaz, no envía nada
+  clockColorPicker.value = hex.toLowerCase();
+  clockColorHex.value = hex.toUpperCase();
+}
+
+async function enviarColorReloj(hex){
+  refreshClockSwatchSelection(-1);            // color personalizado: ninguna paleta marcada
+  const ok = await enviarControl({ clockColorHex: hex });
+  if (!ok) setStatus('No se pudo cambiar el color del reloj', 'err');
+}
+
+// Mientras se arrastra el selector solo se envía al dejar de moverlo (500 ms): cada envío guarda config.ini en la SD
+clockColorPicker.addEventListener('input', (e) => {
+  mostrarColorRelojUI(e.target.value);
+  clearTimeout(clockColorTimer);
+  clockColorTimer = setTimeout(() => enviarColorReloj(e.target.value), 500);
+});
+clockColorPicker.addEventListener('change', (e) => {   // al confirmar el color se envía sin esperar
+  clearTimeout(clockColorTimer);
+  enviarColorReloj(e.target.value);
+});
+clockColorHex.addEventListener('change', (e) => {
+  let v = e.target.value.trim();
+  if (!v.startsWith('#')) v = '#' + v;
+  if (/^#[0-9A-Fa-f]{6}$/.test(v)){
+    mostrarColorRelojUI(v);
+    enviarColorReloj(v);
+  } else {
+    mostrarColorRelojUI(clockColorPicker.value);       // valor no válido: se restaura el anterior
+  }
+});
+
+/* ---------- Modo RELOJ: fondo (BMP 128x32 de /relojes/imagenes) + posición ---------- */
+const CLOCK_POSITIONS = ['Izquierda', 'Centro', 'Derecha'];
+const bgOverlay = document.getElementById('bgOverlay');
+const bgBody = document.getElementById('bgBody');
+
+function nombreFondoVisible(n){ return n ? n.replace(/\.bmp$/i, '') : 'Negro'; }
+
+function aplicarFondoActualUI(activo){
+  document.getElementById('clockBgName').textContent = nombreFondoVisible(activo);
+  // la posición solo tiene sentido con un fondo elegido (sin fondo el reloj ocupa todo el ancho)
+  document.getElementById('clockPosSection').style.display = activo ? '' : 'none';
+}
+
+async function pedirFondosReloj(){
+  const ip = ipEl.value.trim();
+  const res = await fetch(`http://${ip}/reloj/fondos`, { signal: AbortSignal.timeout(5000) });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+
+async function cargarFondosReloj(){
+  if (!ipEl.value.trim()) return;
+  const secFondo = document.getElementById('clockBgSection');
+  const secPos = document.getElementById('clockPosSection');
+  try {
+    const data = await pedirFondosReloj();
+    renderClockPosPills(Number.isInteger(data.pos) ? data.pos : 1);
+    secFondo.style.display = '';
+    aplicarFondoActualUI(data.active || '');
+  } catch (e) {
+    // Firmware sin esta ruta (versión antigua) o sin conexión: se ocultan las dos secciones
+    secFondo.style.display = 'none';
+    secPos.style.display = 'none';
+  }
+}
+
+function avisoRelojPendiente(){
+  // En modo Reloj el cambio se ve al instante; en modo GIF, la próxima vez que aparezca el reloj
+  if (panelPlayModeActual !== 1) setStatus('Guardado: se verá la próxima vez que aparezca el reloj');
+}
+
+async function abrirFondosReloj(){
+  if (!ipEl.value.trim()){ setStatus('Configura la IP del panel (⚙)', 'err'); connPanel.classList.add('open'); return; }
+  bgOverlay.classList.add('open');
+  bgBody.innerHTML = '<div class="cfgLoading">Cargando fondos...</div>';
+  try {
+    const data = await pedirFondosReloj();
+    bgMax = Number.isInteger(data.max) ? data.max : 24;
+    renderFondosReloj(data.items || [], data.active || '');
+  } catch (e){
+    bgBody.innerHTML = '<div class="cfgLoading">No se pudo cargar la lista de fondos.</div>';
+  }
+}
+
+function renderFondosReloj(items, activo){
+  bgItems = items;                                       // para avisar si una subida sustituye a otro fondo
+  actualizarEstadoSubida();
+  bgBody.replaceChildren();
+  const lista = document.createElement('div');
+  lista.className = 'plList';
+  [''].concat(items).forEach(valor => {                  // '' = sin fondo
+    const el = document.createElement('div');
+    el.className = 'plItem' + (valor === activo ? ' active' : '');
+    const nombre = document.createElement('span');
+    nombre.textContent = nombreFondoVisible(valor);
+    const der = document.createElement('span');
+    der.className = 'plRight';
+    if (valor){
+      const papelera = document.createElement('button');
+      papelera.className = 'plTrash';
+      papelera.textContent = '❌';
+      papelera.title = 'Borrar de la SD';
+      papelera.addEventListener('click', (ev) => { ev.stopPropagation(); borrarFondoReloj(valor); });
+      der.appendChild(papelera);
+    }
+    const check = document.createElement('span');
+    check.className = 'plCheck';
+    check.textContent = '●';
+    der.appendChild(check);
+    el.append(nombre, der);
+    el.addEventListener('click', () => seleccionarFondoReloj(valor));
+    lista.appendChild(el);
+  });
+  bgBody.appendChild(lista);
+  if (!items.length){
+    const vacio = document.createElement('div');
+    vacio.className = 'cfgLoading';
+    vacio.textContent = 'No hay imágenes .bmp (128x32) en /relojes/imagenes de la SD.';
+    bgBody.appendChild(vacio);
+  }
+}
+
+async function seleccionarFondoReloj(valor){
+  const ok = await enviarControl({ clockBg: valor });
+  if (!ok){ bgMensaje('No se pudo cambiar el fondo', 'err'); return; }
+  aplicarFondoActualUI(valor);
+  avisoRelojPendiente();
+  setTimeout(() => bgOverlay.classList.remove('open'), 400);
+}
+
+function renderClockPosPills(activa){
+  const row = document.getElementById('clockPosRow');
+  row.replaceChildren();
+  CLOCK_POSITIONS.forEach((nombre, i) => {
+    const b = document.createElement('button');
+    b.className = 'pill' + (i === activa ? ' active' : '');
+    b.textContent = nombre;
+    b.addEventListener('click', async () => {
+      const ok = await enviarControl({ clockPos: i });
+      if (!ok) { setStatus('No se pudo cambiar la posición', 'err'); return; }
+      row.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      avisoRelojPendiente();
+    });
+    row.appendChild(b);
+  });
+}
+
+document.getElementById('clockBgBtn').addEventListener('click', () => { bgMensaje(''); abrirFondosReloj(); });
+document.getElementById('bgClose').addEventListener('click', () => { bgOverlay.classList.remove('open'); bgMensaje(''); });
+
+/* ---------- Subir y borrar fondos del reloj ---------- */
+const BG_W = 128, BG_H = 32;
+const BG_MODOS = [
+  { id: 'recortar', texto: 'Recortar' },
+  { id: 'ajustar',  texto: 'Ajustar'  },
+  { id: 'estirar',  texto: 'Estirar'  }
+];
+const bgFile = document.getElementById('bgFile');
+const bgUploadPanel = document.getElementById('bgUploadPanel');
+const bgPreview = document.getElementById('bgPreview');
+const bgNombre = document.getElementById('bgNombre');
+const bgDither = document.getElementById('bgDither');
+const bgNota = document.getElementById('bgNota');
+const bgModoRow = document.getElementById('bgModoRow');
+const bgModoPills = document.getElementById('bgModoPills');
+let bgImg = null, bgModo = 'recortar', bgRgba = null, bgItems = [];
+let bgMax = 24;                                          // el panel lo informa en GET /reloj/fondos ("max")
+const bgMsg = document.getElementById('bgMsg');
+let bgMsgTimer = null;
+
+function textoMaximo(){
+  return `Has alcanzado el máximo de ${bgMax} fondos. Borra alguno para poder subir otro.`;
+}
+
+// Mensaje DENTRO de la ventana: la línea de estado de la página principal queda tapada por ella
+function bgMensaje(texto, tipo){
+  clearTimeout(bgMsgTimer);
+  bgMsg.textContent = texto || '';
+  bgMsg.className = 'bgMsg' + (texto ? ' ' + (tipo || '') : '');
+  if (texto && tipo === 'ok') bgMsgTimer = setTimeout(() => bgMensaje(''), 4000);
+}
+
+// Contador de fondos y estado del botón "Subir imagen"
+function actualizarEstadoSubida(){
+  const lleno = bgItems.length >= bgMax;
+  document.getElementById('bgUploadTxt').textContent = lleno
+    ? `Máximo alcanzado (${bgItems.length}/${bgMax}): borra alguno para subir otro`
+    : `＋ Subir imagen… (${bgItems.length}/${bgMax})`;
+  document.getElementById('bgUploadBtn').classList.toggle('disabled', lleno);
+}
+
+// "Mi foto (1).jpg" -> "Mi_foto__1_.bmp": solo letras, números, _ y - (máx. 27 caracteres + .bmp)
+function normalizarNombreFondo(nombre){
+  let base = nombre.replace(/\.[^.]*$/, '');
+  base = base.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9_-]/g, '_');
+  if (!base) base = 'fondo';
+  return base.slice(0, 27) + '.bmp';
+}
+
+// Dithering Floyd-Steinberg a RGB565 (los mismos niveles que usa el panel), sobre un RGBA de 128x32
+function ditherRGB565(px){
+  const w = BG_W, h = BG_H;
+  const f = new Float32Array(w * h * 3);
+  for (let i = 0; i < w * h; i++){ f[i*3] = px[i*4]; f[i*3+1] = px[i*4+1]; f[i*3+2] = px[i*4+2]; }
+  for (let y = 0; y < h; y++){
+    for (let x = 0; x < w; x++){
+      for (let c = 0; c < 3; c++){
+        const i = (y * w + x) * 3 + c;
+        const old = Math.min(255, Math.max(0, f[i]));
+        let nv;
+        if (c === 1){ const q = Math.floor(old * 63 / 255 + 0.5); nv = (q << 2) | (q >> 4); }
+        else        { const q = Math.floor(old * 31 / 255 + 0.5); nv = (q << 3) | (q >> 2); }
+        const e = old - nv;
+        f[i] = nv;
+        if (x + 1 < w) f[i + 3] += e * 7 / 16;
+        if (y + 1 < h){
+          if (x > 0)     f[i + w * 3 - 3] += e * 3 / 16;
+          f[i + w * 3] += e * 5 / 16;
+          if (x + 1 < w) f[i + w * 3 + 3] += e / 16;
+        }
+      }
+    }
+  }
+  for (let i = 0; i < w * h; i++){ px[i*4] = f[i*3]; px[i*4+1] = f[i*3+1]; px[i*4+2] = f[i*3+2]; px[i*4+3] = 255; }
+}
+
+// Lleva la imagen a 128x32. Si ya mide 128x32 se copia píxel a píxel (sin suavizado ni modos de ajuste).
+function convertirFondo(img, modo, dither){
+  const c = document.createElement('canvas');
+  c.width = BG_W; c.height = BG_H;
+  const g = c.getContext('2d', { willReadFrequently: true });
+  g.fillStyle = '#000';
+  g.fillRect(0, 0, BG_W, BG_H);                         // la transparencia se compone sobre negro
+  const sw = img.width, sh = img.height;
+  const exacta = (sw === BG_W && sh === BG_H);
+  g.imageSmoothingEnabled = !exacta;
+  g.imageSmoothingQuality = 'high';
+  let sx = 0, sy = 0, sW = sw, sH = sh, dx = 0, dy = 0, dW = BG_W, dH = BG_H;
+  if (!exacta){
+    const rs = sw / sh, rd = BG_W / BG_H;               // el panel es 4:1
+    if (modo === 'recortar'){
+      if (rs > rd){ sW = sh * rd; sx = (sw - sW) / 2; } else { sH = sw / rd; sy = (sh - sH) / 2; }
+    } else if (modo === 'ajustar'){
+      if (rs > rd){ dH = Math.round(BG_W / rs); dy = Math.floor((BG_H - dH) / 2); }
+      else        { dW = Math.round(BG_H * rs); dx = Math.floor((BG_W - dW) / 2); }
+    }                                                    // 'estirar': tal cual
+  }
+  g.drawImage(img, sx, sy, sW, sH, dx, dy, dW, dH);
+  const data = g.getImageData(0, 0, BG_W, BG_H);
+  if (dither) ditherRGB565(data.data);
+  return { rgba: data.data, exacta };
+}
+
+// RGBA 128x32 -> BMP de 24 bits (12.342 bytes). 128*3 = 384 bytes por fila: múltiplo de 4, sin relleno.
+function rgbaABmp(rgba){
+  const rowBytes = BG_W * 3, size = 54 + rowBytes * BG_H;
+  const buf = new ArrayBuffer(size), dv = new DataView(buf), u8 = new Uint8Array(buf);
+  u8[0] = 0x42; u8[1] = 0x4D;
+  dv.setUint32(2, size, true);  dv.setUint32(10, 54, true);
+  dv.setUint32(14, 40, true);   dv.setInt32(18, BG_W, true);  dv.setInt32(22, BG_H, true);   // alto positivo = filas de abajo arriba
+  dv.setUint16(26, 1, true);    dv.setUint16(28, 24, true);   dv.setUint32(30, 0, true);
+  dv.setUint32(34, rowBytes * BG_H, true);  dv.setInt32(38, 2835, true);  dv.setInt32(42, 2835, true);
+  let o = 54;
+  for (let y = BG_H - 1; y >= 0; y--){
+    for (let x = 0; x < BG_W; x++){
+      const i = (y * BG_W + x) * 4;
+      u8[o++] = rgba[i + 2]; u8[o++] = rgba[i + 1]; u8[o++] = rgba[i];                       // orden B, G, R
+    }
+  }
+  return buf;
+}
+
+function refrescarPreviewFondo(){
+  if (!bgImg) return;
+  const r = convertirFondo(bgImg, bgModo, bgDither.checked);
+  bgRgba = r.rgba;
+  bgPreview.getContext('2d').putImageData(new ImageData(r.rgba, BG_W, BG_H), 0, 0);
+  bgModoRow.style.display = r.exacta ? 'none' : '';
+  bgNota.textContent = r.exacta
+    ? 'La imagen ya mide 128x32: se usa tal cual, sin redimensionar.'
+    : `Original ${bgImg.width}x${bgImg.height}: se ajustará a 128x32.`;
+}
+
+function renderBgModoPills(){
+  bgModoPills.replaceChildren();
+  BG_MODOS.forEach(m => {
+    const b = document.createElement('button');
+    b.className = 'pill' + (m.id === bgModo ? ' active' : '');
+    b.textContent = m.texto;
+    b.addEventListener('click', () => { bgModo = m.id; renderBgModoPills(); refrescarPreviewFondo(); });
+    bgModoPills.appendChild(b);
+  });
+}
+renderBgModoPills();
+
+function cerrarPanelSubida(){
+  bgUploadPanel.style.display = 'none';
+  bgImg = null; bgRgba = null;
+}
+
+bgFile.addEventListener('change', async () => {
+  const f = bgFile.files[0];
+  if (!f) return;
+  try {
+    bgImg = await createImageBitmap(f);
+  } catch (e){
+    setStatus('No se pudo leer la imagen', 'err');
+    return;
+  }
+  bgNombre.value = normalizarNombreFondo(f.name);
+  bgDither.checked = false;                              // por defecto sin dithering (una imagen 128x32 no se toca)
+  bgUploadPanel.style.display = '';
+  refrescarPreviewFondo();
+  bgFile.value = '';                                     // permite volver a elegir el mismo archivo
+});
+bgDither.addEventListener('change', refrescarPreviewFondo);
+document.getElementById('bgUploadBtn').addEventListener('click', () => {
+  if (bgItems.length >= bgMax){ bgMensaje(textoMaximo(), 'err'); return; }
+  bgMensaje('');
+  bgFile.click();
+});
+document.getElementById('bgCancelar').addEventListener('click', cerrarPanelSubida);
+document.getElementById('bgSubir').addEventListener('click', subirFondo);
+
+async function subirFondo(){
+  const ip = ipEl.value.trim();
+  if (!ip || !bgRgba) return;
+  const nombre = normalizarNombreFondo(bgNombre.value.trim());
+  if (!bgItems.includes(nombre) && bgItems.length >= bgMax){ bgMensaje(textoMaximo(), 'err'); return; }
+  if (bgItems.includes(nombre) && !confirm(`Ya existe "${nombreFondoVisible(nombre)}". ¿Sustituirlo?`)) return;
+
+  const fd = new FormData();
+  fd.append('file', new Blob([rgbaABmp(bgRgba)], { type: 'image/bmp' }), nombre);
+  const btn = document.getElementById('bgSubir');
+  btn.disabled = true;
+  setStatus('Subiendo ' + nombre + '...');
+  try {
+    const res = await fetch(`http://${ip}/reloj/fondos`, { method: 'POST', body: fd, signal: AbortSignal.timeout(20000) });
+    const txt = await res.text();
+    if (!res.ok){
+      throw new Error(res.status === 409 ? textoMaximo()
+                    : res.status === 413 ? 'El archivo es demasiado grande para el panel.'
+                    : (txt || 'HTTP ' + res.status));
+    }
+    setStatus('Fondo "' + nombreFondoVisible(nombre) + '" subido', 'ok');
+    cerrarPanelSubida();
+    await abrirFondosReloj();                            // recarga la lista
+    bgMensaje('Fondo "' + nombreFondoVisible(nombre) + '" subido', 'ok');
+  } catch (e){
+    const msg = (e instanceof TypeError) ? 'No se pudo conectar con el panel' : e.message;
+    bgMensaje('No se pudo subir: ' + msg, 'err');
+    setStatus('No se pudo subir: ' + msg, 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function borrarFondoReloj(valor){
+  if (!confirm(`¿Borrar "${nombreFondoVisible(valor)}" de la SD?`)) return;
+  const ip = ipEl.value.trim();
+  try {
+    const res = await fetch(`http://${ip}/reloj/fondos/borrar`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: valor }), signal: AbortSignal.timeout(5000)
+    });
+    if (!res.ok) throw new Error(await res.text());
+    setStatus('Fondo borrado', 'ok');
+    await abrirFondosReloj();                            // recarga la lista
+    bgMensaje('Fondo "' + nombreFondoVisible(valor) + '" borrado', 'ok');
+    cargarFondosReloj();                                 // por si era el activo: actualiza la fila de la pestaña
+  } catch (e){
+    const msg = (e instanceof TypeError) ? 'No se pudo conectar con el panel' : e.message;
+    bgMensaje('No se pudo borrar: ' + msg, 'err');
+    setStatus('No se pudo borrar: ' + msg, 'err');
+  }
 }
 
 cargarEstadoPanel();
@@ -1445,7 +2113,7 @@ async function guardarAjustes(){
     if (!ok) return;
   }
 
-  cfgBody.innerHTML = '<div class="cfgLoading">Guardando y reiniciando el panel...</div>';
+  cfgBody.innerHTML = '<div class="cfgLoading">Guardando...</div>';
   try {
     const res = await fetch(`http://${ip}/config`, {
       method: 'POST',
@@ -1454,8 +2122,14 @@ async function guardarAjustes(){
       signal: AbortSignal.timeout(5000)
     });
     if (res.ok){
-      cfgBody.innerHTML = '<div class="cfgLoading">Guardado ✓ El panel se está reiniciando...</div>';
-      setTimeout(() => { cfgOverlay.classList.remove('open'); }, 2500);
+      const txt = await res.text();
+      if (txt.includes('Reiniciando')){                   // el panel decide si el cambio necesita reinicio
+        cfgBody.innerHTML = '<div class="cfgLoading">Guardado ✓ Este cambio necesita reiniciar: el panel se está reiniciando...</div>';
+        setTimeout(() => { cfgOverlay.classList.remove('open'); }, 2500);
+      } else {
+        cfgBody.innerHTML = '<div class="cfgLoading">Guardado ✓ Cambios aplicados sin reiniciar</div>';
+        setTimeout(() => { cfgOverlay.classList.remove('open'); cargarEstadoPanel(); }, 1200);
+      }
     } else {
       cfgBody.innerHTML = '<div class="cfgLoading">El panel respondió con error (' + res.status + ')</div>';
     }
