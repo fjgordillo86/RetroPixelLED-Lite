@@ -1,5 +1,22 @@
 ## 📝 Changelog (Registro de Cambios)
 
+### [v3.1.6] - 2026-11-01
+**Retro Pixel LED Lite: "Reloj"**
+
+#### ✨ Añadido
+* **Relojes dinámicos:** Temas animados con sprites propios dentro del firmware (`RelojDinamico.h`), seleccionables desde la PWA y menú OSD.
+
+#### ⚙️ Mejoras / Cambios Internos
+* **Selector de relojes (PWA):** Cuadrícula con miniaturas, filtros 8/16 bits y modos Aleatoria/Rotar.
+* **Reloj con fondo:** BMP 128×32 en `/relojes/imagenes`, posición izquierda/centro/derecha, sin parpadeo.
+* **Cambio instantáneo:** ahora se cambia de manera instantánea entre Modo Reloj y GIFs desde la PWA.
+
+#### 🛡️ Fixes
+* **Reinicio por cambiar ajustes en PWA:** Corrección del error que hacia que cualquier cambio de ajustes desde la PWA solicitara reiniciar el panel.
+#### ⚠️ Nota de actualización
+* **Al actualizar desde versiones anteriores a la v3.1.4:** desde esa versión se usa el esquema de particiones *Minimal SPIFFS* (1,9 MB para la app con OTA) y el firmware ya no cabe en el espacio antiguo. No se puede instalar por OTA: reinstálalo desde el instalador web. Se borran los datos guardados en la memoria interna (playlist activa, ajustes del temporizador); la configuración y los GIFs de la SD se conservan. Si ya tienes la v3.1.4 o superior, puedes pasar a la v3.1.6 por OTA.
+---
+
 ### [v3.1.5] - 2026-10-17
 **Retro Pixel LED Lite: "Conexiones"**
 
