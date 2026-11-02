@@ -45,7 +45,12 @@
     "ver": "Ver: ",
     "estilo": "Estilo: ",
 	"transicion": "Transicion: ",
-	"color": "Color: "
+	"color": "Color: ",
+	"fondo_ninguno": "Negro",
+	"fondo": "Fondo: ",
+	"pos_izq": "Izquierda",
+	"pos_centro": "Centro",
+	"pos_der": "Derecha"
   },
   "SUBMENU_CLIMA": {
     "titulo": "CLIMA"
