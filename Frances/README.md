@@ -31,6 +31,7 @@ Si la branche 2.x.x a apporté le Menu OSD, la **v3.0.0** a été l'étape défi
 **Depuis la v3.1.0, vous contrôlez le panneau depuis une application web (PWA)**, et depuis la **v3.1.2**, également depuis **Home Assistant**. 🏠
 
 **Depuis la v3.1.5, il n'est plus nécessaire d'éditer le moindre fichier pour le connecter à votre WiFi :** le panneau ouvre son propre portail de configuration depuis votre smartphone, puis vous le retrouvez toujours à l'adresse `retropixel.local`. 📶
+
 **À partir de la v3.1.6, l'horloge prend vie :** des horloges dynamiques et animées avec des personnages et des scènes de jeux vidéo, de séries et de films, sélectionnables depuis la PWA. 🕒🎮
 
 ### 📺 Vidéo du Retro Pixel LED Lite en action
