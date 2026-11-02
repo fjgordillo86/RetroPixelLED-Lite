@@ -78,7 +78,7 @@ Si la rama 2.x.x trajo el Menú OSD, la **v3.0.0** fue el salto definitivo hacia
 <p align="center">
   <img src="docs/img/relojes/Mario.gif" width="30%" alt="Reloj Mario">
   <img src="docs/img/relojes/Ghostbusters.gif" width="30%" alt="Reloj Ghostbusters">
-  <img src="docs/img/relojes/OnePice.gif" width="30%" alt="Reloj One Pice">
+  <img src="docs/img/relojes/Sonic.gif" width="30%" alt="Reloj Sonic">
 </p>
 
 - **🎞️ Relojes dinámicos:** nueva función independiente del reloj Lite. Caras animadas con sprites propios (Mario, Sonic, Invasores, Pac-Man, Zelda, Street Fighter, Castlevania...) en estética de 8 y 16 bits, más temas de anime y cine. [Ver galería](#️-relojes-dinámicos).
@@ -208,7 +208,6 @@ La interfaz se divide en **6 secciones**:
 - **🎛️ Selector de modo:** GIF, Reloj o Texto en tiempo real.
   - **Modo GIF:** playlist activa + toggle de reproducción aleatoria.
   - **Modo Reloj:** selector *Reloj Lite / Dinámico*. Lite: estilos, colores (paleta + RGB libre), fondo y posición. Dinámico: cuadrícula de temas con miniatura, filtros Películas, Anime, 8/16 bits y modos Fijo, Aleatorio, Rotar.
-  - **Modo Reloj:** 5 estilos (Matrix, Solid, Rainbow, Pulse, Gradient) y 9 colores.
   - **Modo Texto:** vista previa en vivo de la matriz mientras escribes, con color, fuente y velocidad de scroll.
 - **🔌 Estado de conexión:** indicador visual (verde/rojo) del WiFi.
 
@@ -533,21 +532,21 @@ RANDOM_MODE=1
 AUTO_CLOCK_INT=6
 # Duracion: Cuantos segundos se muestra el reloj
 CLOCK_DURATION=10
-# Reloj dinamico: 0=OFF (reloj Lite), 1..N=numero del tema (1=Mario)
+# Dynamic clock: 0=OFF (Lite clock), 1..N=theme number (1=Mario)
 DYN_CLOCK=6
-# Modo del reloj dinamico: 0=Fija (siempre el tema de DYN_CLOCK), 1=Aleatoria, 2=Rotar
+# Dynamic clock mode: 0=Fixed (always the theme from DYN_CLOCK), 1=Random, 2=Rotate
 DYN_MODE=1
-# Minutos entre cambios de temas en modo Rotar (DYN_MODE=2): 1-240
+# Minutes between theme changes in Rotate mode (DYN_MODE=2): 1-240
 DYN_ROT=5
-# Estilos: 0=Solid, 1=Aurora, 2=Rainbow, 3=Gradient, 4= Fuego, 5=Glitch
+# Styles: 0=Solid, 1=Aurora, 2=Rainbow, 3=Gradient, 4=Fire, 5=Glitch
 CLOCK_STYLE=2
-# Nombre del fondo que quieres aplicar al reloj ejemplo Mario.bmp
+# Name of the background image you want to apply to the clock, e.g., Mario.bmp
 CLOCK_BG=
-# Posición del reloj 0=Izquierda, 1=Centro, 2=Derecha
+# Clock position 0=Left, 1=Center, 2=Right
 CLOCK_POS=1
-# Activa la transicion del reloj a GIFs con una explosion de particulas : 0=OFF, 1=ON
+# Enables clock transition to GIFs with a particle explosion: 0=OFF, 1=ON
 TRANSITION_ENABLE=1
-# Color del reloj (-1=CLOCK_COLOR_RGB 0= Blanco, 1=Rojo, 2=Verde, 3=Azul, 4=Amarillo, 5=Cian, 6=Magenta, 7=Naranja, 8=Rosa)
+# Clock color (-1=CLOCK_COLOR_RGB, 0=White, 1=Red, 2=Green, 3=Blue, 4=Yellow, 5=Cyan, 6=Magenta, 7=Orange, 8=Pink)
 CLOCK_COLOR=0
 CLOCK_COLOR_RGB=FFFFFF
 
