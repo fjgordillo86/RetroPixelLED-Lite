@@ -31,6 +31,7 @@ While the 2.x.x branch brought the OSD Menu, **v3.0.0** was the ultimate leap to
 **Since v3.1.0, you can control the panel from an app (PWA)**, and since **v3.1.2**, also from **Home Assistant**. 🏠
 
 **Since v3.1.5, you no longer need to edit any files to connect it to your WiFi:** the panel opens its own configuration portal from your phone, and you can always find it afterwards at `retropixel.local`. 📶
+
 **Starting from v3.1.6, the clock comes alive:** dynamic animated clocks featuring characters and scenes from video games, TV shows, and movies, selectable from the PWA. 🕒🎮
 
 ### 📺 Retro Pixel LED Lite in Action Video
