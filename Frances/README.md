@@ -75,9 +75,9 @@ Si la branche 2.x.x a apporté le Menu OSD, la **v3.0.0** a été l'étape défi
 ## 🆕 Nouveautés de la version v3.1.6 Lite
 
 <p align="center">
-  <img src="docs/img/relojes/Mario.gif" width="30%" alt="Reloj Mario">
-  <img src="docs/img/relojes/Ghostbusters.gif" width="30%" alt="Reloj Ghostbusters">
-  <img src="docs/img/relojes/Sonic.gif" width="30%" alt="Reloj Sonic">
+  <img src="../docs/img/relojes/Mario.gif" width="30%" alt="Reloj Mario">
+  <img src="../docs/img/relojes/Ghostbusters.gif" width="30%" alt="Reloj Ghostbusters">
+  <img src="../docs/img/relojes/Sonic.gif" width="30%" alt="Reloj Sonic">
 </p>
 
 - **🎞️ Horloges dynamiques :** nouvelle fonctionnalité indépendante de l'horloge Lite. Cadrans animés avec des sprites personnalisés (Mario, Sonic, Space Invaders, Pac-Man, Zelda, Street Fighter, Castlevania...) en esthétique 8 et 16 bits, ainsi que des thèmes d'anime et de cinéma. [Voir la galerie](#️-dynamic-clocks).
@@ -296,9 +296,9 @@ Chaque thème est une petite scène animée avec l'heure intégrée. Il se séle
 
 | | | |
 |:-:|:-:|:-:|
-| ![Mario](docs/img/relojes/Mario.gif)<br>**Mario** | ![Luigi](docs/img/relojes/Luigi.gif)<br>**Luigi** | ![Peach](docs/img/relojes/Peach.gif)<br>**Peach** |
-| ![Space Invaders](docs/img/relojes/SpaceInvaders.gif)<br>**Space Invaders** | ![Pac-Man](docs/img/relojes/Pacman.gif)<br>**Pac-Man** | ![Tetris](docs/img/relojes/Tetris.gif)<br>**Tetris** |
-| ![Zelda](docs/img/relojes/Zelda.gif)<br>**Zelda** | ![Donkey Kong](docs/img/relojes/DonkeyKong.gif)<br>**Donkey Kong** | ![Bubble Booble](docs/img/relojes/BubbleBooble.gif)<br>**Bubble Booble** |
+| ![Mario](../docs/img/relojes/Mario.gif)<br>**Mario** | ![Luigi](../docs/img/relojes/Luigi.gif)<br>**Luigi** | ![Peach](../docs/img/relojes/Peach.gif)<br>**Peach** |
+| ![Space Invaders](../docs/img/relojes/SpaceInvaders.gif)<br>**Space Invaders** | ![Pac-Man](../docs/img/relojes/Pacman.gif)<br>**Pac-Man** | ![Tetris](../docs/img/relojes/Tetris.gif)<br>**Tetris** |
+| ![Zelda](../docs/img/relojes/Zelda.gif)<br>**Zelda** | ![Donkey Kong](../docs/img/relojes/DonkeyKong.gif)<br>**Donkey Kong** | ![Bubble Booble](../docs/img/relojes/BubbleBooble.gif)<br>**Bubble Booble** |
 
 </details>
 
@@ -307,9 +307,9 @@ Chaque thème est une petite scène animée avec l'heure intégrée. Il se séle
 
 | | | |
 |:-:|:-:|:-:|
-| ![Sonic](docs/img/relojes/Sonic.gif)<br>**Sonic** | ![Mega Man X](docs/img/relojes/MegaManX.gif)<br>**Mega Man X** | ![Bomberman](docs/img/relojes/Bomberman.gif)<br>**Bomberman** |
-| ![Streets of Rage](docs/img/relojes/StreetsOfRage.gif)<br>**Streets of Rage** | ![Street Fighter](docs/img/relojes/StreetFighter.gif)<br>**Street Fighter** | ![Castlevania](docs/img/relojes/Castlevania.gif)<br>**Castlevania** |
-| ![Chrono Trigger](docs/img/relojes/ChronoTrigger.gif)<br>**Chrono Trigger** | ![Metal Slug](docs/img/relojes/MetalSlug.gif)<br>**Metal Slug** |
+| ![Sonic](../docs/img/relojes/Sonic.gif)<br>**Sonic** | ![Mega Man X](../docs/img/relojes/MegaManX.gif)<br>**Mega Man X** | ![Bomberman](../docs/img/relojes/Bomberman.gif)<br>**Bomberman** |
+| ![Streets of Rage](../docs/img/relojes/StreetsOfRage.gif)<br>**Streets of Rage** | ![Street Fighter](../docs/img/relojes/StreetFighter.gif)<br>**Street Fighter** | ![Castlevania](../docs/img/relojes/Castlevania.gif)<br>**Castlevania** |
+| ![Chrono Trigger](../docs/img/relojes/ChronoTrigger.gif)<br>**Chrono Trigger** | ![Metal Slug](../docs/img/relojes/MetalSlug.gif)<br>**Metal Slug** |
 
 </details>
 
@@ -318,8 +318,8 @@ Chaque thème est une petite scène animée avec l'heure intégrée. Il se séle
 
 | | | |
 |:-:|:-:|:-:|
-| ![Dragon Ball](docs/img/relojes/DragonBall.gif)<br>**Dragon Ball** | ![Naruto](docs/img/relojes/Naruto.gif)<br>**Naruto** | ![One Pice](docs/img/relojes/OnePice.gif)<br>**One Pice** |
-| ![Pokemon](docs/img/relojes/Pokemon.gif)<br>**Pokemon** |
+| ![Dragon Ball](../docs/img/relojes/DragonBall.gif)<br>**Dragon Ball** | ![Naruto](../docs/img/relojes/Naruto.gif)<br>**Naruto** | ![One Pice](../docs/img/relojes/OnePice.gif)<br>**One Pice** |
+| ![Pokemon](../docs/img/relojes/Pokemon.gif)<br>**Pokemon** |
 
 </details>
 
@@ -328,8 +328,8 @@ Chaque thème est une petite scène animée avec l'heure intégrée. Il se séle
 
 | | | |
 |:-:|:-:|:-:|
-| ![Terminator](docs/img/relojes/Terminator.gif)<br>**Terminator** | ![Regreso al Futuro](docs/img/relojes/BackToFuture.gif)<br>**Regreso al Futuro** | ![Matrix](docs/img/relojes/Matrix.gif)<br>**Matrix** |
-| ![Star Wars](docs/img/relojes/StarWars.gif)<br>**Star Wars** | ![Jurassic Park](docs/img/relojes/JurassicPark.gif)<br>**Jurassic Park** | ![Ghostbusters](docs/img/relojes/Ghostbusters.gif)<br>**Ghostbusters** |
+| ![Terminator](../docs/img/relojes/Terminator.gif)<br>**Terminator** | ![Regreso al Futuro](../docs/img/relojes/BackToFuture.gif)<br>**Regreso al Futuro** | ![Matrix](../docs/img/relojes/Matrix.gif)<br>**Matrix** |
+| ![Star Wars](../docs/img/relojes/StarWars.gif)<br>**Star Wars** | ![Jurassic Park](../docs/img/relojes/JurassicPark.gif)<br>**Jurassic Park** | ![Ghostbusters](../docs/img/relojes/Ghostbusters.gif)<br>**Ghostbusters** |
 
 </details>
 
