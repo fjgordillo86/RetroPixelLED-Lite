@@ -45,7 +45,12 @@
     "ver": "Show: ",
     "estilo": "Style: ",
 	"transicion": "Transition: ",
-	"color": "Color: "
+	"color": "Color: ",
+	"fondo_ninguno": "None",
+	"fondo": "Back: ",
+	"pos_izq": "Left",
+	"pos_centro": "Center",
+	"pos_der": "Right"
   },
   "SUBMENU_CLIMA": {
     "titulo": "WEATHER"
