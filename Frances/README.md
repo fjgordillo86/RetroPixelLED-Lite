@@ -1,7 +1,7 @@
 # ✨ Retro Pixel LED Lite
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-3.1.5-blue">
+  <img alt="Version" src="https://img.shields.io/badge/version-3.1.6-blue">
   <img alt="Plateforme" src="https://img.shields.io/badge/plateforme-ESP32-informational">
   <img alt="Licence" src="https://img.shields.io/badge/licence-MIT-green">
   <img alt="Statut" src="https://img.shields.io/badge/statut-actif-success">
@@ -31,6 +31,7 @@ Si la branche 2.x.x a apporté le Menu OSD, la **v3.0.0** a été l'étape défi
 **Depuis la v3.1.0, vous contrôlez le panneau depuis une application web (PWA)**, et depuis la **v3.1.2**, également depuis **Home Assistant**. 🏠
 
 **Depuis la v3.1.5, il n'est plus nécessaire d'éditer le moindre fichier pour le connecter à votre WiFi :** le panneau ouvre son propre portail de configuration depuis votre smartphone, puis vous le retrouvez toujours à l'adresse `retropixel.local`. 📶
+**À partir de la v3.1.6, l'horloge prend vie :** des horloges dynamiques et animées avec des personnages et des scènes de jeux vidéo, de séries et de films, sélectionnables depuis la PWA. 🕒🎮
 
 ### 📺 Vidéo du Retro Pixel LED Lite en action
 [![Fonctionnement de Retro Pixel LED Lite](https://img.youtube.com/vi/PCU4Z985G7Y/maxresdefault.jpg)](https://youtu.be/PCU4Z985G7Y)
@@ -39,7 +40,7 @@ Si la branche 2.x.x a apporté le Menu OSD, la **v3.0.0** a été l'étape défi
 
 ## 📑 Sommaire
 
-1. [🆕 Nouveautés de la version actuelle](#-nouveautés-de-la-version-v315-lite)
+1. [🆕 Nouveautés de la version actuelle](#-nouveautés-de-la-version-v316-lite)
 2. [🚀 Guide rapide](#-guide-rapide-premiers-pas)
 3. [🎛️ Fonctionnalités principales](#️-fonctionnalités-principales)
    - [🖥️ Menu OSD](#️-menu-osd-navigation-intelligente)
@@ -47,6 +48,7 @@ Si la branche 2.x.x a apporté le Menu OSD, la **v3.0.0** a été l'étape défi
    - [🏠 Home Assistant](#-home-assistant)
    - [🕹️ Mode Arcade](#️-mode-arcade-batocera-recalbox-retrobat--replayos)
    - [🕒 Horloge et Météo](#-horloge-et-météo)
+   - [🎞️ Horloges dynamiques](#️-horloges-dynamiques)
    - [⏰ Minuteur](#-minuteur)
    - [🌐 Multi-langue](#-multi-langue)
    - [📂 Serveur FTP](#-serveur-ftp)
@@ -62,7 +64,7 @@ Si la branche 2.x.x a apporté le Menu OSD, la **v3.0.0** a été l'étape défi
 6. [🕹️ Intégration Arcade](#️-intégration-arcade-batocera-recalbox-retrobat-ou-replayos)
 7. [🏠 Intégration Home Assistant](#-intégration-home-assistant-guide-complet)
 8. [🧠 Architecture interne / Core Lite](#-architecture-interne--core-lite)
-9. [📜 Historique détaillé des modifications](#-historique-détaillé-des-modifications-v300--v315)
+9. [📜 Historique détaillé des modifications](#-historique-détaillé-des-modifications-v300--v316)
 10. [🛒 Liste du matériel](#-liste-du-matériel)
 11. [🔌 Connexions (Pinout)](#-connexions)
 12. [🛠️ Feuille de route (Roadmap)](#️-feuille-de-route-roadmap)
@@ -70,19 +72,22 @@ Si la branche 2.x.x a apporté le Menu OSD, la **v3.0.0** a été l'étape défi
 
 ---
 
-## 🆕 Nouveautés de la version v3.1.5 Lite
+## 🆕 Nouveautés de la version v3.1.6 Lite
 
-- **📶 Portail WiFi intégré :** connectez le panneau à votre réseau depuis votre smartphone, sans éditer `config.ini`. Il s'ouvre depuis `Menu OSD → WiFi → Ajouter réseau`, ou automatiquement au premier démarrage si aucun réseau n'est configuré. Le panneau affiche son réseau et une clé aléatoire, vous choisissez votre WiFi dans une liste et il vérifie lui-même la connexion avant de la sauvegarder. Textes en espagnol, anglais et français. [Voir le fonctionnement](#-portail-wifi-et-accès-par-nom-mdns).
-- **🏷️ Accès par nom (mDNS) :** le panneau répond à l'adresse `retropixel.local`, sans dépendre de l'IP. La PWA conserve en mémoire la dernière IP connue et vous propose de l'utiliser si le nom ne se résout pas sur votre appareil.
-- **🔔 Notification de mise à jour dans la PWA :** un point ambre sur l'icône 🔄 vous informe lorsqu'une nouvelle version est disponible, avec son numéro et ses nouveautés.
-- **ℹ️ Nouvelle page "À propos" dans la PWA :** versions de la PWA et du firmware, créateur, licence et **diagnostic en direct** du panneau (mémoire, dernier redémarrage, WiFi, carte SD...), avec un bouton pour copier le rapport.
-- **🩺 Diagnostic `/diag` :** consultation rapide de l'état interne depuis le navigateur (`http://retropixel.local/diag`).
-- **🔐 Mots de passe WiFi contenant `#` :** correction d'une erreur de lecture de `config.ini` qui tronquait le SSID ou le mot de passe à partir d'un `#`.
-- **🛡️ PWA plus fiable lors des mises à jour :** le service worker possède désormais une version unique, s'installe même si un fichier échoue et n'intercepte plus les requêtes adressées au panneau.
+<p align="center">
+  <img src="docs/img/relojes/Mario.gif" width="30%" alt="Horloge Mario">
+  <img src="docs/img/relojes/Ghostbusters.gif" width="30%" alt="Horloge Ghostbusters">
+  <img src="docs/img/relojes/Sonic.gif" width="30%" alt="Horloge Sonic">
+</p>
 
-> ⚠️ **Lors d'une mise à jour depuis une version antérieure à la v3.1.4 :** à partir de cette version, le schéma de partitionnement *Minimal SPIFFS* est utilisé (1,9 Mo pour l'application avec OTA) et le firmware ne rentre plus dans l'ancien espace. La mise à jour OTA est impossible : réinstallez-le depuis l'installateur web. Les données sauvegardées dans la mémoire interne seront effacées (playlist active, paramètres du minuteur) ; la configuration et les GIFs de la carte SD seront conservés. Si vous possédez déjà la v3.1.4, vous pouvez passer à la v3.1.5 via OTA.
+- **🎞️ Horloges dynamiques :** nouvelle fonctionnalité indépendante de l'horloge Lite. Cadrans animés avec des sprites personnalisés (Mario, Sonic, Space Invaders, Pac-Man, Zelda, Street Fighter, Castlevania...) en esthétique 8 et 16 bits, ainsi que des thèmes d'anime et de cinéma. [Voir la galerie](#️-dynamic-clocks).
+- **📱 Sélecteur dans la PWA :** choisissez entre l'horloge Lite et l'horloge dynamique, avec une grille de cartes avec miniatures et des filtres 8/16 bits. Modes **Aléatoire** et **Rotation**.
+- **🖼️ Horloge avec image de fond :** BMP de 128×32 dans `/relojes/imagenes`, avec position de l'horloge (gauche, centre, droite) configurable depuis la PWA et le menu OSD.
+- **🌈 Couleur RVB libre** pour l'horloge dans la PWA, sous les palettes fixes.
 
-Pour le détail des versions antérieures (marqueurs GIF en Arcade, reconnexion WiFi, IP dans le menu OSD...), consultez l'[Historique des modifications](#-historique-détaillé-des-modifications-v300--v315).
+> ⚠️ **Lors de la mise à jour depuis des versions antérieures à la v3.1.4 :** à partir de cette version, le schéma de partition *Minimal SPIFFS* est utilisé (1,9 Mo pour l'application avec OTA) et le firmware ne rentre plus dans l'ancien espace. Il ne peut pas être installé par OTA : réinstallez-le depuis l'installateur Web. Les données enregistrées dans la mémoire interne seront effacées (playlist active, paramètres de minuterie) ; la configuration et les GIFs sur la carte SD sont conservés. Si vous possédez déjà la version v3.1.4 ou v3.1.5, vous pouvez passer à la v3.1.6 par OTA.
+
+Pour le détail des versions antérieures (marqueurs GIF en Arcade, reconnexion WiFi, IP dans le menu OSD...), consultez l'[Historique des modifications](#-historique-détaillé-des-modifications-v300--v316).
 
 ---
 
@@ -144,6 +149,7 @@ Le système se contrôle à l'aide d'un **bouton unique** (ou de la télécomman
 │   └── 🔙 Retour
 ├── 🕒 Horloge: [ON / OFF]
 │   ├── 🔄 Activer: [OUI / NON]
+│   ├── 🎞️ Dinamic: [NON, Mario, Sonic, Back to Future, Dragon Ball....]
 │   ├── 🖼️ Tous les: [1...20] GIFs
 │   ├── ⏳ Durée: [5...30] sec
 │   ├── 🎨 Style Horloge: [Matrix, Solid, Rainbow, Pulse, Gradient]
@@ -200,7 +206,7 @@ L'interface est divisée en **6 sections** :
 - **☀️ Contrôle de la luminosité :** curseur 0-100% à application instantanée, sans redémarrage.
 - **🎛️ Sélecteur de mode :** GIF, Horloge ou Texte en temps réel.
   - **Mode GIF :** playlist active + bascule de lecture aléatoire.
-  - **Mode Horloge :** 5 styles (Matrix, Solid, Rainbow, Pulse, Gradient) et 9 couleurs.
+  - **Mode Horloge :** sélecteur *Horloge Lite / Dynamique*. Lite : styles, couleurs (palette + RVB libre), fond et position. Dynamique : grille de thèmes avec miniatures, filtres Films, Anime, 8/16 bits et modes Fixe, Aléatoire, Rotation.
   - **Mode Texte :** aperçu en direct sur la matrice pendant la frappe, avec couleur, police et vitesse d'enroulement.
 - **🔌 État de la connexion :** indicateur visuel (vert/rouge) du WiFi.
 
@@ -278,7 +284,57 @@ S'active depuis `Menu → Lecture → Arcade`. Le guide d'installation complet s
 
 ### 🕒 Horloge et Météo
 
-- **Horloge :** 5 styles (Matrix, Solid, Rainbow, Pulse, Gradient) et 9 couleurs, avec transition de particules à l'apparition/disparition. La galerie de GIFs s'interrompt tous les *x* GIFs pour afficher l'heure pendant *x* secondes (configurable), puis reprend la lecture exactement là où elle s'était arrêtée.
+- **Horloge Lite :** 10 styles (Solid, Aurora, Rainbow, Gradient, Fuego, Glitch, Latido, Destello...) et 9 couleurs, avec transition de particules. Prend en charge l'image de fond et la position. Interrompt la galerie toutes les *x* GIFs pour l'afficher pendant *x* secondes.
+- **Horloge dynamique :** thèmes animés, voir [Horloges dynamiques](#️-relojes-dinámicos).
+
+### 🎞️ Horloges dynamiques
+
+Chaque thème est une petite scène animée avec l'heure intégrée. Il se sélectionne depuis la PWA (`Home → Horloge → Dynamique`) ou le menu OSD (`Menu → Horloge → Dynamique`) et tout réside dans le firmware : aucune carte SD requise.
+
+<details>
+<summary>🕹️ <b>Thèmes 8 bits</b></summary>
+
+| | | |
+|:-:|:-:|:-:|
+| ![Mario](docs/img/relojes/Mario.gif)<br>**Mario** | ![Luigi](docs/img/relojes/Luigi.gif)<br>**Luigi** | ![Peach](docs/img/relojes/Peach.gif)<br>**Peach** |
+| ![Space Invaders](docs/img/relojes/SpaceInvaders.gif)<br>**Space Invaders** | ![Pac-Man](docs/img/relojes/Pacman.gif)<br>**Pac-Man** | ![Tetris](docs/img/relojes/Tetris.gif)<br>**Tetris** |
+| ![Zelda](docs/img/relojes/Zelda.gif)<br>**Zelda** | ![Donkey Kong](docs/img/relojes/DonkeyKong.gif)<br>**Donkey Kong** | ![Bubble Booble](docs/img/relojes/BubbleBooble.gif)<br>**Bubble Booble** |
+
+</details>
+
+<details>
+<summary>🎮 <b>Thèmes 16 bits</b></summary>
+
+| | | |
+|:-:|:-:|:-:|
+| ![Sonic](docs/img/relojes/Sonic.gif)<br>**Sonic** | ![Mega Man X](docs/img/relojes/MegaManX.gif)<br>**Mega Man X** | ![Bomberman](docs/img/relojes/Bomberman.gif)<br>**Bomberman** |
+| ![Streets of Rage](docs/img/relojes/StreetsOfRage.gif)<br>**Streets of Rage** | ![Street Fighter](docs/img/relojes/StreetFighter.gif)<br>**Street Fighter** | ![Castlevania](docs/img/relojes/Castlevania.gif)<br>**Castlevania** |
+| ![Chrono Trigger](docs/img/relojes/ChronoTrigger.gif)<br>**Chrono Trigger** | ![Metal Slug](docs/img/relojes/MetalSlug.gif)<br>**Metal Slug** |
+
+</details>
+
+<details>
+<summary>🖼️ <b>Anime</b></summary>
+
+| | | |
+|:-:|:-:|:-:|
+| ![Dragon Ball](docs/img/relojes/DragonBall.gif)<br>**Dragon Ball** | ![Naruto](docs/img/relojes/Naruto.gif)<br>**Naruto** | ![One Pice](docs/img/relojes/OnePice.gif)<br>**One Pice** |
+| ![Pokemon](docs/img/relojes/Pokemon.gif)<br>**Pokemon** |
+
+</details>
+
+<details>
+<summary>🎬 <b>Films</b></summary>
+
+| | | |
+|:-:|:-:|:-:|
+| ![Terminator](docs/img/relojes/Terminator.gif)<br>**Terminator** | ![Regreso al Futuro](docs/img/relojes/BackToFuture.gif)<br>**Retour vers le futur** | ![Matrix](docs/img/relojes/Matrix.gif)<br>**Matrix** |
+| ![Star Wars](docs/img/relojes/StarWars.gif)<br>**Star Wars** | ![Jurassic Park](docs/img/relojes/JurassicPark.gif)<br>**Jurassic Park** | ![Ghostbusters](docs/img/relojes/Ghostbusters.gif)<br>**Ghostbusters** |
+
+</details>
+
+**Modes de sélection :** Thème fixe, **Aléatoire** (un différent à chaque fois) ou **Rotation** (défilement dans l'ordre).
+
 - **Météo :** avec une clé API gratuite d'OpenWeatherMap, affiche la température et l'icône météo au-dessus de l'horloge, accompagnées d'un message personnalisable (`WEATHER_MSG`). Voir [comment obtenir votre clé API](#5--comment-obtenir-votre-clé-api-météo).
 
 ---
@@ -475,12 +531,23 @@ RANDOM_MODE=1
 AUTO_CLOCK_INT=6
 # Durée: Nombre de secondes d'affichage de l'horloge
 CLOCK_DURATION=10
-# Styles d'horloge: 0=Solid, 1=Aurora, 2=Rainbow, 3=Gradient, 4=Fuego, 5=Glitch
+# Horloge dynamique : 0=OFF (horloge Lite), 1..N=numéro du thème (1=Mario)
+DYN_CLOCK=6
+# Mode de l'horloge dynamique : 0=Fixe (toujours le thème de DYN_CLOCK), 1=Aléatoire, 2=Rotation
+DYN_MODE=1
+# Minutes entre les changements de thèmes en mode Rotation (DYN_MODE=2) : 1-240
+DYN_ROT=5
+# Styles : 0=Solid, 1=Aurora, 2=Rainbow, 3=Gradient, 4=Feu, 5=Glitch
 CLOCK_STYLE=2
+# Nom de l'image de fond que vous souhaitez appliquer à l'horloge, par exemple Mario.bmp
+CLOCK_BG=
+# Position de l'horloge 0=Gauche, 1=Centre, 2=Droite
+CLOCK_POS=1
 # Active la transition de l'horloge vers les GIFs avec une explosion de particules : 0=OFF, 1=ON
 TRANSITION_ENABLE=1
-# Couleur de l'horloge (0=Blanc, 1=Rouge, 2=Vert, 3=Bleu, 4=Jaune, 5=Cyan, 6=Magenta, 7=Orange, 8=Rose)
-CLOCK_COLOR=4
+# Couleur de l'horloge (-1=CLOCK_COLOR_RGB, 0=Blanc, 1=Rouge, 2=Vert, 3=Bleu, 4=Jaune, 5=Cyan, 6=Magenta, 7=Orange, 8=Rose)
+CLOCK_COLOR=0
+CLOCK_COLOR_RGB=FFFFFF
 
 [WEATHER]
 # Active la météo: 0=OFF, 1=ON (Nécessite le WiFi)
@@ -629,10 +696,13 @@ Détails techniques sur le fonctionnement interne du système :
 
 ---
 
-## 📜 Historique détaillé des modifications (v3.0.0 → v3.1.5)
+## 📜 Historique détaillé des modifications (v3.0.0 → v3.1.6)
 
 | Fonctionnalité | Détail technique | Bénéfice |
 | :--- | :--- | :--- |
+| **🎞️ Horloges dynamiques** | Cadrans animés avec des sprites personnalisés intégrés au firmware (`RelojDinamico.h`), sélectionnables depuis la PWA. | **Horloge avec personnalité**, sans carte SD ni configuration supplémentaire. |
+| **🗂️ Sélecteur d'horloges (PWA)** | Grille avec miniatures, filtres 8/16 bits et modes Aléatoire/Rotation. | **Choisir des thèmes en deux clics.** |
+| **🖼️ Horloge avec fond** | BMP 128×32 dans `/relojes/imagenes`, position gauche/centre/droite, sans scintillement. | **Personnalisation visuelle totale.** |
 | **📶 Portail WiFi intégré** | Point d'accès temporaire (`RetroPixel-LED`) avec clé aléatoire affichée à l'écran, DNS captive portal et page web intégrée listant les réseaux triés par puissance de signal. Teste la connexion avant de l'enregistrer dans `config.ini`. S'ouvre depuis `Menu OSD → WiFi → Ajouter réseau` ou automatiquement si `WIFI_ENABLE=1` et `SSID` est vide. Textes en ES/EN/FR intégrés au firmware. | **Connectez le panneau sans éditer de fichiers.** Changer de routeur ne nécessite plus de retirer la carte SD. |
 | **🏷️ Accès par nom (mDNS)** | Le panneau s'annonce sous le nom `retropixel.local`. La PWA accepte le nom ou l'IP (`GET /status` inclut désormais `ip`), conserve la dernière IP connue et propose son utilisation si le nom ne se résout pas. | **Indépendance vis-à-vis de l'adresse IP**, qui peut changer selon le routeur. |
 | **🔔 Notification de mise à jour** | La PWA compare la version du firmware (`fw` et `fwNum` dans `GET /status`) avec le fichier `version.json` sur GitHub Pages. Point ambre sur 🔄, affichant la version disponible et ses nouveautés (`notes`). | **Soyez informé des nouvelles versions** sans recherche manuelle. |
