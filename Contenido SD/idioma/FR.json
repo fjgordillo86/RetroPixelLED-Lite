@@ -45,7 +45,12 @@
     "ver": "Voir: ",
     "estilo": "Style: ",
 	"transicion": "Transition: ",
-	"color": "Couleur: "
+	"color": "Couleur: ",
+    "fondo_ninguno": "Aucun",
+    "fondo": "Fond : ",
+    "pos_izq": "Gauche",
+    "pos_centro": "Centre",
+    "pos_der": "Droite"
   },
   "SUBMENU_CLIMA": {
     "titulo": "METEO"
