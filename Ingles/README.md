@@ -75,9 +75,9 @@ While the 2.x.x branch brought the OSD Menu, **v3.0.0** was the ultimate leap to
 ## 🆕 What's New in v3.1.6 Lite
 
 <p align="center">
-  <img src="docs/img/relojes/Mario.gif" width="30%" alt="Mario Clock">
-  <img src="docs/img/relojes/Ghostbusters.gif" width="30%" alt="Ghostbusters Clock">
-  <img src="docs/img/relojes/Sonic.gif" width="30%" alt="Sonic Clock">
+  <img src="docs/img/relojes/Mario.gif" width="30%" alt="Reloj Mario">
+  <img src="docs/img/relojes/Ghostbusters.gif" width="30%" alt="Reloj Ghostbusters">
+  <img src="docs/img/relojes/Sonic.gif" width="30%" alt="Reloj Sonic">
 </p>
 
 - **🎞️ Dynamic Clocks:** new feature independent of the Lite clock. Animated faces with custom sprites (Mario, Sonic, Space Invaders, Pac-Man, Zelda, Street Fighter, Castlevania...) in 8 and 16-bit aesthetics, plus anime and movie themes. [See gallery](#️-dynamic-clocks).
@@ -292,7 +292,7 @@ Activated via `Menu → Playback → Arcade`. Complete installation instructions
 Each theme is a small animated stage with the built-in clock. It is selected from the PWA (`Home → Clock → Dynamic`) or the OSD menu (`Menu → Clock → Dynamic`) and everything lives inside the firmware: no SD card required.
 
 <details>
-<summary>🕹️ <b>8-bit Themes</b></summary>
+<summary>🕹️ <b>8 bits</b></summary>
 
 | | | |
 |:-:|:-:|:-:|
@@ -303,7 +303,7 @@ Each theme is a small animated stage with the built-in clock. It is selected fro
 </details>
 
 <details>
-<summary>🎮 <b>16-bit Themes</b></summary>
+<summary>🎮 <b>16 bits</b></summary>
 
 | | | |
 |:-:|:-:|:-:|
@@ -324,11 +324,11 @@ Each theme is a small animated stage with the built-in clock. It is selected fro
 </details>
 
 <details>
-<summary>🎬 <b>Movies</b></summary>
+<summary>🎬 <b>Películas</b></summary>
 
 | | | |
 |:-:|:-:|:-:|
-| ![Terminator](docs/img/relojes/Terminator.gif)<br>**Terminator** | ![Regreso al Futuro](docs/img/relojes/BackToFuture.gif)<br>**Back to the Future** | ![Matrix](docs/img/relojes/Matrix.gif)<br>**Matrix** |
+| ![Terminator](docs/img/relojes/Terminator.gif)<br>**Terminator** | ![Regreso al Futuro](docs/img/relojes/BackToFuture.gif)<br>**Regreso al Futuro** | ![Matrix](docs/img/relojes/Matrix.gif)<br>**Matrix** |
 | ![Star Wars](docs/img/relojes/StarWars.gif)<br>**Star Wars** | ![Jurassic Park](docs/img/relojes/JurassicPark.gif)<br>**Jurassic Park** | ![Ghostbusters](docs/img/relojes/Ghostbusters.gif)<br>**Ghostbusters** |
 
 </details>
@@ -479,7 +479,7 @@ The `config.ini` file is located in the [Contenido SD](https://github.com/fjgord
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v3.1.5 - CONFIGURATION FILE
+# 🕹️ RETRO PIXEL LED LITE v3.1.6 - CONFIGURATION FILE
 # ============================================================
 # Note: Do not leave spaces around the '=' symbol.
 # Correct example: BRIGHTNESS=40
