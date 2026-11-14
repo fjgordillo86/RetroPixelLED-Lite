@@ -48,9 +48,23 @@
 	"color": "Color: ",
 	"fondo_ninguno": "None",
 	"fondo": "Back: ",
+	"posicion": "Position: ",
 	"pos_izq": "Left",
 	"pos_centro": "Center",
-	"pos_der": "Right"
+	"pos_der": "Right",
+	"tipo": "Type: ",
+    "tipo_lite": "Lite",
+    "tipo_dinamico": "Dynamic",
+    "menu_lite": "Lite Options",
+    "menu_dinamico": "Dynamic Options",
+    "titulo_lite": "LITE CLOCK ",
+    "titulo_dinamico": "DYN CLOCK ",
+    "tema": "Theme: ",
+    "modo": "Mode: ",
+    "modo_fijo": "Fixed",
+    "modo_aleatorio": "Random",
+    "modo_rotar": "Rotate",
+    "rotar": "Rotate: "
   },
   "SUBMENU_CLIMA": {
     "titulo": "WEATHER"
