@@ -84,7 +84,7 @@ Y el reloj tiene vida propia: **relojes dinámicos** animados con personajes y e
 - **🛟 Página de recuperación:** si la SD no tiene la interfaz, `http://IP/` muestra una página mínima con un botón para descargarla.
 - **↔️ Las dos formas siguen disponibles:** la versión de GitHub Pages (Android y PC, instalable y offline) y la de la SD (cualquier dispositivo).
 
-> ⚠️ **Al actualizar desde versiones anteriores a la v3.1.4:** desde esa versión se usa el esquema de particiones *Minimal SPIFFS* (1,9 MB para la app con OTA) y el firmware ya no cabe en el espacio antiguo. No se puede instalar por OTA: reinstálalo desde el instalador web. Se borran los datos guardados en la memoria interna (playlist activa, ajustes del temporizador); la configuración y los GIFs de la SD se conservan. Si ya tienes la v3.1.4 o la v3.1.5, puedes pasar a la v3.1.6 por OTA.
+> ⚠️ **Al actualizar desde versiones anteriores a la v3.1.4:** desde esa versión se usa el esquema de particiones *Minimal SPIFFS* (1,9 MB para la app con OTA) y el firmware ya no cabe en el espacio antiguo. No se puede instalar por OTA: reinstálalo desde el instalador web. Se borran los datos guardados en la memoria interna (playlist activa, ajustes del temporizador); la configuración y los GIFs de la SD se conservan. Si ya tienes la v3.1.4 o la v3.1.5... puedes pasar a la v3.1.7 por OTA.
 
 Para el detalle de versiones anteriores (marquesinas GIF en Arcade, reconexión WiFi, IP en el menú OSD...) consulta el [Historial de cambios](#-historial-de-cambios-detallado-v300--v317).
 
