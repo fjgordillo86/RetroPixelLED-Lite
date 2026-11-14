@@ -1,5 +1,43 @@
 ## 📝 Changelog (Registre des modifications)
 
+- ### [v3.1.7]2026-11-14
+**Retro Pixel LED Lite: "iOS"**
+
+#### ✨ Ajouts
+* **PWA servie depuis la carte SD :** le panneau sert l'interface depuis `/web/index.htm.gz` par HTTP (`http://retropixel.local/` ou l'adresse IP). Étant donné qu'il s'agit de la même origine que l'API, il n'y a pas de contenu mixte, donc **la PWA fonctionne sur iPhone, iPad et Mac** (Safari bloque les requêtes `http://` depuis les pages `https://`).
+* **Mettre à jour l'interface depuis la PWA :** bouton **METTRE À JOUR L'INTERFACE** sous 🔄. Le panneau redémarre, télécharge la dernière interface depuis GitHub vers la carte SD et la page se recharge toute seule. Il valide le téléchargement (taille et format gzip) et, en cas d'échec, conserve l'ancienne version.
+* **Page de récupération :** si la carte SD ne contient pas l'interface, `http://IP/` affiche une page minimale avec un bouton pour la télécharger.
+
+#### ⚙️ Améliorations / Changements internes
+* **Deux façons d'utiliser la PWA :** la version GitHub Pages (Android et PC, installable et hors ligne) et la version carte SD (tout appareil, sans mode hors ligne). C'est le même `index.htm` : il détecte d'où il est ouvert et s'adapte (IP automatique, chemins relatifs).
+* **Notification de nouvelle interface :** `version.json` inclut `web` ; la PWA le compare à sa propre version et affiche un point ambre sur 🔄 lorsqu'une nouvelle interface est disponible.
+* **Vérification de connexion plus légère :** la PWA vérifie le panneau avec `GET /status` au lieu de demander la page complète, ce qui évite de lire l'interface de la carte SD à chaque vérification.
+
+#### ⚠️ Note de mise à jour
+* **Depuis la v3.1.4 ou supérieure**, vous pouvez passer à la v3.1.7 par OTA. Pour utiliser la PWA depuis la carte SD, copiez le dossier `web` de *Contenido SD* à la racine de la carte SD, ouvrez `http://IP/` et cliquez sur **Télécharger l'interface** (nécessite un Wi-Fi avec accès à Internet).
+* Le téléchargement de l'interface utilise le même niveau de confiance que l'OTA et les langues (ne valide pas le certificat GitHub).
+* Lors de la mise à jour depuis des versions antérieures à la v3.1.4, la note de la v3.1.6 (ci-dessous) s'applique toujours.
+
+---
+
+### [v3.1.6] - 2026-11-01
+**Retro Pixel LED Lite: "Horloge"**
+
+#### ✨ Ajouts
+- **Horloges dynamiques :** Thèmes animés avec des sprites intégrés dans le firmware (`RelojDinamico.h`), sélectionnables depuis la PWA et le menu OSD.
+
+#### ⚙️ Améliorations / Changements internes
+- **Sélecteur d'horloges (PWA) :** Grille avec vignettes, filtres 8/16 bits et modes Aléatoire/Rotation.
+- **Horloge avec arrière-plan :** BMP 128×32 dans `/relojes/imagenes`, alignement gauche/centre/droite, sans scintillement.
+- **Changement instantané :** passage instantané entre le mode horloge et les GIFs depuis la PWA.
+
+#### 🛡️ Corrections
+- **Redémarrage lors de la modification des paramètres dans la PWA :** Correction d'un bug qui faisait que n'importe quelle modification de paramètre depuis la PWA forçait le redémarrage du panneau.
+
+#### ⚠️ Note de mise à jour
+- **Lors de la mise à jour depuis des versions antérieures à la v3.1.4 :** à partir de cette version, le schéma de partitionnement *Minimal SPIFFS* est utilisé (1,9 Mo pour l'application avec OTA) et le firmware ne rentre plus dans l'ancien espace. L'installation par OTA est impossible : réinstallez-le depuis l'installateur web. Les données enregistrées dans la mémoire interne (playlist active, paramètres de minuterie) seront effacées ; les paramètres et les GIFs de la carte SD sont conservés. Si vous possédez déjà la v3.1.4 ou une version supérieure, vous pouvez passer à la v3.1.6 par OTA.
+---
+
 ### [v3.1.5] - 2026-10-17
 **Retro Pixel LED Lite : "Connexions"**
 
