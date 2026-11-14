@@ -1,12 +1,11 @@
 {
-  "v": 316,
+  "v": 317,
   "web": 201,
   "url": "https://github.com/fjgordillo86/RetroPixelLED-Lite/raw/refs/heads/main/docs/firmware.bin",
   "notes": [
-    "Reloj Dinámico con 28 temas.",
-    "Cambio instantáneo entre Reloj y GIFs.",
-    "Añadir imagen de fondo a reloj lite.",
-    "Subir/borrar de fondos desde la PWA.",
-    "Correciones de errores y mejoras."
+    "PWA en iPhone, iPad y Mac.",
+    "Actualización de la interfaz desde la PWA.",
+    "Página de recuperación.",
+    "Organización del menu Reloj en el OSD."
   ]
 }
