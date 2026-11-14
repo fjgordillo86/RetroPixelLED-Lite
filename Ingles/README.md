@@ -1,7 +1,7 @@
 # ✨ Retro Pixel LED Lite
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-3.1.6-blue">
+  <img alt="Version" src="https://img.shields.io/badge/version-3.1.7-blue">
   <img alt="Platform" src="https://img.shields.io/badge/platform-ESP32-informational">
   <img alt="License" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="Status" src="https://img.shields.io/badge/status-active-success">
@@ -28,11 +28,15 @@
 
 While the 2.x.x branch brought the OSD Menu, **v3.0.0** was the ultimate leap toward hardware independence: the panel became an autonomous smart device, requiring no PC connection for maintenance or configuration. `config.ini` and playlists are edited directly from Windows Explorer or an FTP client, turning the SD card into a wireless network drive. It also features native remote control support: navigate the OSD Menu, adjust brightness, and turn power on/off right from your couch.
 
-**Since v3.1.0, you can control the panel from an app (PWA)**, and since **v3.1.2**, also from **Home Assistant**. 🏠
+Today you control it from any device with an **app (PWA)**, also on **iPhone, iPad, and Mac**: the panel can serve it directly from its own SD card, and the interface updates with a single button. If you use home automation, it integrates with **Home Assistant**. 🏠🍎 To connect it to your Wi-Fi, there's no need to edit any files: the panel opens its own configuration portal from your mobile, and afterwards you can always find it at `retropixel.local`. 📶
 
-**Since v3.1.5, you no longer need to edit any files to connect it to your WiFi:** the panel opens its own configuration portal from your phone, and you can always find it afterwards at `retropixel.local`. 📶
+And the clock has a life of its own: animated **dynamic clocks** featuring characters and scenes from video games, series, and movies, which you can choose from the PWA or the OSD menu. 🕒🎮
 
-**Starting from v3.1.6, the clock comes alive:** dynamic animated clocks featuring characters and scenes from video games, TV shows, and movies, selectable from the PWA. 🕒🎮
+<p align="center">
+  <img src="../docs/img/relojes/Mario.gif" width="30%" alt="Reloj Mario">
+  <img src="../docs/img/relojes/Ghostbusters.gif" width="30%" alt="Reloj Ghostbusters">
+  <img src="../docs/img/relojes/Sonic.gif" width="30%" alt="Reloj Sonic">
+</p>
 
 ### 📺 Retro Pixel LED Lite in Action Video
 [![Retro Pixel LED Lite Operation](https://img.youtube.com/vi/PCU4Z985G7Y/maxresdefault.jpg)](https://youtu.be/PCU4Z985G7Y)
@@ -41,7 +45,7 @@ While the 2.x.x branch brought the OSD Menu, **v3.0.0** was the ultimate leap to
 
 ## 📑 Table of Contents
 
-1. [🆕 What's new in the current version](#-whats-new-in-version-v316-lite)
+1. [🆕 What's new in the current version](#-whats-new-in-v317-lite)
 2. [🚀 Quick Guide](#-quick-guide-getting-started)
 3. [🎛️ Main Features](#️-main-features)
    - [🖥️ OSD Menu](#️-osd-menu-smart-navigation)
@@ -65,7 +69,7 @@ While the 2.x.x branch brought the OSD Menu, **v3.0.0** was the ultimate leap to
 6. [🕹️ Arcade Integration](#️-arcade-integration-batocera-recalbox-retrobat-or-replayos)
 7. [🏠 Home Assistant Integration](#-home-assistant-integration-complete-guide)
 8. [🧠 Internal Architecture / Core Lite](#-internal-architecture--core-lite)
-9. [📜 Detailed Changelog](#-detailed-changelog-v300--v316)
+9. [📜 Detailed Changelog](#-detailed-changelog-v300--v317)
 10. [🛒 Bill of Materials](#-bill-of-materials)
 11. [🔌 Connections (Pinout)](#-connections)
 12. [🛠️ Roadmap](#️-roadmap)
@@ -73,22 +77,16 @@ While the 2.x.x branch brought the OSD Menu, **v3.0.0** was the ultimate leap to
 
 ---
 
-## 🆕 What's New in v3.1.6 Lite
+## 🆕 What's New in v3.1.7 Lite
 
-<p align="center">
-  <img src="../docs/img/relojes/Mario.gif" width="30%" alt="Reloj Mario">
-  <img src="../docs/img/relojes/Ghostbusters.gif" width="30%" alt="Reloj Ghostbusters">
-  <img src="../docs/img/relojes/Sonic.gif" width="30%" alt="Reloj Sonic">
-</p>
+- **🍎 PWA on iPhone, iPad, and Mac:** Safari blocks `http://` requests from an `https://` page, so the GitHub Pages PWA couldn't communicate with the panel. Now the panel serves the PWA directly from its SD card at `http://retropixel.local/` (or its IP) and works on any device. [See how to use it](#️-installation-and-configuration-de-la-pwa).
+- **🌐 Updating the interface from the PWA:** **UPDATE INTERFACE** button under 🔄. The panel reboots, downloads the latest interface from GitHub to `/web` on the SD card, and the page reloads automatically. If it fails, it keeps the previous version.
+- **🛟 Recovery Page:** if the SD card doesn't have the interface, `http://IP/` displays a minimal page with a button to download it.
+- **↔️ Both methods remain available:** the GitHub Pages version (Android and PC, installable and offline) and the SD card version (any device).
 
-- **🎞️ Dynamic Clocks:** new feature independent of the Lite clock. Animated faces with custom sprites (Mario, Sonic, Space Invaders, Pac-Man, Zelda, Street Fighter, Castlevania...) in 8 and 16-bit aesthetics, plus anime and movie themes. [See gallery](#️-dynamic-clocks).
-- **📱 Selector in the PWA:** choose between Lite and dynamic clocks, featuring a card grid with thumbnails and 8/16-bit filters. **Random** and **Rotate** modes.
-- **🖼️ Clock with Background Image:** 128×32 BMP in `/relojes/imagenes`, with clock position (left, center, right) configurable from the PWA and OSD menu.
-- **🌈 Free RGB Color** for the clock in the PWA, below the fixed palettes.
+> ⚠️ **When updating from versions prior to v3.1.4:** since that version, the *Minimal SPIFFS* partition scheme is used (1.9 MB for the app with OTA) and the firmware no longer fits in the old space. It cannot be installed via OTA: reinstall it from the web installer. Data saved in internal memory will be erased (active playlist, timer settings); settings and GIFs on the SD card are preserved. If you already have v3.1.4 or v3.1.5... you can upgrade to v3.1.7 via OTA.
 
-> ⚠️ **When updating from versions prior to v3.1.4:** since that version, the *Minimal SPIFFS* partition scheme is used (1.9 MB for the app with OTA) and the firmware no longer fits in the old space. It cannot be installed via OTA: reinstall it from the web installer. Data saved in internal memory will be erased (active playlist, timer settings); settings and GIFs on the SD card are preserved. If you already have v3.1.4 or v3.1.5, you can upgrade to v3.1.6 via OTA.
-
-For details on previous versions (Arcade GIF marquees, WiFi reconnection, IP in OSD menu...), see the [Detailed Changelog](#-detailed-changelog-v300--v316).
+For details on previous versions (Arcade GIF marquees, WiFi reconnection, IP in OSD menu...), see the [Detailed Changelog](#-detailed-changelog-v300--v317).
 
 ---
 
@@ -148,15 +146,24 @@ The system is controlled via a **single physical button** (or the IR remote cont
 │   ├── 🏷️ IP: [192.168.1.117]
 │   ├── 🔎 Show IP: [YES / NO]
 │   └── 🔙 Back
-├── 🕒 Clock: [ON / OFF]
-│   ├── 🔄 Activate: [YES / NO]
-│   ├── 🎞️ Dinamic: [NO, Mario, Sonic, Back to Future, Dragon Ball....]
-│   ├── 🖼️ Every: [1...20] GIFs
-│   ├── ⏳ Duration: [5...30] sec
-│   ├── 🎨 Clock Style: [Matrix, Solid, Rainbow, Pulse, Gradient]
-│   ├── 🎨 Color: [White, Red, Green, Blue, Yellow, Cyan, Magenta, Orange, Pink]
-│   ├── 🔄 Transition: [YES / NO]
-│   └── 🔙 Back
+├── 🕒 Horloge : [ON / OFF]
+│   ├── 🔄 Activer : [OUI / NON]
+│   ├── 🎨 Type : [Lite / Dynamique]
+│   ├── 🖼️ Toutes les : [1...20] GIFs
+│   ├── ⏳ Durée : [5...30] s
+│   ├── 📟 Lite
+│   │   ├── 🔤 Style d'horloge : [Matrix, Solid, Rainbow, Pulse, Gradient]
+│   │   ├── 🎨 Couleur : [Blanc, Rouge, Vert, Bleu, Jaune, Cyan, Magenta, Orange, Rose]
+│   │   ├── ⬛ Arrière-plan : [Noir,.....]
+│   │   ├── 📍 Position : [Centre, Gauche, Droite]
+│   │   ├── ✨ Transition : [OUI / NON]
+│   │   └── 🔙 Retour
+│   ├── 🎞️ Dynamique
+│   │   ├── 🎭 Thème : [Mario, Sonic, Back to Future, Dragon Ball....]
+│   │   ├── 🔀 Mode : [Fixe, Aléatoire, Rotation]
+│   │   ├── ⏱️ Rotation : [5, 15, 30, 60, 120]
+│   │   └── 🔙 Retour
+│   └── 🔙 Retour
 ├── 🌡️ Weather: [ON / OFF]
 │   ├── 🔄 Activate: [YES / NO]
 │   └── 🔙 Back
@@ -195,21 +202,19 @@ The system is controlled via a **single physical button** (or the IR remote cont
 
 ### 📱 PWA — Remote Control App
 
-**[👉 Install or Try Retro Pixel LED Control](https://fjgordillo86.github.io/RetroPixelLED-Lite/control/)**
+**[👉 Install or test Retro Pixel LED Control](https://fjgordillo86.github.io/RetroPixelLED-Lite/control/)** *(Android & PC)* · On iPhone, iPad, or Mac open `http://retropixel.local/` ([see how](#%EF%B8%8F-installing-and-configuring-the-pwa)).
 
-A modern web application installable on any device (phone, tablet, computer) connected to the same network as the panel. Requires no external server, works on the local network, and functions offline once installed. 📴
+Modern web app to control the panel from any device (mobile, tablet, computer) connected to the same network. It requires no external server and works on the local network. There are **two ways to use it**:
 
-https://github.com/user-attachments/assets/f5231448-7862-4476-901e-ac25ac7f4248
-
-The interface is divided into **6 sections**:
-
-**1️⃣ Main Page (Home)**
-- **☀️ Brightness Control:** 0-100% slider with instantaneous application, no reboot required.
-- **🎛️ Mode Selector:** GIF, Clock, or Text in real time.
-  - **GIF Mode:** Active playlist + random playback toggle.
-  - **Clock Mode:** *Lite / Dynamic Clock* selector. Lite: styles, colors (palette + free RGB), background, and position. Dynamic: theme grid with thumbnails, Movies, Anime, 8/16-bit filters, and Fixed, Random, Rotate modes.
-  - **Text Mode:** Live 26×7 matrix preview as you type, with color, font, and scroll speed selection.
-- **🔌 Connection Status:** Visual indicator (green/red) of the WiFi status.
+| | 🌍 GitHub Pages (HTTPS) | 💾 From the panel's SD (HTTP) |
+| :--- | :--- | :--- |
+| **Address** | `https://fjgordillo86.github.io/RetroPixelLED-Lite/control/` | `http://retropixel.local/` or `http://IP/` |
+| **Android & PC** | ✅ | ✅ |
+| **iPhone, iPad & Mac (Safari)** | ❌ Safari blocks `http://` from an `https://` page | ✅ |
+| **Installable & offline** | ✅ (service worker) | ❌ Without HTTPS there is no service worker; on iOS it is added to the home screen as a shortcut |
+| **Update** | Automatic | **UPDATE INTERFACE** button (🔄) |
+| **Panel IP** | You type it (⚙) | Automatic |
+| **Saved settings** | Independent | Independent (each address saves its own) |
 
 **2️⃣ Timer ⏰**
 - Toggle enable/disable.
@@ -227,7 +232,8 @@ The interface is divided into **6 sections**:
 **4️⃣ Update 🔄**
 - **Firmware OTA:** Checks GitHub and automatically updates if a newer version is found.
 - **New Version Notice:** An amber dot over the 🔄 icon alerts you when a update is available; opening the modal reveals the version number and changelog. *(new in v3.1.5)*
-- **Download Languages:** Fetches `.json` files directly from GitHub into the SD card's `/idiomas` folder.
+- **Language download:** fetches the `.json` files from GitHub to `/idiomas` on the SD.
+- **Web interface (only when opening the PWA from the SD):** **UPDATE INTERFACE** button; downloads `index.htm.gz` from GitHub to `/web` on the SD. An amber dot over 🔄 notifies when a new interface is available. *(new in v3.1.7)*
 
 **5️⃣ Settings 🛠**
 
@@ -242,12 +248,27 @@ Accessible from the "ℹ About" link at the footer of the main screen.
 - **Credits:** Creator (`fjgordillo86`), MIT license, and source code link.
 - **Live Diagnostics:** Free memory, last reboot reason, WiFi signal, SD card info, CPU, and firmware partition usage, with a **copy report** button to attach when reporting an issue.
 
-#### ⚙️ PWA Installation and Setup
+#### ⚙️ Installing and configuring the PWA
+
+**Option A — Android and PC (GitHub Pages):**
 
 1. Open <https://fjgordillo86.github.io/RetroPixelLED-Lite/control/> from your device.
-2. Tap the connection icon (⚙) and enter the panel's hostname (`retropixel.local`) or local IP address (e.g., `192.168.1.117`). If the hostname is not resolved on your device, the PWA will offer to use the last known IP.
-3. *(Optional)* Install it as an app: Chrome/Edge usually prompts automatically; otherwise, go to Menu (⋮) → "Install application".
-4. Done — it now appears as a native app, without typing URLs each time. 🎉
+2. Tap the connection icon (⚙) and enter the panel's hostname (`retropixel.local`) or its local IP (e.g., `192.168.1.117`). If the hostname isn't found on your device, the PWA will offer to use the last known IP.
+3. *(Optional)* Install it as an app: Chrome/Edge usually prompts automatically; otherwise, go to menu (⋮) → "Install app".
+4. Done — it appears like a regular app, no need to type URLs every time. 🎉
+
+**Option B — iPhone, iPad, Mac, and any device (from the panel's SD):**
+
+1. Copy the `web` folder from [Contenido SD](https://github.com/fjgordillo86/RetroPixelLED-Lite/tree/main/Contenido%20SD) (which contains `index.htm.gz`) to the SD card. If you skip this, no problem: the panel will offer to download it (step 3).
+2. With your device on the same Wi-Fi, open `http://retropixel.local/` (or `http://IP/`) in Safari. Use **http**, not https.
+3. If you see the «Interface not installed» page, tap **Download interface**: the panel reboots, downloads it from GitHub, and the page reloads automatically. Requires Wi-Fi with internet access and the SD card inserted.
+4. On iOS: Share button → **Add to Home Screen**. It opens like an app, though without offline mode.
+5. To update it: 🔄 → **UPDATE INTERFACE** (an amber dot appears when a new version is available).
+
+> [!NOTE]
+> - Only works while you are on the same network as the panel.
+> - If `.local` does not resolve on your device, use the IP address.
+> - Dynamic clock thumbnails are loaded from GitHub Pages, so your device needs an internet connection.
 
 #### 📝 Requirements
 
@@ -256,6 +277,7 @@ Accessible from the "ℹ About" link at the footer of the main screen.
 - `TEXT_ENABLE=1` for sending custom text messages.
 - Internet connection on the panel for OTA and language downloads (outbound access to GitHub).
 - Languages are downloaded once and then work fully offline.
+- To use the PWA from the SD card: place `index.htm.gz` in `/web` on the SD card (copied manually or via the **Download interface** button).
 
 ---
 
@@ -462,6 +484,8 @@ Format your MicroSD card in **FAT32** format and copy the entire contents of the
 │   ├── ES.json
 │   ├── EN.json
 │   └── FR.json
+├── web/                         <-- PWA served from the panel (for iOS and Mac).
+│   └── index.htm.gz
 ├── playlists/                   <-- Lists generated by the "Playlist Generator" script.
 │   ├── Arcade.txt
 │   ├── Computers.txt
@@ -480,7 +504,7 @@ The `config.ini` file is located in the [Contenido SD](https://github.com/fjgord
 
 ```ini
 # ============================================================
-# 🕹️ RETRO PIXEL LED LITE v3.1.6 - CONFIGURATION FILE
+# 🕹️ RETRO PIXEL LED LITE v3.1.7 - CONFIGURATION FILE
 # ============================================================
 # Note: Do not leave spaces around the '=' symbol.
 # Correct example: BRIGHTNESS=40
@@ -530,24 +554,24 @@ RANDOM_MODE=1
 # Interval: How many GIFs play between clock displays
 AUTO_CLOCK_INT=6
 # Duration: How many seconds the clock is displayed
-CLOCK_DURATION=10
-# Reloj dinamico: 0=OFF (reloj Lite), 1..N=numero del tema (1=Mario)
-DYN_CLOCK=6
-# Modo del reloj dinamico: 0=Fija (siempre el tema de DYN_CLOCK), 1=Aleatoria, 2=Rotar
+CLOCK_DURATION=30
+# Dynamic clock: 0=OFF (Lite clock), 1..N=theme number from 1 to 27 (1=Mario)
+DYN_CLOCK=23
+# Dynamic clock mode: 0=Fixed (always the theme in DYN_CLOCK), 1=Random, 2=Rotate
 DYN_MODE=1
-# Minutos entre cambios de temas en modo Rotar (DYN_MODE=2): 1-240
+# Minutes between theme changes in Rotate mode (DYN_MODE=2): 1-240
 DYN_ROT=5
-# Estilos: 0=Solid, 1=Aurora, 2=Rainbow, 3=Gradient, 4= Fuego, 5=Glitch
+# Styles: 0=Solid, 1=Aurora, 2=Rainbow, 3=Gradient, 4=Fire, 5=Glitch
 CLOCK_STYLE=2
-# Nombre del fondo que quieres aplicar al reloj ejemplo Mario.bmp
+# Name of the background you want to apply to the clock, e.g., Mario.bmp
 CLOCK_BG=
-# Posición del reloj 0=Izquierda, 1=Centro, 2=Derecha
+# Clock position: 0=Left, 1=Center, 2=Right
 CLOCK_POS=1
-# Activa la transicion del reloj a GIFs con una explosion de particulas : 0=OFF, 1=ON
+# Enables clock-to-GIF transition with a particle explosion: 0=OFF, 1=ON
 TRANSITION_ENABLE=1
-# Color del reloj (-1=CLOCK_COLOR_RGB 0= Blanco, 1=Rojo, 2=Verde, 3=Azul, 4=Amarillo, 5=Cian, 6=Magenta, 7=Naranja, 8=Rosa)
-CLOCK_COLOR=0
-CLOCK_COLOR_RGB=FFFFFF
+# Clock color (-1=CLOCK_COLOR_RGB, 0=White, 1=Red, 2=Green, 3=Blue, 4=Yellow, 5=Cyan, 6=Magenta, 7=Orange, 8=Pink)
+CLOCK_COLOR=6
+CLOCK_COLOR_RGB=FF00FF
 
 [WEATHER]
 # Enable weather display: 0=OFF, 1=ON (Requires WiFi)
@@ -696,10 +720,14 @@ Technical details describing internal system operations:
 
 ---
 
-## 📜 Detailed Changelog (v3.0.0 → v3.1.6)
+## 📜 Detailed Changelog (v3.0.0 → v3.1.7)
 
 | Feature | Technical Detail | Benefit |
 | :--- | :--- | :--- |
+| **🍎 PWA from SD (iOS/Mac)** | The panel serves `/web/index.htm.gz` from the SD card over HTTP using `serveStatic` (gzip, `Cache-Control: no-cache`), registered last so it doesn't override API routes. The PWA detects if it's served by the panel (`EN_PANEL`) and uses relative paths and the panel's own IP, avoiding mixed content. Same `index.htm` as on GitHub Pages. | **The PWA works on iPhone, iPad, and Mac**, without needing HTTPS on the ESP32. |
+| **🌐 Interface Update** | `POST /web/actualizar` sets a flag in `Preferences` and reboots; in `setup()` (with Wi-Fi active and the panel off, leaving RAM free), it downloads `index.htm.gz` from GitHub to `.tmp`, validates it (file size, `Content-Length`, and `1F 8B` gzip header), backs up the previous version as `.bak`, and restores it if anything fails. `GET /web/estado` reports the result. | **Update the interface without removing the SD card**, keeping the previous version as a backup. |
+| **🛟 Recovery Page** | If `/web/index.htm.gz` does not exist, `GET /` returns a minimal page with a button to download it. | **You never lose access** to the interface. |
+| **🔔 New Interface Notification** | `version.json` includes `web` (the published interface version number); the PWA compares it with its own (`PWA_WEB_NUM`). Amber dot over 🔄. | **You get notified of new interfaces** without having to look for them. |
 | **🎞️ Dynamic Clocks** | Animated faces with custom sprites inside the firmware (`RelojDinamico.h`), selectable from the PWA. | **Clock with personality**, no SD or extra setup needed. |
 | **🗂️ Clock Selector (PWA)** | Grid with thumbnails, 8/16-bit filters, and Random/Rotate modes. | **Choose themes in two taps.** |
 | **🖼️ Clock with Background** | 128×32 BMP in `/relojes/imagenes`, left/center/right position, flicker-free. | **Total visual customization.** |
