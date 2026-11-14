@@ -1,5 +1,43 @@
 ## 📝 Changelog
 
+- ### [v3.1.7] - 2026-11-14
+**Retro Pixel LED Lite: "iOS"**
+
+#### ✨ Added
+* **PWA served from the SD card:** the panel serves the interface from `/web/index.htm.gz` via HTTP (`http://retropixel.local/` or the IP address). Since it's the same origin as the API, there is no mixed content, so **the PWA works on iPhone, iPad, and Mac** (Safari blocks `http://` requests from `https://` pages).
+* **Update interface from the PWA:** **UPDATE INTERFACE** button under 🔄. The panel reboots, downloads the latest interface from GitHub to the SD card, and the page reloads automatically. It validates the download (size and gzip format) and, if anything fails, keeps the previous version.
+* **Recovery page:** if the SD card lacks the interface, `http://IP/` displays a minimal page with a button to download it.
+
+#### ⚙️ Improvements / Internal Changes
+* **Two ways to use the PWA:** the GitHub Pages version (Android and PC, installable and offline) and the SD card version (any device, no offline mode). It is the same `index.htm`: it detects where it is opened from and adapts accordingly (automatic IP, relative paths).
+* **New interface notification:** `version.json` includes `web`; the PWA compares it with its own version and shows an amber dot over 🔄 when a new interface is available.
+* **Lighter connection check:** the PWA checks the panel with `GET /status` instead of requesting the full page, avoiding reading the interface from the SD on every check.
+
+#### ⚠️ Update Note
+* **From v3.1.4 or higher** you can upgrade to v3.1.7 via OTA. To use the PWA from the SD card, copy the `web` folder from *Contenido SD* to the root of the SD card, or open `http://IP/` and click **Download interface** (requires Wi-Fi with internet access).
+* The interface download uses the same trust level as OTA and languages (does not validate the GitHub certificate).
+* When upgrading from versions prior to v3.1.4, the note from v3.1.6 (below) still applies.
+
+---
+
+### [v3.1.6] - 2026-11-01
+**Retro Pixel LED Lite: "Clock"**
+
+#### ✨ Added
+- **Dynamic clocks:** Animated themes with custom sprites built into the firmware (`RelojDinamico.h`), selectable from the PWA and OSD menu.
+
+#### ⚙️ Improvements / Internal Changes
+- **Clock selector (PWA):** Grid layout with thumbnails, 8/16-bit filters, and Random/Rotate modes.
+- **Clock with background:** 128×32 BMP in `/relojes/imagenes`, left/center/right alignment, flicker-free.
+- **Instant switch:** instant switching between Clock Mode and GIFs from the PWA.
+
+#### 🛡️ Fixes
+- **Reboot caused by PWA settings changes:** Fixed a bug that caused any settings change from the PWA to trigger a panel reboot.
+
+#### ⚠️ Update Note
+- **When upgrading from versions prior to v3.1.4:** starting from that version, the *Minimal SPIFFS* partition scheme is used (1.9 MB for the app with OTA) and the firmware no longer fits in the old space. It cannot be installed via OTA: please reinstall it from the web installer. Data saved in internal memory (active playlist, timer settings) will be erased; settings and GIFs on the SD card are preserved. If you already have v3.1.4 or higher, you can upgrade to v3.1.6 via OTA.
+---
+
 ### [v3.1.5] - 2026-10-17
 **Retro Pixel LED Lite: "Connections"**
 
