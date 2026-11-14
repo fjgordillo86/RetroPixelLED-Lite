@@ -48,9 +48,23 @@
 	"color": "Couleur: ",
     "fondo_ninguno": "Aucun",
     "fondo": "Fond : ",
+	"posicion": "Position: ",
     "pos_izq": "Gauche",
     "pos_centro": "Centre",
-    "pos_der": "Droite"
+    "pos_der": "Droite",
+	"tipo": "Type : ",
+    "tipo_lite": "Lite",
+    "tipo_dinamico": "Dynamique",
+    "menu_lite": "Options Lite",
+    "menu_dinamico": "Options Dynamique",
+    "titulo_lite": "HORLOGE LITE ",
+    "titulo_dinamico": "HORLOGE DYN ",
+    "tema": "Theme : ",
+    "modo": "Mode : ",
+    "modo_fijo": "Fixe",
+    "modo_aleatorio": "Aleatoire",
+    "modo_rotar": "Pivoter",
+    "rotar": "Pivoter : "
   },
   "SUBMENU_CLIMA": {
     "titulo": "METEO"
