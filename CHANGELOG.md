@@ -1,5 +1,25 @@
 ## 📝 Changelog (Registro de Cambios)
 
+### [v3.1.7] - 2026-11-14
+**Retro Pixel LED Lite: "iOS"**
+
+#### ✨ Añadido
+* **PWA servida desde la SD:** el panel sirve la interfaz desde `/web/index.htm.gz` por HTTP (`http://retropixel.local/` o la IP). Al ser la misma dirección que la API no hay contenido mixto, así que **la PWA funciona en iPhone, iPad y Mac** (Safari bloquea las llamadas `http://` desde páginas `https://`).
+* **Actualizar interfaz desde la PWA:** botón **ACTUALIZAR INTERFAZ** en 🔄. El panel reinicia, descarga la última interfaz desde GitHub a la SD y la página se recarga sola. Valida la descarga (tamaño y formato gzip) y, si algo falla, conserva la versión anterior.
+* **Página de recuperación:** si la SD no tiene la interfaz, `http://IP/` muestra una página mínima con un botón para descargarla.
+
+#### ⚙️ Mejoras / Cambios Internos
+* **Dos formas de usar la PWA:** la de GitHub Pages (Android y PC, instalable y offline) y la de la SD (cualquier dispositivo, sin modo offline). Es el mismo `index.htm`: detecta de dónde se abre y se adapta (IP automática, rutas relativas).
+* **Aviso de interfaz nueva:** `version.json` incluye `web`; la PWA lo compara con su versión y marca con el punto ámbar sobre 🔄 cuando hay una interfaz nueva.
+* **Comprobación de conexión más ligera:** la PWA comprueba el panel con `GET /status` en lugar de pedir la página completa, para no leer la interfaz de la SD en cada comprobación.
+
+#### ⚠️ Nota de actualización
+* **Desde la v3.1.4 o superior** puedes pasar a la v3.1.7 por OTA. Para usar la PWA desde la SD, copia la carpeta `web` de *Contenido SD* a la raíz de la SD, o abre `http://IP/` y pulsa **Descargar interfaz** (necesita WiFi con salida a internet).
+* La descarga de la interfaz usa el mismo nivel de confianza que el OTA y los idiomas (no valida el certificado de GitHub).
+* Al actualizar desde versiones anteriores a la v3.1.4, sigue vigente la nota de la v3.1.6 (más abajo).
+
+---
+
 ### [v3.1.6] - 2026-11-01
 **Retro Pixel LED Lite: "Reloj"**
 
