@@ -6,7 +6,11 @@
 <meta name="theme-color" content="#0A0D12">
 <title>Retro Pixel LED</title>
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="https://fjgordillo86.github.io/RetroPixelLED-Lite/control/icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RetroPixel">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -673,6 +677,14 @@
       <button id="idiomasBtn">📥 DESCARGAR IDIOMAS</button>
       <div class="otaResult" id="idiomasResultado" style="display:none;"></div>
     </div>
+
+    <div class="otaBox" id="webBox" style="display:none;">
+      <h3>Interfaz web (PWA)</h3>
+      <p>Descarga desde GitHub la interfaz y la guarda en <code>/web</code> de la SD, sustituyendo la anterior. El panel se reiniciará un momento y esta página se recargará sola.</p>
+      <div class="otaResult" id="webInfo" style="margin:0 0 10px;"></div>
+      <button id="webBtn">🌐 ACTUALIZAR INTERFAZ</button>
+      <div class="otaResult" id="webResultado" style="display:none;"></div>
+    </div>
   </div>
 </div>
 
@@ -703,7 +715,13 @@
    Lee docs/version.json (mismo origen que la PWA) y lo compara
    con la versión que informa el panel en /status.
    ========================================================= */
-const VERSION_URL = '../version.json';
+/* ---- Servida desde el propio panel (http://retropixel.local) o desde GitHub Pages ---- */
+const EN_PANEL        = location.protocol === 'http:' && !/\.github\.io$/i.test(location.hostname);
+const PWA_PAGES       = 'https://fjgordillo86.github.io/RetroPixelLED-Lite/';
+const PWA_WEB_NUM     = 201;        // version de ESTA interfaz: subirla en cada release (igual que "web" en docs/version.json)
+const PWA_VERSION_TXT = '2.0.1';  // igual que PWA_VERSION de sw.js (solo se muestra en "Acerca de")
+function apiBase(ip){ return EN_PANEL ? '' : 'http://' + ip; }   // desde el panel: misma URL, sin IP
+const VERSION_URL = EN_PANEL ? PWA_PAGES + 'version.json' : '../version.json';
 const VERSION_TTL = 6 * 3600 * 1000;      // como mucho una consulta cada 6 h (salvo al abrir el modal 🔄)
 
 function fmtVersion(n){ return Math.floor(n / 100) + '.' + (Math.floor(n / 10) % 10) + '.' + (n % 10); }
@@ -717,7 +735,7 @@ async function leerVersionPublicada(forzar){
   if (!r.ok) throw new Error(r.status);
   const j = await r.json();
     const notes = Array.isArray(j.notes) ? j.notes : (j.notes ? [j.notes] : []);
-  const dato = { t: Date.now(), v: Number(j.v) || 0, name: j.name || '', notes: notes.slice(0, 8).map(String) };
+  const dato = { t: Date.now(), v: Number(j.v) || 0, web: Number(j.web) || 0, name: j.name || '', notes: notes.slice(0, 8).map(String) };
   try { localStorage.setItem('rpl_ver', JSON.stringify(dato)); } catch (e) {}
   return dato;
 }
@@ -727,6 +745,7 @@ async function comprobarActualizacion(st, forzar){
     const actual = Number(st && st.fwNum);
     if (!actual) return;                                  // firmware sin fwNum: no podemos comparar
     const pub = await leerVersionPublicada(forzar);
+    setTimeout(() => comprobarWeb(pub), 0);   // después de que se pinte el aviso de firmware
     if (!pub.v) return;
 
     const hay = pub.v > actual;
@@ -1087,7 +1106,8 @@ function mostrarFallbackIp(){
   caja.style.display = 'block';
 }
 
-ipEl.value = loadIp();
+ipEl.value = EN_PANEL ? location.host : loadIp();
+if (EN_PANEL) ipEl.readOnly = true;     // servida desde el propio panel: no hay IP que configurar
 if (!ipEl.value) connPanel.classList.add('open');
 
 gearBtn.addEventListener('click', () => connPanel.classList.toggle('open'));
@@ -1109,7 +1129,7 @@ async function pingPanel(){
   const ip = ipEl.value.trim();
   if (!ip) { connDot.style.background = '#6B7280'; connDot.style.boxShadow = 'none'; return; }
   try {
-    await fetch(`http://${ip}/`, { method: 'GET', mode: 'no-cors', signal: AbortSignal.timeout(2500) });
+    await fetch(`${apiBase(ip)}/status`, { method: 'GET', mode: 'no-cors', signal: AbortSignal.timeout(2500) });
     connDot.style.background = '#5FDB7E';
     connDot.style.boxShadow = '0 0 8px #5FDB7E';
     recordarIpPanel(ip);
@@ -1133,7 +1153,7 @@ async function enviarControl(cambios){
   const ip = ipEl.value.trim();
   if (!ip) return false;
   try {
-    const res = await fetch(`http://${ip}/control`, {
+    const res = await fetch(`${apiBase(ip)}/control`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(cambios),
@@ -1150,7 +1170,7 @@ async function cargarEstadoPanel(){
   const ip = ipEl.value.trim();
   if (!ip) return;
   try {
-    const res = await fetch(`http://${ip}/status`, { signal: AbortSignal.timeout(4000) });
+    const res = await fetch(`${apiBase(ip)}/status`, { signal: AbortSignal.timeout(4000) });
     if (!res.ok) return;
     panelStatus = await res.json();
     aplicarEstadoPanelAUI(panelStatus);
@@ -1220,7 +1240,7 @@ powerBtn.addEventListener('click', async () => {
   
   powerBtn.disabled = true;
   try {
-    const res = await fetch(`http://${ip}/timer/toggle`, { 
+    const res = await fetch(`${apiBase(ip)}/timer/toggle`, { 
       method: 'POST', 
       signal: AbortSignal.timeout(4000) 
     });
@@ -1468,7 +1488,7 @@ function dynRenderGrid(){
   document.querySelectorAll('#dynFilterRow .pill').forEach(p => p.classList.toggle('active', p.dataset.era === dynFiltro));
   document.getElementById('dynGrid').innerHTML = items.map(x => `
     <button class="dynCard ${dynSt.clock === x.i + 1 ? 'active' : ''}" data-cara="${x.i + 1}">
-      <div class="dynThumb"><img src="dyn/${dynSlug(x.n)}.png" alt="" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="dynThumb"><img src="${EN_PANEL ? PWA_PAGES + 'control/' : ''}dyn/${dynSlug(x.n)}.png" alt="" loading="lazy" onerror="this.style.display='none'"></div>
       <div class="dynName">${dynEsc(x.n)}</div>
       ${DYN_MOSTRAR_JUEGO && x.info.juego ? `<div class="dynSub">estilo ${dynEsc(x.info.juego)}</div>` : '<div class="dynSub">&nbsp;</div>'}
     </button>`).join('') || '<div class="dynHint">No hay caras con este filtro.</div>';
@@ -1499,7 +1519,7 @@ async function cargarCarasDinamicas(){
   const ip = ipEl.value.trim();
   if (!ip) return false;
   try {
-    const res = await fetch(`http://${ip}/dynfaces`, { signal: AbortSignal.timeout(4000) });
+    const res = await fetch(`${apiBase(ip)}/dynfaces`, { signal: AbortSignal.timeout(4000) });
     if (!res.ok) return false;
     const lista = await res.json();
     if (!Array.isArray(lista)) return false;
@@ -1577,7 +1597,7 @@ function aplicarFondoActualUI(activo){
 
 async function pedirFondosReloj(){
   const ip = ipEl.value.trim();
-  const res = await fetch(`http://${ip}/reloj/fondos`, { signal: AbortSignal.timeout(5000) });
+  const res = await fetch(`${apiBase(ip)}/reloj/fondos`, { signal: AbortSignal.timeout(5000) });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   return res.json();
 }
@@ -1870,7 +1890,7 @@ async function subirFondo(){
   btn.disabled = true;
   setStatus('Subiendo ' + nombre + '...');
   try {
-    const res = await fetch(`http://${ip}/reloj/fondos`, { method: 'POST', body: fd, signal: AbortSignal.timeout(20000) });
+    const res = await fetch(`${apiBase(ip)}/reloj/fondos`, { method: 'POST', body: fd, signal: AbortSignal.timeout(20000) });
     const txt = await res.text();
     if (!res.ok){
       throw new Error(res.status === 409 ? textoMaximo()
@@ -1894,7 +1914,7 @@ async function borrarFondoReloj(valor){
   if (!confirm(`¿Borrar "${nombreFondoVisible(valor)}" de la SD?`)) return;
   const ip = ipEl.value.trim();
   try {
-    const res = await fetch(`http://${ip}/reloj/fondos/borrar`, {
+    const res = await fetch(`${apiBase(ip)}/reloj/fondos/borrar`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: valor }), signal: AbortSignal.timeout(5000)
     });
@@ -1915,7 +1935,7 @@ cargarEstadoPanel();
 async function enviarTexto(){
   const ip = ipEl.value.trim();
   try {
-    const res = await fetch(`http://${ip}/texto`, {
+    const res = await fetch(`${apiBase(ip)}/texto`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: currentText, color: currentColor, speed: currentSpeed, font: currentFont }),
@@ -1934,7 +1954,7 @@ async function detenerTexto(){
 
   setStatus('Deteniendo...');
   try {
-    const res = await fetch(`http://${ip}/texto`, {
+    const res = await fetch(`${apiBase(ip)}/texto`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ cmd: 'STOP' }),
@@ -2084,7 +2104,7 @@ async function abrirAjustes(){
   cargarEstadoIR(); // en paralelo, no bloquea la carga del resto de ajustes
 
   try {
-    const res = await fetch(`http://${ip}/config`, { signal: AbortSignal.timeout(5000) });
+    const res = await fetch(`${apiBase(ip)}/config`, { signal: AbortSignal.timeout(5000) });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     renderConfigForm(data);
@@ -2098,7 +2118,7 @@ async function cerrarAjustesSinGuardar(){
   cfgOverlay.classList.remove('open');
   if (!ip) return;
   try {
-    await fetch(`http://${ip}/config/exit`, { method: 'POST', signal: AbortSignal.timeout(3000) });
+    await fetch(`${apiBase(ip)}/config/exit`, { method: 'POST', signal: AbortSignal.timeout(3000) });
   } catch (e) { /* si no responde, no pasa nada: el panel seguirá mostrando "Configuración APP" hasta el próximo reinicio manual */ }
 }
 
@@ -2115,7 +2135,7 @@ async function guardarAjustes(){
 
   cfgBody.innerHTML = '<div class="cfgLoading">Guardando...</div>';
   try {
-    const res = await fetch(`http://${ip}/config`, {
+    const res = await fetch(`${apiBase(ip)}/config`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(nuevo),
@@ -2187,7 +2207,7 @@ async function cargarEstadoIR(){
   const ip = ipEl.value.trim();
   if (!ip) return;
   try {
-    const res = await fetch(`http://${ip}/ir/estado`, { signal: AbortSignal.timeout(4000) });
+    const res = await fetch(`${apiBase(ip)}/ir/estado`, { signal: AbortSignal.timeout(4000) });
     if (!res.ok) return;
     const data = await res.json();
     IR_BOTONES.forEach(b => {
@@ -2213,7 +2233,7 @@ async function irMapearBoton(idx){
   setIrMsg('Pulsa ahora la tecla en el mando físico...', '');
 
   try {
-    await fetch(`http://${ip}/ir/learn`, {
+    await fetch(`${apiBase(ip)}/ir/learn`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idx }),
@@ -2235,7 +2255,7 @@ async function irMapearBoton(idx){
   const intervalo = setInterval(async () => {
     intentos++;
     try {
-      const res = await fetch(`http://${ip}/ir/estado`, { signal: AbortSignal.timeout(3000) });
+      const res = await fetch(`${apiBase(ip)}/ir/estado`, { signal: AbortSignal.timeout(3000) });
       const data = await res.json();
 
       if (data.pasoMapeo !== idx || intentos >= maxIntentos) {
@@ -2287,7 +2307,7 @@ async function abrirPlaylists(){
   plBody.innerHTML = '<div class="cfgLoading">Cargando playlists...</div>';
 
   try {
-    const res = await fetch(`http://${ip}/playlists`, { signal: AbortSignal.timeout(5000) });
+    const res = await fetch(`${apiBase(ip)}/playlists`, { signal: AbortSignal.timeout(5000) });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     renderPlaylists(data.items || [], data.active || '');
@@ -2316,7 +2336,7 @@ async function seleccionarPlaylist(name){
   const ip = ipEl.value.trim();
   plBody.innerHTML = '<div class="cfgLoading">Activando playlist...</div>';
   try {
-    const res = await fetch(`http://${ip}/playlist`, {
+    const res = await fetch(`${apiBase(ip)}/playlist`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name }),
@@ -2356,7 +2376,7 @@ async function lanzarOTA(){
   btn.textContent = 'BUSCANDO...';
 
   try {
-    await fetch(`http://${ip}/ota`, { method: 'POST', signal: AbortSignal.timeout(4000) });
+    await fetch(`${apiBase(ip)}/ota`, { method: 'POST', signal: AbortSignal.timeout(4000) });
   } catch (e) { /* el panel puede cortar la conexión al reiniciar; es normal */ }
 
   btn.textContent = 'REINICIANDO EL PANEL...';
@@ -2367,7 +2387,7 @@ document.getElementById('otaBtn').addEventListener('click', lanzarOTA);
 
 /* ---------- Idiomas (descarga desde GitHub a /idioma de la SD) ---------- */
 async function consultarEstadoIdiomas(ip){
-  const res = await fetch(`http://${ip}/idiomas/estado`, { method: 'GET', signal: AbortSignal.timeout(3000) });
+  const res = await fetch(`${apiBase(ip)}/idiomas/estado`, { method: 'GET', signal: AbortSignal.timeout(3000) });
   return res.json();
 }
 
@@ -2383,7 +2403,7 @@ async function descargarIdiomas(){
 
   // 1. Disparamos la descarga; el panel reinicia y corta esta petición, es normal.
   try {
-    await fetch(`http://${ip}/idiomas/actualizar`, { method: 'POST', signal: AbortSignal.timeout(4000) });
+    await fetch(`${apiBase(ip)}/idiomas/actualizar`, { method: 'POST', signal: AbortSignal.timeout(4000) });
   } catch (e) { /* corte por reinicio del panel */ }
 
   btn.textContent = 'REINICIANDO EL PANEL...';
@@ -2420,6 +2440,70 @@ async function descargarIdiomas(){
 }
 
 document.getElementById('idiomasBtn').addEventListener('click', descargarIdiomas);
+
+/* ---------- Interfaz web (PWA) servida desde la SD: descarga desde GitHub a /web ---------- */
+function comprobarWeb(pub){
+  if (!EN_PANEL) return;                                   // solo tiene sentido si la sirve el panel
+  document.getElementById('webBox').style.display = 'block';
+  const hay = !!pub && pub.web > PWA_WEB_NUM;
+  const info = document.getElementById('webInfo');
+  info.className = hay ? 'otaResult ok' : 'otaResult';
+  info.textContent = hay
+    ? 'Interfaz nueva disponible (v' + pub.web + ', instalada: v' + PWA_WEB_NUM + ')'
+    : 'Interfaz al día (v' + PWA_WEB_NUM + ')';
+  if (hay) document.getElementById('updateBtn').classList.add('hasUpdate');
+}
+
+async function consultarEstadoWeb(ip){
+  const res = await fetch(`${apiBase(ip)}/web/estado`, { signal: AbortSignal.timeout(3000) });
+  return res.json();
+}
+
+async function descargarWeb(){
+  const ip = ipEl.value.trim();
+  if (!ip) return;
+  const btn = document.getElementById('webBtn');
+  const resultado = document.getElementById('webResultado');
+  btn.disabled = true;
+  btn.textContent = 'DESCARGANDO...';
+  resultado.style.display = 'none';
+
+  // 1. Disparamos la descarga; el panel reinicia y corta esta petición, es normal.
+  try {
+    await fetch(`${apiBase(ip)}/web/actualizar`, { method: 'POST', signal: AbortSignal.timeout(4000) });
+  } catch (e) { /* corte por reinicio del panel */ }
+
+  btn.textContent = 'REINICIANDO EL PANEL...';
+  await new Promise(r => setTimeout(r, 5000));
+
+  // 2. Polling a /web/estado hasta que haya resultado fresco
+  btn.textContent = 'COMPROBANDO RESULTADO...';
+  let hecho = false;
+  for (let intento = 0; intento < 15; intento++) {
+    try {
+      const data = await consultarEstadoWeb(ip);
+      if (data && data.hay) {
+        resultado.style.display = 'block';
+        resultado.className = data.ok ? 'otaResult ok' : 'otaResult err';
+        resultado.textContent = data.resumen || (data.ok ? 'Interfaz actualizada' : 'No se pudo completar la descarga');
+        if (data.ok) setTimeout(() => location.reload(), 1500);   // carga la interfaz nueva
+        hecho = true;
+        break;
+      }
+    } catch (e) { /* aún no ha vuelto a la red; reintentamos */ }
+    await new Promise(r => setTimeout(r, 2000));
+  }
+
+  if (!hecho) {
+    resultado.style.display = 'block';
+    resultado.className = 'otaResult err';
+    resultado.textContent = 'El panel no respondió a tiempo. Vuelve a abrir esta página en unos segundos.';
+  }
+  btn.disabled = false;
+  btn.textContent = '🌐 ACTUALIZAR INTERFAZ';
+}
+
+document.getElementById('webBtn').addEventListener('click', descargarWeb);
 
 /* ---------- Mostrar el último resultado al abrir el panel de actualización ---------- */
 async function mostrarUltimoEstadoIdiomas(){
@@ -2460,7 +2544,7 @@ async function abrirTemporizador(){
 
   timerOverlay.classList.add('open');
   try {
-    const res = await fetch(`http://${ip}/timer`, { signal: AbortSignal.timeout(5000) });
+    const res = await fetch(`${apiBase(ip)}/timer`, { signal: AbortSignal.timeout(5000) });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
 
@@ -2477,7 +2561,7 @@ async function enviarAjusteTimer(cambios){
   const ip = ipEl.value.trim();
   if (!ip) return;
   try {
-    await fetch(`http://${ip}/timer`, {
+    await fetch(`${apiBase(ip)}/timer`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(cambios),
@@ -2508,7 +2592,7 @@ timerToggleBtn.addEventListener('click', async () => {
   if (!ip) return;
   timerToggleBtn.disabled = true;
   try {
-    const res = await fetch(`http://${ip}/timer/toggle`, { method: 'POST', signal: AbortSignal.timeout(4000) });
+    const res = await fetch(`${apiBase(ip)}/timer/toggle`, { method: 'POST', signal: AbortSignal.timeout(4000) });
     if (res.ok){
       const data = await res.json();
       actualizarEstadoEnergia(!!data.isSleeping);
@@ -2552,6 +2636,7 @@ let aboutTimer = null, aboutBusy = false, aboutUltimo = null, aboutNota = null, 
 
 // Versión de la PWA: sale del nombre de la caché que crea sw.js (retropixel-shell-vX.Y.Z)
 async function aboutLeerVersionPwa(){
+  if (EN_PANEL) { aboutPwaVer = PWA_VERSION_TXT + ' (SD)'; return; }   // sin service worker no hay caché de la que leerla
   try {
     const nombres = (await caches.keys()).filter(n => n.startsWith('retropixel-shell-v')).sort();
     aboutPwaVer = nombres.length ? nombres[nombres.length - 1].replace('retropixel-shell-v', '') : '';
@@ -2633,7 +2718,7 @@ async function aboutCargarDiag(){
   if (!ip) { msg.className = 'otaResult err'; msg.textContent = 'Configura la dirección del panel (⚙)'; return; }
   aboutBusy = true;
   try {
-    const r = await fetch(`http://${ip}/diag`, { signal: AbortSignal.timeout(4000) });
+    const r = await fetch(`${apiBase(ip)}/diag`, { signal: AbortSignal.timeout(4000) });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     aboutPintarDiag(await r.json());
   } catch (e) {
