@@ -1,6 +1,6 @@
 ## 📝 Changelog (Registre des modifications)
 
-- ### [v3.1.7]2026-11-14
+- ### [v3.1.7] - 2026-11-14
 **Retro Pixel LED Lite: "iOS"**
 
 #### ✨ Ajouts
