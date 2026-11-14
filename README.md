@@ -741,7 +741,6 @@ Detalles técnicos de cómo funciona el sistema por dentro:
 | **🌐 Actualización de la interfaz** | `POST /web/actualizar` marca una bandera en `Preferences` y reinicia; en `setup()` (WiFi activo y sin panel, con la RAM libre) descarga `index.htm.gz` desde GitHub a `.tmp`, valida (tamaño, `Content-Length` y cabecera gzip `1F 8B`), conserva la anterior como `.bak` y la restaura si algo falla. `GET /web/estado` informa del resultado. | **Actualizar la interfaz sin sacar la SD**, con la anterior como respaldo. |
 | **🛟 Página de recuperación** | Si no existe `/web/index.htm.gz`, `GET /` devuelve una página mínima con un botón para descargarla. | **Nunca te quedas sin acceso** a la interfaz. |
 | **🔔 Aviso de interfaz nueva** | `version.json` incluye `web` (número de la interfaz publicada); la PWA lo compara con el suyo (`PWA_WEB_NUM`). Punto ámbar sobre 🔄. | **Te enteras de las interfaces nuevas** sin buscarlas. |
-| **🎞️ Relojes dinámicos** | Caras animadas con sprites propios
 | **🎞️ Relojes dinámicos** | Caras animadas con sprites propios dentro del firmware (`RelojDinamico.h`), seleccionables desde la PWA. | **Reloj con personalidad**, sin SD ni configuración extra. |
 | **🗂️ Selector de relojes (PWA)** | Cuadrícula con miniaturas, filtros 8/16 bits y modos Aleatoria/Rotar. | **Elegir temas en dos toques.** |
 | **🖼️ Reloj con fondo** | BMP 128×32 en `/relojes/imagenes`, posición izquierda/centro/derecha, sin parpadeo. | **Personalización visual total.** |
